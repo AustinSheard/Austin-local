@@ -440,6 +440,30 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 .chamber .img{aspect-ratio:3/4;max-width:100%;border-radius:var(--radius);overflow:hidden}
 @media (max-width:760px){.chamber{grid-template-columns:1fr}}
 .inp span{text-transform:none;letter-spacing:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{border:1px solid var(--line-2);border-radius:999px;padding:4px 12px;font-size:.76rem;color:var(--ink-2);background:var(--bg)}
+.chips.big span{font-family:var(--serif);font-size:1.15rem;padding:8px 18px;color:var(--ink);border-color:var(--ink)}
+.units-sum{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.units-sum{grid-template-columns:1fr}}
+.usum{border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px;background:var(--bg);min-width:0}
+.usum-h{display:flex;align-items:center;gap:12px}
+.usum-h svg,.ptiles svg{width:28px;height:28px;flex:none;stroke:var(--ink);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.usum-h h4{font-size:1.5rem}
+.usum p{font-size:.9rem;color:var(--ink-2)}
+.params{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;background:var(--band);border-radius:var(--radius);padding:clamp(20px,3vw,36px)}
+@media (max-width:860px){.params{grid-template-columns:1fr}}
+.ptiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ptiles div{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ptiles b{font-family:var(--serif);font-weight:400;font-size:1.15rem;line-height:1.2}
+.values.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:760px){.values.two{grid-template-columns:1fr}}
+.portal-sec{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+@media (max-width:760px){.portal-sec{grid-template-columns:1fr}}
+.field-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.team{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:560px){.team{grid-template-columns:1fr;max-width:320px}}
+@media (max-width:760px){.field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cards{grid-template-columns:repeat(3,minmax(0,1fr))}@media (max-width:860px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:560px){.cards{grid-template-columns:1fr}}
 [hidden]{display:none!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -489,8 +513,8 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="hero-copy">
         <span class="label">Product guide for machine buyers and operators</span>
         <h1>A self-cleaning smoothie vending system, for operators.</h1>
-        <p class="lede">The two-unit system is sold as an upfront capital purchase. Customers tap to pay at the freezer and take a cup of frozen ingredients. The blender adds water, blends it and then cleans itself.</p>
-        <p class="lede">The buyer owns the machine and operates it: sourcing product, restocking, cleaning and food safety compliance. Juvo provides the machine technology, the machine software under an ongoing licence, on-call support and replacement parts under warranty.</p>
+        <p class="lede">The two-unit system is sold as an upfront capital purchase. Customers tap to pay at the freezer and take a cup of frozen ingredients. The blender adds liquid, blends it in the cup and then cleans itself.</p>
+        <p class="lede">The buyer owns the machine and operates it: curating the product range, restocking, cleaning and food safety compliance. Juvo provides the machine technology, the machine software under an ongoing licence, on-call support and replacement parts under warranty.</p>
       </div>
       <figure>
         <div class="hero-img"><img class="cover" src="images/_DSC1665.jpg" alt="A customer opens the freezer door beside the blender" fetchpriority="high"></div>
@@ -517,8 +541,8 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <a class="ex" href="#business" data-go="business"><div class="img"><img class="cover" src="images/_DSC0915.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Business model</h3><span class="label">01</span></div><p>What you buy, what you do and what we do, operator duties and a P&amp;L calculator.</p></a>
       <a class="ex" href="#flow" data-go="flow"><div class="img"><img class="cover" src="images/_DSC1651.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>Customer flow</h3><span class="label">02</span></div><p>What a customer does, from tapping to pay to collecting a smoothie.</p></a>
       <a class="ex" href="#machine" data-go="machine"><div class="img"><img class="cover" src="images/_DSC0980-b.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>The machine</h3><span class="label">03</span></div><p>The freezer and blender, installation, specifications and cleaning.</p></a>
-      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">04</span></div><p>The licensed machine software, and optional add-ons.</p></a>
-      <a class="ex" href="#menu" data-go="menu"><div class="img"><img class="cover" src="images/_DSC9284.jpg" alt="" loading="lazy"></div><div class="row"><h3>The menu</h3><span class="label">05</span></div><p>The cup format and the kinds of product that can be run through it.</p></a>
+      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">04</span></div><p>The licensed machine software, blend parameters, the operator portal and add-ons.</p></a>
+      <a class="ex" href="#menu" data-go="menu"><div class="img"><img class="cover" src="images/_DSC1720.jpg" alt="" loading="lazy"></div><div class="row"><h3>The menu</h3><span class="label">05</span></div><p>The cup format, and guidance on what suits it.</p></a>
       <a class="ex" href="#about" data-go="about"><div class="img"><img class="cover" src="images/_DSC9305.jpg" alt="" loading="lazy" style="object-position:50% 30%"></div><div class="row"><h3>About us</h3><span class="label">06</span></div><p>Why we started, what we learned operating machines, and the team.</p></a>
     </div>
   </div>
@@ -558,7 +582,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             <h4>You</h4>
             <ul>
               <li>Buy the machine</li>
-              <li>Source product</li>
+              <li>Product and cups</li>
               <li>Restock</li>
               <li>Clean</li>
               <li>First-line maintenance</li>
@@ -655,7 +679,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             <div class="calc-msg" id="calcMsg"></div>
           </div>
         </div>
-        <p class="small">Figures are illustrative and depend entirely on the numbers entered. They are not a forecast of sales.</p>
+        <p class="small">Figures are illustrative and depend entirely on the numbers entered. They are a planning aid, based on the numbers you enter.</p>
       </div>
     </div>
 
@@ -666,8 +690,8 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
         <details class="q"><summary>What do I pay on an ongoing basis?</summary><p>The software licence fee. Your other running costs are your own: product, any host-site commission or rent, electricity, labour and travel, and insurance.</p></details>
         <details class="q"><summary>Can the machine carry my branding?</summary><p>Yes. The machine technology is white-labelled.</p></details>
         <details class="q"><summary>Who monitors the machine?</summary><p>You do. The machine software shows status, stock and faults, and sends alerts to you. Juvo is on call if you need support.</p></details>
-        <details class="q"><summary>Who sources the product?</summary><p>You do. Juvo does not supply product to buyers of the machine.</p></details>
-        <details class="q"><summary>Who handles food safety compliance?</summary><p>You are responsible for your own food safety compliance.</p></details>
+        <details class="q"><summary>Who makes the product?</summary><p>You curate your own flavours and manufacturing processes, and source the cups.</p></details>
+        <details class="q"><summary>Who handles food safety compliance?</summary><p>You manage food safety compliance for your product.</p></details>
         <details class="q"><summary>What happens if a part fails?</summary><p>The machine software flags the fault. Juvo is on call to support you and supplies replacement parts under the warranty arrangement.</p></details>
       </div>
     </div>
@@ -750,7 +774,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
           <span class="where">Blender</span>
           <span class="n">6</span>
           <h3>Press start and collect</h3>
-          <p>The blender adds water and blends in the cup, in about 60 seconds. The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
+          <p>The blender adds liquid and blends in the cup, in about 60 seconds. The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
         </li>
       </ol>
     </div>
@@ -788,7 +812,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="stack-lg">
         <div class="unit-pair">
           <div><span class="label">Unit 1</span><h3>Freezer</h3><p class="small">Glass-door freezer holding ~220 cups across up to 10 flavours. Unlocks after payment and records each cup taken.</p></div>
-          <div><span class="label">Unit 2</span><h3>Blender</h3><p class="small">Reads the cup, adds water, blends, then rinses itself at 90°C with a cleaning solution before the next cup.</p></div>
+          <div><span class="label">Unit 2</span><h3>Blender</h3><p class="small">Reads the cup, adds liquid, blends, then rinses itself at 90°C with a cleaning solution before the next cup.</p></div>
         </div>
         <div class="cmp-wrap">
           <table class="cmp">
@@ -909,13 +933,12 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     </div>
 
     <div class="sub reveal">
-      <span class="label">Only water</span>
+      <span class="label">Liquid</span>
       <div class="water">
-        <figure><div class="img"><img class="cover" src="images/_DSC0259.jpg" alt="The water tanks behind the blender's lower door" loading="lazy"></div><figcaption>Juvo-provided water tank, behind the blender's lower door.</figcaption></figure>
+        <figure><div class="img"><img class="cover" src="images/_DSC0259.jpg" alt="The water tanks behind the blender's lower door" loading="lazy"></div><figcaption>Juvo-provided tank, behind the blender's lower door.</figcaption></figure>
         <div class="stack">
-          <h3>Water is the only thing the blender adds</h3>
-          <p>Everything else is already in the cup. There are no milks, syrups or other liquids, and no lines to manage. That keeps cleaning, maintenance and food safety simple.</p>
-          <div class="not-list" aria-label="What the blender adds"><span class="yes">Water</span><span>Milk</span><span>Syrup</span><span>Ice</span><span>Concentrate</span></div>
+          <h3>Water as standard, your choice of liquid</h3>
+          <p>The blender adds water from a mains connection or the Juvo-provided tank. Other liquids, such as milk, can be used if your product calls for it. The liquid, like the rest of the product, is part of your product design.</p>
         </div>
       </div>
     </div>
@@ -932,17 +955,44 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="chap label"><span>04</span><span>Software</span></div>
       <div class="intro">
         <h2>Machine software, under licence</h2>
-        <p class="lede">The machine software is licensed for an ongoing fee. It includes monitoring, which you access and use yourself. Juvo is on call for support. Add-ons are optional and built on request.</p>
+        <p class="lede">The machine software is licensed for an ongoing fee. It runs the freezer and blender, lets you set up each blend, and includes monitoring that you access and use yourself. Juvo is on call for support.</p>
       </div>
     </div>
 
     <div class="stack-lg reveal">
       <div class="seg" role="group" aria-label="Show">
         <button type="button" data-sw="core" aria-pressed="true">Machine software (licensed)</button>
-        <button type="button" data-sw="addons" aria-pressed="false">Optional add-ons (operator portal, rewards app)</button>
+        <button type="button" data-sw="addons" aria-pressed="false">Optional add-ons</button>
       </div>
 
       <div class="sw-panel" data-panel="core">
+        <div class="units-sum">
+          <div class="usum">
+            <div class="usum-h"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="6" y="2.5" width="16" height="23" rx="1.5"/><path d="M9 7h10M9 12h10M9 17h10M19 21.5v-1"/></svg><h4>Freezer</h4></div>
+            <p>Recognises each purchase and charges for it automatically, and turns sales and stock data into insights.</p>
+            <div class="chips"><span>Smart vending</span><span>Sales insights</span><span>Layout and product-mix optimisation</span></div>
+          </div>
+          <div class="usum">
+            <div class="usum-h"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="7" y="2.5" width="14" height="23" rx="1.5"/><rect x="10" y="6" width="8" height="5" rx=".8"/><path d="M11 15h6v6h-6z"/></svg><h4>Blender</h4></div>
+            <p>Reads each cup, blends it to that product's settings and cleans itself, without staff. Status and faults report to the software in real time.</p>
+            <div class="chips"><span>Autonomous operation</span><span>Monitoring</span><span>Customisable blend parameters</span></div>
+          </div>
+        </div>
+
+        <div class="params">
+          <div class="stack">
+            <span class="label">Customisable blend parameters</span>
+            <h3>Build the blend for each product</h3>
+            <p>Each product has its own blend settings, which the blender recognises from the QR code on the lid. You set the parameters so you can build the ideal product.</p>
+          </div>
+          <div class="ptiles">
+            <div><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3v16"/><path d="M9 19h10"/><path d="M14 23v2"/><path d="M10 14l4 5 4-5"/></svg><b>Blade depth</b></div>
+            <div><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="10"/><path d="M14 14l6-4"/><path d="M14 6v2M6 14h2M22 14h-2"/></svg><b>Blade speed</b></div>
+            <div><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3c3 5 6 8 6 12a6 6 0 0 1-12 0c0-4 3-7 6-12z"/><path d="M11 16a3 3 0 0 0 3 3"/></svg><b>Hot water option</b></div>
+            <div><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M5 8h18M5 14h18M5 20h18"/><circle cx="10" cy="8" r="2"/><circle cx="18" cy="14" r="2"/><circle cx="12" cy="20" r="2"/></svg><b>Other machine settings</b></div>
+          </div>
+        </div>
+
         <figure>
           <div class="ph" style="aspect-ratio:21/9;max-width:100%">Photo to come: the machine software dashboard on a screen<br><span class="tbc" style="margin-top:8px">PHOTO: dashboard on screen</span></div>
         </figure>
@@ -964,38 +1014,29 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             <div class="card"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M6 14h4l2-4 3 7 2-3h5"/><path d="M10 24h8"/></svg><h4>Uptime</h4><p>80–90% for Juvo machines, against 50–60% for others on the market (Juvo operating data). The software flags a breakdown, so you know when a machine is down.</p></div>
           </div>
         </div>
-        <div class="stack-lg">
-          <span class="label">Machine functions</span>
-          <div class="cover-list">
-            <div>
-              <h4>Freezer</h4>
-              <ul class="fn-list">
-                <li><b>Smart vending</b><span>Purchases are recognised and paid for automatically.</span></li>
-                <li><b>Sales insights</b><span>Sales data from every machine.</span></li>
-                <li><b>Layout and product-mix optimisation</b><span>Sales and stock data inform the freezer layout and product mix.</span></li>
-              </ul>
-            </div>
-            <div>
-              <h4>Blender</h4>
-              <ul class="fn-list">
-                <li><b>Autonomous operation</b><span>Reads the cup, adds water, blends and cleans itself without staff.</span></li>
-                <li><b>Monitoring</b><span>Status and faults are reported to the machine software in real time.</span></li>
-                <li><b>Adjustable settings</b><span>Blend and machine settings can be adjusted.</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="sw-panel" data-panel="addons" hidden>
-        <div class="stack">
-          <div class="values three">
-            <div><h4>Operator portal</h4><p>A web portal for your sales, orders and machine data across sites.</p></div>
-            <div><h4>Rewards app</h4><p>A customer app for points and rewards, linked to purchases at the machine.</p></div>
-            <div><h4>Customised machine software</h4><p>Changes to the machine software to suit your setup or product range.</p></div>
-          </div>
-          <p class="small">Optional. Juvo builds these on request.</p>
+        <p class="lede" style="max-width:64ch">Optional extras that Juvo builds on request, to suit how you run your machines and engage your customers.</p>
+        <div class="values three two">
+          <div><h4>Rewards app</h4><p>A customer app for points and rewards, linked to purchases at the machine.</p></div>
+          <div><h4>Customised machine software</h4><p>Changes to the machine software to suit your setup or product range.</p></div>
         </div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Operator portal</span>
+      <div class="portal-sec">
+        <div class="stack">
+          <h3>One view of your operation</h3>
+          <p>The operator portal is a web portal for your sales, orders and machine data across all your sites.</p>
+        </div>
+        <ul class="fn-list">
+          <li><b>Sales</b><span>Sales by machine, site and product.</span></li>
+          <li><b>Orders</b><span>Every purchase, with how it was paid.</span></li>
+          <li><b>Machines</b><span>Status and stock for each machine.</span></li>
+        </ul>
       </div>
     </div>
     <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#menu" data-go="menu"><span class="label">05</span><span class="serif">The menu</span></a></nav>
@@ -1011,46 +1052,34 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="chap label"><span>05</span><span>The menu</span></div>
       <div class="intro">
         <h2>What can be run through the machine</h2>
-        <p class="lede">The system blends a pre-portioned frozen cup with water, in its own cup. Products that suit that format can be run through it.</p>
+        <p class="lede">The system blends a pre-portioned frozen cup in its own cup. The range is yours to design. This section gives guidance on what suits the format.</p>
       </div>
     </div>
 
-    <div class="ethos reveal">
-      <figure><div class="img"><img class="cover" src="images/_DSC9284.jpg" alt="Five cups from above, each filled with frozen ingredients" loading="lazy"></div><figcaption>Illustrative photo of the cup format.</figcaption></figure>
+    <div class="stack-lg reveal">
+      <span class="label">The format</span>
+      <div class="flow" aria-label="How a cup is blended">
+        <div class="node"><b>Frozen cup</b>A single serve of frozen ingredients, in a lidded cup</div><span class="arr">&rarr;</span>
+        <div class="node"><b>QR code</b>Each blend has its own settings, recognised from the lid</div><span class="arr">&rarr;</span>
+        <div class="node"><b>Liquid</b>Water as standard, or another liquid your product calls for</div><span class="arr">&rarr;</span>
+        <div class="node alert"><b>Blended in the cup</b>To the settings for that product</div>
+      </div>
+      <p class="small">You source the cups.</p>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Product guidance</span>
       <div class="stack">
-        <span class="label">The format</span>
-        <p class="serif" style="font-size:1.45rem;line-height:1.35">A single serve of frozen ingredients, in a lidded cup, plus water.</p>
-        <p>The cup is kept frozen in the freezer. At the blender, the QR code on the lid identifies the product and sets the blend. The blender adds water and blends in the cup. Water is the only thing the machine adds.</p>
+        <p>Anything that works as a single serve of frozen ingredients, blended in its own cup, suits the format. For example:</p>
+        <div class="chips big"><span>Frozen fruit smoothies</span><span>Slushies</span><span>Other frozen blended drinks</span></div>
       </div>
     </div>
 
     <div class="sub reveal">
-      <span class="label">Product categories</span>
-      <div class="stack">
-        <div class="values">
-          <div><h4>Frozen fruit smoothies</h4><p>Whole frozen fruit, blended with water.</p></div>
-          <div><h4>Protein and functional smoothies</h4><p>Fruit with protein or other functional ingredients.</p></div>
-          <div><h4>Electrolyte slushies</h4><p>Frozen hydration blends.</p></div>
-          <div><h4>Other frozen blended products</h4><p>Anything that works as a cup of frozen ingredients plus water.</p></div>
-        </div>
-        <p class="small">Illustrative categories only.</p>
-      </div>
-    </div>
-
-    <div class="sub reveal">
-      <span class="label">Product and compliance</span>
+      <span class="label">Your product</span>
       <div class="notice">
-        <h4>Operators source their own product</h4>
-        <p>Operators source their own product and are responsible for their own food safety compliance. Juvo does not supply product to buyers of the machine.</p>
-      </div>
-    </div>
-
-    <div class="sub reveal">
-      <span class="label">The cup</span>
-      <div class="prod">
-        <div class="img"><img class="cover" src="images/JUVO0285.jpg" alt="Goji berries poured into a cup" loading="lazy"></div>
-        <div class="img"><img class="cover" src="images/JUVO0499.jpg" alt="Passionfruit squeezed into a cup" loading="lazy"></div>
-        <div class="img"><img class="cover" src="images/JUVO0119.jpg" alt="Close view of strawberries and blueberries inside a cup" loading="lazy"></div>
+        <h4>You curate your own range</h4>
+        <p>You curate your own flavours and manufacturing processes, and manage food safety compliance for your product.</p>
       </div>
     </div>
     <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#about" data-go="about"><span class="label">06</span><span class="serif">About us</span></a></nav>
@@ -1073,8 +1102,8 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 
     <div class="values three reveal">
       <div><span class="n">1</span><h4>The business we built</h4><p>We were fed up with over-processed, sugary and expensive drinks being the only thing on offer after training. Powders were easy to forget and hard to clean. Making a proper smoothie at home took time, and the habit never lasted. Real, wholefood nutrition just wasn't there when we needed it.</p><p>Juvo was founded in Perth by Josh, Kese and Laine. We operate our own machines in market, across Perth and Sydney, at sites that include a gym and a corporate office. The team is ten people.</p></div>
-      <div><span class="n">2</span><h4>What operating real machines taught us</h4><p>Running machines at real sites showed where the work is: keeping the blending chamber hygienic between cups, stopping one flavour carrying into the next, keeping machines selling, and knowing when one is down.</p></div>
-      <div><span class="n">3</span><h4>Why we built our own machine</h4><p>We spent months developing our own hardware and software. The result is a blender that rinses itself at 90°C with a cleaning solution after every blend and adds only water, a freezer that records each cup taken, and machine software on every unit.</p></div>
+      <div><span class="n">2</span><h4>What operating real machines taught us</h4><p>Running machines at real sites showed where the work is: managing reliability and ensuring a consistently great product.</p></div>
+      <div><span class="n">3</span><h4>Why we built our own machine</h4><p>We wanted reliable machines that deliver a great product, every time. We spent months developing our own hardware and software around those two goals. That work is the system in this guide.</p></div>
     </div>
 
     <div class="sub reveal">
@@ -1085,14 +1114,12 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
         <div class="img"><img class="cover" src="images/DSCF4430.jpg" alt="A team member shows visitors the freezer" loading="lazy"></div>
         <div class="img"><img class="cover" src="images/DSCF4505.jpg" alt="An expo stand with the machine and a crowd of visitors" loading="lazy"></div>
         <div class="img"><img class="cover" src="images/DSCF4517.jpg" alt="Two expo visitors hold up their smoothies" loading="lazy"></div>
-        <div class="img"><img class="cover" src="images/_DSC0822.jpg" alt="Two members of the team beside the units" loading="lazy"></div>
         <div class="img"><img class="cover" src="images/JUVO0672.jpg" alt="A gym member holds a cup" loading="lazy"></div>
-        <div class="img"><img class="cover" src="images/_DSC1863.jpg" alt="An opened cup of frozen strawberries, peanut butter and cacao nibs" loading="lazy"></div>
       </div>
     </div>
 
     <div class="sub reveal">
-      <span class="label">Our team</span>
+      <span class="label">Founders</span>
       <div class="stack-lg">
         <div class="team" id="team"></div>
       </div>
@@ -1257,7 +1284,7 @@ const HS = [
   {u:'freezer', x:35,   y:86,   t:'Refrigeration', d:'Keeps every cup frozen. Temperature is reported continuously to the machine software.'},
   {u:'blender', x:64.3, y:45.5, t:'Touchscreen', d:'Shows step-by-step instructions and the start button.'},
   {u:'blender', x:70.5, y:56.6, t:'QR scanner', d:'Reads the code on the cup lid to identify the blend.'},
-  {u:'blender', x:58.5, y:63,   t:'Blending chamber', d:'Food-safe stainless steel. The cup sits here while water is added and the smoothie is blended.'},
+  {u:'blender', x:58.5, y:63,   t:'Blending chamber', d:'Food-safe stainless steel. The cup sits here while liquid is added and the product is blended.'},
   {u:'blender', x:64.5, y:73.5, t:'Cleaning system', d:'Rinses the chamber at 90°C with a cleaning solution after every blend.'},
   {u:'blender', x:64.5, y:85,   t:'Water system', d:'Mains connection or a Juvo-provided tank good for 120 to 180 cups, behind the lower door.'}
 ];
@@ -1336,16 +1363,9 @@ if (!reduce) {
 
 /* ---------- Team ---------- */
 const TEAM = [
-  {n:'Kese Gasbarri', r:'Co-founder and Co-CEO', img:'kese', one:'Runs operations: food manufacturing, logistics and unit economics.', bio:'Kese studied a Bachelor of Commerce in Finance and Data Science and worked in investment banking before co-founding Juvo. He leads the operations side of the business, from our kitchen and production capacity to logistics and the cost of every cup.'},
-  {n:'Joshua Taylor', r:'Co-founder and Co-CEO', img:'josh', one:'Works with venue partners and leads the rollout of new sites.', bio:'Josh studied a Bachelor of Science in Mechanical Engineering and Finance and worked in investment banking before co-founding Juvo. He works with venue partners and leads the rollout of new sites.'},
-  {n:'Laine Mulvay', r:'Co-founder and Head of Product', img:'laine', one:'Leads the machine, the software and the customer experience.', bio:'Laine holds a Bachelor of Science in Mathematics and Engineering and a Master of Data Science. He leads machine development, the Juvo app and venue portal, and the product range.'},
-  {n:'Austin Sheard', r:'Head of Manufacturing and Operations', img:'austin', one:'Runs production scheduling, procurement and inventory.', bio:'Austin holds a Master of Engineering from UWA. He spent three years at Bain after working as a process engineer at Wesfarmers, and now runs production scheduling, procurement, inventory and the scale-up of our facility.'},
-  {n:'Ava Willow-Wilson', r:'Brand and Marketing Lead', img:'ava', one:'Leads the brand, content and activations.', bio:'Ava joined from a boutique fashion brand in Melbourne. She leads the Juvo brand, content, social channels, campaigns and in-venue activations.'},
-  {n:'Zac Barrett', r:'Food Manufacturing Lead', img:'zac', one:'Leads daily production at our Midland kitchen.', bio:'Zac leads daily manufacturing at our Midland kitchen, and looks after machine servicing, restocking and logistics.'},
-  {n:'Peter Tanner', r:'Software and Hardware Engineer', img:'peter', one:'Builds the machine software and hardware improvements.', bio:'Peter is completing a Master of Professional Engineering at UWA. He builds our machine software and works on hardware improvements.'},
-  {n:'Katherina Cooper', r:'Product Innovation and Nutrition', img:'katherina', one:'Develops new blends and supports quality control.', bio:'Katherina is studying nutrition and has a background in quality assurance and quality control in food manufacturing. She drives new product ideas and formulations.'},
-  {n:'Thomas Lenette', r:'Admin and Operations', img:'thomas', one:'Covers compliance, finance, HR and internal systems.', bio:'Thomas is studying Philosophy and Politics at UWA. He covers compliance, legal and finance workstreams, HR and our internal systems.'},
-  {n:'Mariann Hetland', r:'Accounting and Bookkeeping', img:'mariann', one:'Runs accounts and payroll.', bio:'Mariann is an experienced finance controller and previously worked as a senior financial officer in public health. She runs our accounts and payroll.'}
+  {n:'Kese Gasbarri', r:'Co-founder and Co-CEO', img:'kese', one:'Leads operations, logistics and unit economics.', bio:'Kese studied a Bachelor of Commerce in Finance and Data Science and worked in investment banking before co-founding Juvo. He leads the operations side of the business.'},
+  {n:'Joshua Taylor', r:'Co-founder and Co-CEO', img:'josh', one:'Leads partnerships and the rollout of new sites.', bio:'Josh studied a Bachelor of Science in Mechanical Engineering and Finance and worked in investment banking before co-founding Juvo. He leads partnerships and the rollout of new sites.'},
+  {n:'Laine Mulvay', r:'Co-founder and Head of Product', img:'laine', one:'Leads the machine and the software.', bio:'Laine holds a Bachelor of Science in Mathematics and Engineering and a Master of Data Science. He leads machine development and the machine software.'}
 ];
 const team = $('#team');
 TEAM.forEach((p, i) => {
