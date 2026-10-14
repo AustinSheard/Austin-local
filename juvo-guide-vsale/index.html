@@ -693,6 +693,16 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 .guide-row{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:center}
 .guide-row .img{aspect-ratio:1;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band)}
 @media (max-width:560px){.guide-row{grid-template-columns:1fr}.guide-row .img{max-width:240px}}
+/* simplified calculator */
+.assume label.wide{grid-column:1 / -1}
+.assume .hint{font-size:.72rem;letter-spacing:0;text-transform:none;color:var(--ink-3);line-height:1.5}
+.disc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:600px){.disc{grid-template-columns:1fr}}
+.disc > div{border:1px solid var(--line-2);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:8px;background:var(--bg);min-width:0}
+.disc ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;font-size:.84rem;color:var(--ink-2)}
+.disc li{display:flex;gap:8px}
+.disc > div:first-child li::before{content:"+";color:var(--accent);font-weight:500}
+.disc > div:last-child li::before{content:"–";color:var(--ink-3)}
 [hidden]{display:none!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -848,32 +858,11 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             </div>
             <div class="assume">
               <label for="cCups">Cups per machine per day<span class="inp"><input id="cCups" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <label for="cProduct">Product cost per cup, ex GST<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
               <label for="cPrice">Price per cup, incl GST<span class="inp"><span>$</span><input id="cPrice" type="number" inputmode="decimal" min="0" step="0.1" value="8.90"></span></label>
-              <label for="cFee">Transaction costs<span class="inp"><input id="cFee" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="3"><span>%</span></span></label>
-
-              <span class="grp">Per machine</span>
-              <label for="cPurchase">Machine purchase price<span class="inp"><span>$</span><input id="cPurchase" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter"></span></label>
-              <label for="cLicence">Licence fee, per month<span class="inp"><span>$</span><input id="cLicence" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <label for="cComm">Host-site commission, % of sales<span class="inp"><input id="cComm" type="number" inputmode="decimal" min="0" max="100" step="0.5" placeholder="Enter"><span>%</span></span></label>
-              <label for="cRent">Host-site rent, per month<span class="inp"><span>$</span><input id="cRent" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <label for="cIns">Insurance, per month<span class="inp"><span>$</span><input id="cIns" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-
-              <span class="grp">Electricity, per machine</span>
-              <label for="cFrz">Freezer, average draw<span class="inp"><input id="cFrz" type="number" inputmode="decimal" min="0" step="0.05" placeholder="Enter"><span>kW</span></span></label>
-              <label for="cBl">Blender, while blending<span class="inp"><input id="cBl" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Enter"><span>kW</span></span></label>
-              <label for="cBlSec">Blend time per cup<span class="inp"><input id="cBlSec" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"><span>sec</span></span></label>
-              <label for="cKwh">Electricity price<span class="inp"><span>$</span><input id="cKwh" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"><span>/kWh</span></span></label>
-              <div class="derived"><span>Electricity per month</span><b id="dElec">—</b></div>
-
-              <span class="grp">Restock and service labour, per machine</span>
-              <label for="cVisits">Visits per week<span class="inp"><input id="cVisits" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Enter"></span></label>
-              <label for="cMins">Minutes per visit<span class="inp"><input id="cMins" type="number" inputmode="decimal" min="0" step="5" placeholder="Enter"><span>min</span></span></label>
-              <label for="cRate">Hourly rate<span class="inp"><span>$</span><input id="cRate" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"><span>/hr</span></span></label>
-              <label for="cTravel">Travel cost per visit<span class="inp"><span>$</span><input id="cTravel" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <div class="derived"><span>Labour and travel per month</span><b id="dLabour">—</b></div>
+              <label for="cProduct">Product cost per cup, ex GST<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
+              <label for="cPurchase">Machine purchase price, each<span class="inp"><span>$</span><input id="cPurchase" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter"></span></label>
+              <label for="cRun" class="wide">Running costs per machine, per month<span class="inp"><span>$</span><input id="cRun" type="number" inputmode="decimal" min="0" step="10" placeholder="Enter"></span><span class="hint">Software licence, host-site rent or commission, electricity, restock and service labour, travel and insurance.</span></label>
             </div>
-            <p class="small">Enter 0 for any cost that does not apply. Commission is taken on sales ex GST. Assumes the machines trade 365 days a year.</p>
           </div>
           <div class="calc-out" aria-live="polite">
             <div class="out-main stack">
@@ -888,7 +877,24 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             <div class="calc-msg" id="calcMsg"></div>
           </div>
         </div>
-        <p class="small">Figures are illustrative and depend entirely on the numbers entered. They are a planning aid, based on the numbers you enter.</p>
+        <div class="disc">
+          <div><span class="label">Included</span><ul>
+            <li>Sales, excluding GST</li>
+            <li>Transaction costs, at 3% of sales</li>
+            <li>Product cost per cup, as entered</li>
+            <li>Monthly running costs, as entered</li>
+            <li>Trading 365 days a year</li>
+          </ul></div>
+          <div><span class="label">Not included</span><ul>
+            <li>GST, income tax and financing costs</li>
+            <li>Depreciation of the machine</li>
+            <li>Delivery, installation and set-up</li>
+            <li>Wastage, spoilage and refunds</li>
+            <li>Downtime and the time to build sales at a new site</li>
+            <li>Any cost not entered above</li>
+          </ul></div>
+        </div>
+        <p class="small">Figures are illustrative, based only on the numbers you enter. They are a planning aid, not a forecast, and not financial advice.</p>
       </div>
     </div>
 
@@ -1472,17 +1478,14 @@ let swRaf = 0;
 addEventListener('scroll', () => { if (!swRaf) swRaf = requestAnimationFrame(() => { swRaf = 0; spySw(); }); }, {passive:true});
 
 /* ---------- Operator P&L calculator ---------- */
+const FEE = 0.03;   // transaction costs, share of sales ex GST
 const cM = $('#cMachines');
-const F = {cups:'#cCups', product:'#cProduct', price:'#cPrice', fee:'#cFee', purchase:'#cPurchase', licence:'#cLicence', comm:'#cComm', rent:'#cRent', ins:'#cIns',
-  frz:'#cFrz', bl:'#cBl', blSec:'#cBlSec', kwh:'#cKwh', visits:'#cVisits', mins:'#cMins', rate:'#cRate', travel:'#cTravel'};
-const LBL = {cups:'cups per day', product:'product cost', price:'price', fee:'transaction costs', purchase:'purchase price', licence:'licence fee', comm:'commission', rent:'rent', ins:'insurance',
-  frz:'freezer kW', bl:'blender kW', blSec:'blend time', kwh:'electricity price', visits:'visits per week', mins:'minutes per visit', rate:'hourly rate', travel:'travel cost'};
-const MONTH_DAYS = 365 / 12, MONTH_WEEKS = 52 / 12;
+const F = {cups:'#cCups', price:'#cPrice', product:'#cProduct', purchase:'#cPurchase', run:'#cRun'};
+const LBL = {cups:'cups per day', price:'price', product:'product cost', purchase:'purchase price', run:'running costs'};
 function fillRange(r){ r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%'); }
 const out = {year:$('#rYear'), month:$('#rMonth'), payback:$('#rPayback'), be:$('#rBe')};
 function set(el, txt, dash){ el.textContent = txt; el.classList.toggle('dash', !!dash); }
 const sgn = (v, d=0) => (v < 0 ? '−' : '') + aud(Math.abs(v), d);
-const has = (v, ks) => ks.every(k => k in v);
 function calc(){
   const m = +cM.value;
   $('#oMachines').textContent = m; fillRange(cM);
@@ -1491,36 +1494,23 @@ function calc(){
     const raw = $(sel).value.trim(), n = parseFloat(raw);
     if (raw === '' || !isFinite(n) || n < 0) missing.push(k); else v[k] = n;
   });
-  // electricity: freezer runs 24 h; blender draws only while blending
-  const elecM = has(v, ['frz', 'bl', 'blSec', 'kwh', 'cups']) ? (v.frz * 24 + v.bl * v.blSec / 3600 * v.cups) * v.kwh * MONTH_DAYS : null;
-  const labourM = has(v, ['visits', 'mins', 'rate', 'travel']) ? v.visits * (v.mins / 60 * v.rate + v.travel) * MONTH_WEEKS : null;
-  $('#dElec').textContent = elecM == null ? '—' : aud(elecM, 2);
-  $('#dLabour').textContent = labourM == null ? '—' : aud(labourM, 2);
   if (missing.length) {
     Object.values(out).forEach(el => set(el, '—', true));
     $('#calcMsg').textContent = `Enter ${missing.length === Object.keys(F).length ? 'every field' : missing.map(k => LBL[k]).join(', ')} to see results.`;
     return;
   }
   const exGst = v.price / 1.1;
-  const perCup = exGst * (1 - v.fee / 100 - v.comm / 100) - v.product;
-  const fixedM = v.licence + v.rent + v.ins + elecM + labourM;   // per machine per month
-  const contribYear = m * v.cups * 365 * perCup;
-  const fixedYear = m * fixedM * 12;
-  const netYear = contribYear - fixedYear, netMonth = netYear / 12;
+  const perCup = exGst * (1 - FEE) - v.product;
+  const netYear = m * (v.cups * 365 * perCup - v.run * 12), netMonth = netYear / 12;
   const capital = m * v.purchase;
   set(out.year, sgn(netYear)); set(out.month, sgn(netMonth));
   set(out.payback, netMonth > 0 ? (capital / netMonth).toFixed(1) + ' months' : 'Not reached', netMonth <= 0);
-  // breakeven: cups needed to cover the fixed costs (the blender's electricity per cup is folded into the per-cup margin)
-  const blKwhCup = v.bl * v.blSec / 3600 * v.kwh;
-  const fixedNoBl = fixedM - v.bl * v.blSec / 3600 * v.cups * v.kwh * MONTH_DAYS;
-  const margin = perCup - blKwhCup;
-  const be = margin > 0 ? (fixedNoBl / MONTH_DAYS) / margin : null;
+  const be = perCup > 0 ? (v.run * 12 / 365) / perCup : null;
   set(out.be, be == null ? 'Not reached' : be.toFixed(1), be == null);
   $('#calcMsg').innerHTML =
     `<span class="label" style="display:block;margin-bottom:6px">How it is worked out</span>` +
-    `${aud(v.price,2)} &divide; 1.1 to remove GST = <b>${aud(exGst,2)}</b>. Less ${v.fee}% transaction costs, ${v.comm}% commission and ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
-    `${m} machine${m > 1 ? 's' : ''} &times; ${v.cups} cups &times; 365 days = <b>${sgn(contribYear)}</b> per year.<br>` +
-    `Monthly costs per machine: licence ${aud(v.licence)}, rent ${aud(v.rent)}, insurance ${aud(v.ins)}, electricity ${aud(elecM)}, labour and travel ${aud(labourM)} = <b>${aud(fixedM)}</b>. &times; 12 &times; ${m} = <b>${aud(fixedYear)}</b> per year.<br>` +
+    `${aud(v.price,2)} &divide; 1.1 to remove GST, less 3% transaction costs and ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
+    `(${v.cups} cups &times; 365 days &times; ${sgn(perCup,2)}) less (${aud(v.run)} &times; 12 months) = <b>${sgn(netYear / m)}</b> per machine per year.<br>` +
     `Payback: ${aud(capital)} purchase &divide; net per month.`;
 }
 cM.addEventListener('input', calc);
