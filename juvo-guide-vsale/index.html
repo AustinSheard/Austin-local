@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: a calm product manual. One reading column inside a 1200px frame, photography breaking out wide,
-   numbered chapters 01 to 07. Single light theme by design (brand palette is light). */
+   numbered chapters 01 to 06. Single light theme by design (brand palette is light). */
 :root{
   color-scheme: light;
   /* Brand palette (Juvo Brand Guidelines 2026) */
@@ -424,6 +424,22 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 .bench{font-size:.82rem;color:var(--ink-2);border-left:2px solid var(--juvo-green);padding:4px 0 4px 14px;max-width:64ch}
 .spec td .tbc{margin-left:0}
 .machine-hero > *,.share-grid > *,.hs-wrap > *,.clean > *,.water > *,.ethos > *{min-width:0}
+.tl-bar{grid-template-columns:1fr 2fr 1fr}
+.tl-bar .c{background:var(--juvo-green);color:var(--off-black)}
+.assume label{justify-content:space-between}
+.inp{min-height:42px}
+.derived{grid-column:1 / -1;display:flex;justify-content:space-between;gap:12px;font-size:.8rem;color:var(--ink-2);border-bottom:1px dashed var(--line-2);padding-bottom:10px}
+.derived b{font-weight:500;font-variant-numeric:tabular-nums;color:var(--ink)}
+.field-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field-grid .img{aspect-ratio:4/5;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band)}
+@media (max-width:760px){.field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.foot .lock{flex-direction:column;align-items:flex-start;gap:8px}
+.foot .lock span{padding-bottom:0}
+.sw-panel{display:flex;flex-direction:column;gap:clamp(40px,5vw,64px)}
+.chamber{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:center}
+.chamber .img{aspect-ratio:3/4;max-width:100%;border-radius:var(--radius);overflow:hidden}
+@media (max-width:760px){.chamber{grid-template-columns:1fr}}
+.inp span{text-transform:none;letter-spacing:0}
 [hidden]{display:none!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -449,7 +465,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="#home" data-go="home" aria-label="Juvo product guide home"><svg viewBox="0 0 722.83 238.11" role="img" aria-hidden="true"><use href="#juvo"/></svg></a>
+    <a class="logo" href="#home" data-go="home" aria-label="Product guide home"><svg viewBox="0 0 722.83 238.11" role="img" aria-hidden="true"><use href="#juvo"/></svg></a>
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
     <ul class="nav-links" id="navLinks">
       <li><a href="#home" data-go="home">Home</a></li>
@@ -459,7 +475,6 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <li><a href="#software" data-go="software">Software</a></li>
       <li><a href="#menu" data-go="menu">The menu</a></li>
       <li><a href="#about" data-go="about">About us</a></li>
-      <li><a href="#support" data-go="support">Support and terms</a></li>
     </ul>
   </div>
   <div class="nav-progress" id="navProgress"></div>
@@ -473,22 +488,22 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <div class="hero-grid">
       <div class="hero-copy">
         <span class="label">Product guide for machine buyers and operators</span>
-        <h1>The Juvo smoothie vending system, for operators.</h1>
-        <p class="lede">Juvo sells its two-unit smoothie system as an upfront capital purchase. Customers tap to pay at the Juvo Freezer and take a cup of frozen ingredients. The Juvo Blender adds water, blends it and then cleans itself.</p>
-        <p class="lede">The buyer owns the machine and operates it: sourcing product, restocking, cleaning and food safety compliance. Juvo provides the machine software and remote monitoring for an ongoing licence fee, on-call support and replacement parts.</p>
+        <h1>A self-cleaning smoothie vending system, for operators.</h1>
+        <p class="lede">The two-unit system is sold as an upfront capital purchase. Customers tap to pay at the freezer and take a cup of frozen ingredients. The blender adds water, blends it and then cleans itself.</p>
+        <p class="lede">The buyer owns the machine and operates it: sourcing product, restocking, cleaning and food safety compliance. Juvo provides the machine technology, the machine software under an ongoing licence, on-call support and replacement parts under warranty.</p>
       </div>
       <figure>
-        <div class="hero-img"><img class="cover" src="images/_DSC1665.jpg" alt="A customer opens the Juvo Freezer door beside the Juvo Blender" fetchpriority="high"></div>
-        <figcaption>The Juvo Freezer (left) and Juvo Blender (right).</figcaption>
+        <div class="hero-img"><img class="cover" src="images/_DSC1665.jpg" alt="A customer opens the freezer door beside the blender" fetchpriority="high"></div>
+        <figcaption>The freezer (left) and blender (right).</figcaption>
       </figure>
     </div>
     <div class="facts" aria-label="Key facts">
-      <div class="fact"><span class="label">Purchase to drink</span><span class="v">2<small>min, about</small></span></div>
-      <div class="fact"><span class="label">Freezer capacity</span><span class="v">240<small>cups</small></span><span class="small">Up to 10 flavours</span></div>
-      <div class="fact"><span class="label">Operator deep clean</span><span class="v">1<small>per week</small></span><span class="small">Others on the market: 3–4 per week</span></div>
+      <div class="fact"><span class="label">Purchase to drink</span><span class="v">90<small>sec</small></span><span class="small">Followed by a 30 sec clean</span></div>
+      <div class="fact"><span class="label">Freezer capacity</span><span class="v">~220<small>cups</small></span><span class="small">Up to 10 flavours</span></div>
+      <div class="fact"><span class="label">Operator clean</span><span class="v">1<small>per week</small></span><span class="small">Others on the market: 3–4 per week</span></div>
       <div class="fact"><span class="label">Uptime</span><span class="v">80–90<small>%</small></span><span class="small">Others on the market: 50–60%</span></div>
     </div>
-    <p class="foot-note" style="margin-top:12px">Cleaning and uptime figures are from Juvo operating data, compared with others on the market. The deep clean is a pot wash by the operator.</p>
+    <p class="foot-note" style="margin-top:12px">Cleaning and uptime figures are from Juvo operating data, compared with others on the market.</p>
   </div>
 </section>
 
@@ -499,14 +514,13 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="intro"><h2>Explore the guide</h2><p class="lede">Each section covers one part of buying and operating the system.</p></div>
     </div>
     <div class="explore">
-      <a class="ex" href="#business" data-go="business"><div class="img"><img class="cover" src="images/_DSC0915.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Business model</h3><span class="label">01</span></div><p>What the operator buys, who does what, operator duties and a P&amp;L calculator.</p></a>
+      <a class="ex" href="#business" data-go="business"><div class="img"><img class="cover" src="images/_DSC0915.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Business model</h3><span class="label">01</span></div><p>What you buy, what you do and what we do, operator duties and a P&amp;L calculator.</p></a>
       <a class="ex" href="#flow" data-go="flow"><div class="img"><img class="cover" src="images/_DSC1651.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>Customer flow</h3><span class="label">02</span></div><p>What a customer does, from tapping to pay to collecting a smoothie.</p></a>
-      <a class="ex" href="#machine" data-go="machine"><div class="img"><img class="cover" src="images/_DSC0980.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>The machine</h3><span class="label">03</span></div><p>The Juvo Freezer and Juvo Blender, installation, specifications and cleaning.</p></a>
-      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">04</span></div><p>Machine software and remote monitoring under licence, and optional add-ons.</p></a>
+      <a class="ex" href="#machine" data-go="machine"><div class="img"><img class="cover" src="images/_DSC0980-b.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>The machine</h3><span class="label">03</span></div><p>The freezer and blender, installation, specifications and cleaning.</p></a>
+      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">04</span></div><p>The licensed machine software, and optional add-ons.</p></a>
       <a class="ex" href="#menu" data-go="menu"><div class="img"><img class="cover" src="images/_DSC9284.jpg" alt="" loading="lazy"></div><div class="row"><h3>The menu</h3><span class="label">05</span></div><p>The cup format and the kinds of product that can be run through it.</p></a>
-      <a class="ex" href="#about" data-go="about"><div class="img"><img class="cover" src="images/_DSC9305.jpg" alt="" loading="lazy" style="object-position:50% 30%"></div><div class="row"><h3>About us</h3><span class="label">06</span></div><p>The business we built, what we learned operating machines, and the team.</p></a>
+      <a class="ex" href="#about" data-go="about"><div class="img"><img class="cover" src="images/_DSC9305.jpg" alt="" loading="lazy" style="object-position:50% 30%"></div><div class="row"><h3>About us</h3><span class="label">06</span></div><p>Why we started, what we learned operating machines, and the team.</p></a>
     </div>
-    <div class="also"><span class="label">07</span><a href="#support" data-go="support">Support and terms</a></div>
   </div>
 </section>
 </div>
@@ -519,7 +533,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="chap label"><span>01</span><span>Business model</span></div>
       <div class="intro">
         <h2>How the sale model works</h2>
-        <p class="lede">The operator buys the Juvo Freezer and Juvo Blender and runs them. Juvo provides the machine software and remote monitoring under licence, and supports the operator after the sale.</p>
+        <p class="lede">You buy the machine and run it. We supply the machine technology and software, and support you after the sale.</p>
       </div>
     </div>
 
@@ -527,39 +541,43 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="stack cost-head">
         <span class="label">Upfront</span>
         <h3>Machine purchase</h3>
-        <p>A one-off capital purchase of the Juvo Freezer and Juvo Blender. The operator owns the machine.</p>
+        <p>A one-off capital purchase of the freezer and blender. You own the machine.</p>
       </div>
       <div class="stack cost-head">
         <span class="label">Ongoing</span>
         <h3>Software licence</h3>
-        <p>An ongoing licence fee for the machine software and remote monitoring.</p>
+        <p>An ongoing fee for the machine software.</p>
       </div>
     </div>
 
-    <div class="sub reveal">
-      <span class="label">Responsibilities</span>
-      <div class="cover-list">
-        <div class="venue">
-          <h4>Operator</h4>
-          <ul>
-            <li>Purchases the Juvo Freezer and Juvo Blender</li>
-            <li>Sources and stocks product</li>
-            <li>Restocking</li>
-            <li>Deep cleans (a pot wash)</li>
-            <li>First-line maintenance, supported by Juvo</li>
-            <li>Power: a standard outlet, and the electricity it uses</li>
-            <li>Food safety compliance</li>
-          </ul>
+    <div class="sub reveal" id="who">
+      <span class="label">What you do, what we do</span>
+      <div class="stack-lg">
+        <div class="cover-list">
+          <div class="venue">
+            <h4>You</h4>
+            <ul>
+              <li>Buy the machine</li>
+              <li>Source product</li>
+              <li>Restock</li>
+              <li>Clean</li>
+              <li>First-line maintenance</li>
+              <li>Power and electricity</li>
+              <li>Food safety compliance</li>
+              <li>Host-site arrangements</li>
+            </ul>
+          </div>
+          <div>
+            <h4>We</h4>
+            <ul>
+              <li>Proprietary machine technology, white-labelled</li>
+              <li>Machine software, under licence</li>
+              <li>On-call support</li>
+              <li>Replacement parts, under warranty</li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <h4>Juvo</h4>
-          <ul>
-            <li>The machine: Juvo Freezer and Juvo Blender</li>
-            <li>Machine software and remote monitoring, under licence</li>
-            <li>On-call support</li>
-            <li>Replacement parts</li>
-          </ul>
-        </div>
+        <p class="small">Detailed terms, including the warranty, are set out in the purchase and licence agreements.</p>
       </div>
     </div>
 
@@ -570,17 +588,16 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
           <table class="cmp">
             <thead><tr><th scope="col">Duty</th><th scope="col">Juvo</th><th scope="col">Others on the market</th></tr></thead>
             <tbody>
-              <tr><th scope="row">Deep clean (pot wash)</th><td class="j">Once per week</td><td class="o">3–4 times per week</td></tr>
+              <tr><th scope="row">Operator clean</th><td class="j">Once per week</td><td class="o">3–4 times per week</td></tr>
               <tr><th scope="row">Uptime</th><td class="j">80–90%</td><td class="o">50–60%</td></tr>
             </tbody>
           </table>
         </div>
         <ul class="duty-notes">
-          <li><b>Cleaning</b><span>The Blender cleans itself after every blend. The operator does a deeper clean once per week. This covers operator deep cleans only, not spill wipe-downs at the host site.</span></li>
-          <li><b>Restocking</b><span>Aligned to the weekly cleaning cycle, so no extra visits.</span></li>
-          <li><b>Maintenance</b><span>First-line maintenance by the operator, supported by Juvo.</span></li>
-          <li><b>Breakdowns</b><span>Remote monitoring flags breakdowns, so the operator knows when a machine is down.</span></li>
-          <li><b>Power</b><span>A standard outlet. No special electrical work.</span></li>
+          <li><b>Cleaning</b><span>Clean once per week (pot wash). The blender rinses itself at 90°C after every blend.</span></li>
+          <li><b>Restocking</b><span>Restock products, guided by stock management software. Aligned to the weekly clean, so no extra visits.</span></li>
+          <li><b>Maintenance</b><span>Carry out first-line maintenance, with Juvo on call. The machine software flags breakdowns, so you know when a machine is down.</span></li>
+          <li><b>Power</b><span>Standard outlet.</span></li>
         </ul>
         <p class="small">Juvo figures are from Juvo operating data.</p>
       </div>
@@ -598,17 +615,30 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             </div>
             <div class="assume">
               <label for="cCups">Cups per machine per day<span class="inp"><input id="cCups" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cProduct">Product cost per cup, ex GST<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
               <label for="cPrice">Price per cup, incl GST<span class="inp"><span>$</span><input id="cPrice" type="number" inputmode="decimal" min="0" step="0.1" value="8.90"></span></label>
               <label for="cFee">Transaction costs<span class="inp"><input id="cFee" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="3"><span>%</span></span></label>
-              <label for="cProduct">Product cost per cup, ex GST<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
+
               <span class="grp">Per machine</span>
               <label for="cPurchase">Machine purchase price<span class="inp"><span>$</span><input id="cPurchase" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter"></span></label>
               <label for="cLicence">Licence fee, per month<span class="inp"><span>$</span><input id="cLicence" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
               <label for="cComm">Host-site commission, % of sales<span class="inp"><input id="cComm" type="number" inputmode="decimal" min="0" max="100" step="0.5" placeholder="Enter"><span>%</span></span></label>
               <label for="cRent">Host-site rent, per month<span class="inp"><span>$</span><input id="cRent" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <label for="cPower">Electricity, per month<span class="inp"><span>$</span><input id="cPower" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <label for="cLabour">Restock and service labour and travel, per month<span class="inp"><span>$</span><input id="cLabour" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
               <label for="cIns">Insurance, per month<span class="inp"><span>$</span><input id="cIns" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+
+              <span class="grp">Electricity, per machine</span>
+              <label for="cFrz">Freezer, average draw<span class="inp"><input id="cFrz" type="number" inputmode="decimal" min="0" step="0.05" placeholder="Enter"><span>kW</span></span></label>
+              <label for="cBl">Blender, while blending<span class="inp"><input id="cBl" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Enter"><span>kW</span></span></label>
+              <label for="cBlSec">Blend time per cup<span class="inp"><input id="cBlSec" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"><span>sec</span></span></label>
+              <label for="cKwh">Electricity price<span class="inp"><span>$</span><input id="cKwh" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"><span>/kWh</span></span></label>
+              <div class="derived"><span>Electricity per month</span><b id="dElec">—</b></div>
+
+              <span class="grp">Restock and service labour, per machine</span>
+              <label for="cVisits">Visits per week<span class="inp"><input id="cVisits" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Enter"></span></label>
+              <label for="cMins">Minutes per visit<span class="inp"><input id="cMins" type="number" inputmode="decimal" min="0" step="5" placeholder="Enter"><span>min</span></span></label>
+              <label for="cRate">Hourly rate<span class="inp"><span>$</span><input id="cRate" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"><span>/hr</span></span></label>
+              <label for="cTravel">Travel cost per visit<span class="inp"><span>$</span><input id="cTravel" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <div class="derived"><span>Labour and travel per month</span><b id="dLabour">—</b></div>
             </div>
             <p class="small">Enter 0 for any cost that does not apply. Commission is taken on sales ex GST. Assumes the machines trade 365 days a year.</p>
           </div>
@@ -632,20 +662,21 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <div class="sub reveal">
       <span class="label">Common questions</span>
       <div class="qs">
-        <details class="q"><summary>What do I buy?</summary><p>The Juvo Freezer and Juvo Blender, as an upfront capital purchase. You own the machine. The machine software and remote monitoring are provided under an ongoing licence.</p></details>
-        <details class="q"><summary>What do I pay on an ongoing basis?</summary><p>The licence fee to Juvo for the machine software and remote monitoring. Your other running costs are your own: product, any host-site commission or rent, electricity, restocking and service labour and travel, and insurance.</p></details>
-        <details class="q"><summary>What does Juvo support?</summary><p>Juvo is on call for support, is responsible for replacement parts, and provides the machine software and remote monitoring under licence.</p></details>
-        <details class="q"><summary>Who sources the product?</summary><p>The operator. Juvo does not supply product to buyers of the machine.</p></details>
-        <details class="q"><summary>Who handles food safety compliance?</summary><p>The operator is responsible for their own food safety compliance.</p></details>
-        <details class="q"><summary>What happens if a part fails?</summary><p>Remote monitoring flags the fault, so you know the machine is down. Juvo supports you remotely and on call, and supplies the replacement part.</p></details>
+        <details class="q"><summary>What do I buy?</summary><p>The freezer and blender, as an upfront capital purchase. You own the machine. The machine software is provided under an ongoing licence.</p></details>
+        <details class="q"><summary>What do I pay on an ongoing basis?</summary><p>The software licence fee. Your other running costs are your own: product, any host-site commission or rent, electricity, labour and travel, and insurance.</p></details>
+        <details class="q"><summary>Can the machine carry my branding?</summary><p>Yes. The machine technology is white-labelled.</p></details>
+        <details class="q"><summary>Who monitors the machine?</summary><p>You do. The machine software shows status, stock and faults, and sends alerts to you. Juvo is on call if you need support.</p></details>
+        <details class="q"><summary>Who sources the product?</summary><p>You do. Juvo does not supply product to buyers of the machine.</p></details>
+        <details class="q"><summary>Who handles food safety compliance?</summary><p>You are responsible for your own food safety compliance.</p></details>
+        <details class="q"><summary>What happens if a part fails?</summary><p>The machine software flags the fault. Juvo is on call to support you and supplies replacement parts under the warranty arrangement.</p></details>
       </div>
     </div>
 
     <figure class="sub reveal">
       <span class="label">Restocking</span>
       <div>
-        <div style="aspect-ratio:3/2;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band-2)"><img class="cover" src="images/_DSC0915.jpg" alt="Restocking the Juvo Freezer from boxes of cups" loading="lazy" style="object-position:50% 40%"></div>
-        <figcaption>Restocking can be done on the same visit as the weekly deep clean.</figcaption>
+        <div style="aspect-ratio:3/2;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band-2)"><img class="cover" src="images/_DSC0915.jpg" alt="Restocking the freezer from boxes of cups" loading="lazy" style="object-position:50% 40%"></div>
+        <figcaption>Restocking can be done on the same visit as the weekly clean.</figcaption>
       </div>
     </figure>
     <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#flow" data-go="flow"><span class="label">02</span><span class="serif">Customer flow</span></a></nav>
@@ -661,7 +692,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="chap label"><span>02</span><span>Customer flow</span></div>
       <div class="intro">
         <h2>From purchase to drink</h2>
-        <p class="lede">What a customer does at the Juvo Freezer and the Juvo Blender. Payment is by card or phone on the payment terminal. No staff are needed at any step.</p>
+        <p class="lede">What a customer does at the freezer and the blender. Payment is by card or phone on the payment terminal. No staff are needed at any step.</p>
       </div>
     </div>
 
@@ -669,10 +700,10 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="steps-media" aria-hidden="true">
         <div class="frame" id="stepFrame">
           <img src="images/_DSC1508.jpg" alt="" data-i="0" class="on">
-          <img src="images/_DSC1665.jpg" alt="" data-i="1" loading="lazy">
+          <img src="images/_DSC1651-g.jpg" alt="" data-i="1" loading="lazy">
           <img src="images/_DSC1651.jpg" alt="" data-i="2" loading="lazy">
           <img src="images/_DSC1700.jpg" alt="" data-i="3" loading="lazy">
-          <img src="images/_DSC1789.jpg" alt="" data-i="4" loading="lazy">
+          <img src="images/_DSC1769.jpg" alt="" data-i="4" loading="lazy">
           <img src="images/_DSC1897.jpg" alt="" data-i="5" loading="lazy">
           <span class="counter" id="stepCounter">STEP 1 OF 6</span>
         </div>
@@ -680,21 +711,21 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <ol class="step-list" style="list-style:none;padding:0;margin:0">
         <li class="step on" data-i="0">
           <div class="step-img"><img class="cover" src="images/_DSC1508.jpg" alt="A customer taps a card on the freezer's payment terminal" loading="lazy"></div>
-          <span class="where">Juvo Freezer</span>
+          <span class="where">Freezer</span>
           <span class="n">1</span>
           <h3>Tap to pay</h3>
           <p>The customer taps a card or phone on the payment terminal beside the door. This places a temporary hold. The customer is charged only for what they take.</p>
         </li>
         <li class="step" data-i="1">
-          <div class="step-img"><img class="cover" src="images/_DSC1665.jpg" alt="A customer opens the freezer door" loading="lazy"></div>
-          <span class="where">Juvo Freezer</span>
+          <div class="step-img"><img class="cover" src="images/_DSC1651-g.jpg" alt="The freezer door unlocked, with the green light shown by the door" loading="lazy"></div>
+          <span class="where">Freezer</span>
           <span class="n">2</span>
           <h3>The freezer unlocks</h3>
           <p>The door unlocks with a click and a green light.</p>
         </li>
         <li class="step" data-i="2">
           <div class="step-img"><img class="cover" src="images/_DSC1651.jpg" alt="A customer takes a cup from the freezer" loading="lazy"></div>
-          <span class="where">Juvo Freezer</span>
+          <span class="where">Freezer</span>
           <span class="n">3</span>
           <h3>Take a cup</h3>
           <p>The customer takes any cup and closes the door. The freezer records what was taken and charges for that.</p>
@@ -702,34 +733,34 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
         </li>
         <li class="step" data-i="3">
           <div class="step-img"><img class="cover" src="images/_DSC1700.jpg" alt="The QR code on the cup lid is scanned at the blender" loading="lazy"></div>
-          <span class="where">Juvo Blender</span>
+          <span class="where">Blender</span>
           <span class="n">4</span>
           <h3>Scan the cup on the blender</h3>
           <p>The customer holds the QR code on the lid under the scanner. The blender reads which product it is and sets the blend.</p>
         </li>
         <li class="step" data-i="4">
-          <div class="step-img"><img class="cover" src="images/_DSC1789.jpg" alt="A customer places the open cup in the blender" loading="lazy"></div>
-          <span class="where">Juvo Blender</span>
+          <div class="step-img"><img class="cover" src="images/_DSC1769.jpg" alt="The cup goes into the empty blender chamber while the screen shows Start" loading="lazy"></div>
+          <span class="where">Blender</span>
           <span class="n">5</span>
           <h3>Lid off, cup in</h3>
-          <p>The customer peels off the lid and places the cup in the blending chamber.</p>
+          <p>The customer peels off the lid and places the cup in the empty blending chamber.</p>
         </li>
         <li class="step" data-i="5">
           <div class="step-img"><img class="cover" src="images/_DSC1897.jpg" alt="A customer holds a blended smoothie with a straw" loading="lazy"></div>
-          <span class="where">Juvo Blender</span>
+          <span class="where">Blender</span>
           <span class="n">6</span>
           <h3>Press start and collect</h3>
-          <p>The blender adds water and blends in the cup, in under a minute. The customer takes the smoothie. The blender then cleans itself with hot water and cleaning solution, ready for the next cup.</p>
-          <p class="small">About 90 seconds at the blender, including the clean.</p>
+          <p>The blender adds water and blends in the cup, in about 60 seconds. The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
         </li>
       </ol>
     </div>
 
     <div class="timeline reveal" aria-label="Timeline from purchase to drink">
-      <div class="tl-sum"><span class="v">About 2 minutes</span><span class="small">from tap to pay to the blender being ready again</span></div>
+      <div class="tl-sum"><span class="v">90 sec from purchase to drink</span><span class="small">followed by a 30 sec clean</span></div>
       <div class="tl-bar">
-        <div class="f"><span>Freezer: tap, take</span><span class="num">30 s</span></div>
-        <div class="b"><span>Blender: scan, blend, self-clean</span><span class="num">90 s</span></div>
+        <div class="f"><span>Freezer</span><span class="num">30 s</span></div>
+        <div class="b"><span>Blend</span><span class="num">60 s</span></div>
+        <div class="c"><span>Clean</span><span class="num">30 s</span></div>
       </div>
       <div class="tl-axis num"><span>0:00</span><span>0:30</span><span>1:00</span><span>1:30</span><span>2:00</span></div>
     </div>
@@ -746,24 +777,24 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="chap label"><span>03</span><span>The machine</span></div>
       <div class="intro">
         <h2>Two units, one system</h2>
-        <p class="lede">The Juvo Freezer stores the cups and handles payment. The Juvo Blender blends each cup and cleans itself. They stand side by side and run on standard power.</p>
+        <p class="lede">The freezer stores the cups and handles payment. The blender blends each cup and cleans itself. They stand side by side and run on standard power.</p>
       </div>
     </div>
 
     <div class="machine-hero reveal">
       <figure>
-        <div class="img"><img class="cover" src="images/_DSC0980.jpg" alt="The Juvo Freezer and Juvo Blender, fully stocked" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/_DSC0980-b.jpg" alt="The freezer and blender, fully stocked" loading="lazy"></div>
       </figure>
       <div class="stack-lg">
         <div class="unit-pair">
-          <div><span class="label">Unit 1</span><h3>Juvo Freezer</h3><p class="small">Glass-door freezer holding up to 240 cups across up to 10 flavours. Unlocks after payment and records each cup taken.</p></div>
-          <div><span class="label">Unit 2</span><h3>Juvo Blender</h3><p class="small">Reads the cup, adds water, blends, then rinses itself at 90°C with cleaning solution before the next cup.</p></div>
+          <div><span class="label">Unit 1</span><h3>Freezer</h3><p class="small">Glass-door freezer holding ~220 cups across up to 10 flavours. Unlocks after payment and records each cup taken.</p></div>
+          <div><span class="label">Unit 2</span><h3>Blender</h3><p class="small">Reads the cup, adds water, blends, then rinses itself at 90°C with a cleaning solution before the next cup.</p></div>
         </div>
         <div class="cmp-wrap">
           <table class="cmp">
             <thead><tr><th scope="col">Operator benchmark</th><th scope="col">Juvo</th><th scope="col">Others on the market</th></tr></thead>
             <tbody>
-              <tr><th scope="row">Deep clean</th><td class="j">Once per week</td><td class="o">3–4 times per week</td></tr>
+              <tr><th scope="row">Operator clean</th><td class="j">Once per week</td><td class="o">3–4 times per week</td></tr>
               <tr><th scope="row">Uptime</th><td class="j">80–90%</td><td class="o">50–60%</td></tr>
             </tbody>
           </table>
@@ -776,9 +807,9 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <span class="label">Installation requirements</span>
       <table class="spec">
         <tbody>
-          <tr><th scope="row">Power</th><td>A standard power outlet. No special electrical work.</td></tr>
-          <tr><th scope="row">Water</th><td>A mains connection, or the Blender's built-in tank, good for 120 to 180 cups between refills. Either works.</td></tr>
-          <tr><th scope="row">Floor space</th><td>Room for the Juvo Freezer and Juvo Blender side by side. <span class="tbc">CONFIRM: combined footprint W x D</span></td></tr>
+          <tr><th scope="row">Power</th><td>Standard outlet. No special electrical work.</td></tr>
+          <tr><th scope="row">Water</th><td>A mains connection, or a Juvo-provided tank good for 120 to 180 cups between refills.</td></tr>
+          <tr><th scope="row">Floor space</th><td>Room for the freezer and blender side by side. <span class="tbc">CONFIRM: combined footprint W x D</span></td></tr>
           <tr><th scope="row">Connectivity</th><td>Wifi, with a backup SIM</td></tr>
         </tbody>
       </table>
@@ -789,12 +820,12 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="stack-lg">
         <div class="seg" role="group" aria-label="Show hotspots for">
           <button type="button" data-unit="all" aria-pressed="true">Both</button>
-          <button type="button" data-unit="freezer" aria-pressed="false">Juvo Freezer</button>
-          <button type="button" data-unit="blender" aria-pressed="false">Juvo Blender</button>
+          <button type="button" data-unit="freezer" aria-pressed="false">Freezer</button>
+          <button type="button" data-unit="blender" aria-pressed="false">Blender</button>
         </div>
         <div class="hs-wrap">
           <div class="hs-fig" id="hsFig">
-            <img src="images/_DSC0982.jpg" alt="Front view of the Juvo Freezer and Juvo Blender with numbered points of interest" loading="lazy">
+            <img src="images/_DSC0982.jpg" alt="Front view of the freezer and blender with numbered points of interest" loading="lazy">
           </div>
           <ul class="hs-list" id="hsList"></ul>
         </div>
@@ -806,7 +837,19 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="details">
         <figure><div class="img"><img class="cover" src="images/_DSC1496.jpg" alt="A card tapped on the freezer payment terminal" loading="lazy"></div><figcaption>Payment terminal</figcaption></figure>
         <figure><div class="img"><img class="cover" src="images/_DSC0249.jpg" alt="The blender QR scanner above the cup opening" loading="lazy"></div><figcaption>QR scanner and cup opening</figcaption></figure>
-        <figure><div class="img"><img class="cover" src="images/_DSC0248.jpg" alt="Inside the stainless steel blending chamber" loading="lazy"></div><figcaption>Blending chamber</figcaption></figure>
+        <figure><div class="img"><img class="cover" src="images/_DSC1720.jpg" alt="The blender screen showing the start button" loading="lazy"></div><figcaption>Touchscreen</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Blending chamber</span>
+      <div class="chamber">
+        <figure><div class="img"><img class="cover" src="images/_DSC0248.jpg" alt="Inside the stainless steel blending chamber" loading="lazy"></div></figure>
+        <div class="stack">
+          <h3>Food-safe stainless steel</h3>
+          <p>The chamber is made of food-safe stainless steel. A housing around the cup contains spills during the blend.</p>
+          <p><span class="tbc">CONFIRM: chamber material grade and housing details</span></p>
+        </div>
       </div>
     </div>
 
@@ -814,23 +857,23 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <span class="label">Specifications</span>
       <div class="specs">
         <table class="spec">
-          <caption>Juvo Freezer</caption>
+          <caption>Freezer</caption>
           <tbody>
-            <tr><th scope="row">Capacity</th><td>240 cups</td></tr>
+            <tr><th scope="row">Capacity</th><td>~220 cups</td></tr>
             <tr><th scope="row">Flavours</th><td>Up to 10</td></tr>
             <tr><th scope="row">Payment</th><td>Tap to pay, by card or phone, on the payment terminal</td></tr>
             <tr><th scope="row">Access</th><td>Door unlocks after payment; each cup taken is recorded</td></tr>
-            <tr><th scope="row">Power</th><td>Standard power outlet</td></tr>
+            <tr><th scope="row">Power</th><td>Standard outlet</td></tr>
             <tr><th scope="row">Connectivity</th><td>Wifi with a backup SIM</td></tr>
           </tbody>
         </table>
         <table class="spec">
-          <caption>Juvo Blender</caption>
+          <caption>Blender</caption>
           <tbody>
-            <tr><th scope="row">Time per cup</th><td>About 90 seconds, including the clean</td></tr>
-            <tr><th scope="row">Water</th><td>Mains connection, or a built-in tank good for 120 to 180 cups between refills</td></tr>
-            <tr><th scope="row">Cleaning</th><td>90°C hot water and cleaning solution after every blend</td></tr>
-            <tr><th scope="row">Power</th><td>Standard power outlet</td></tr>
+            <tr><th scope="row">Time per cup</th><td>About 60 seconds to blend, then a 30 second clean</td></tr>
+            <tr><th scope="row">Water</th><td>Mains connection, or a Juvo-provided tank good for 120 to 180 cups between refills</td></tr>
+            <tr><th scope="row">Cleaning</th><td>Rinses itself at 90°C with a cleaning solution after every blend</td></tr>
+            <tr><th scope="row">Power</th><td>Standard outlet</td></tr>
             <tr><th scope="row">Connectivity</th><td>Wifi with a backup SIM</td></tr>
           </tbody>
         </table>
@@ -856,11 +899,11 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
           <ol class="loop-steps" id="loopSteps">
             <li class="on"><span><b>Blend</b>The smoothie is blended in its own cup.</span></li>
             <li><span><b>Cup removed</b>The customer takes the smoothie.</span></li>
-            <li><span><b>90°C rinse with cleaning solution</b>Hot water and cleaning solution run through the chamber.</span></li>
+            <li><span><b>90°C rinse with a cleaning solution</b>The blender rinses the chamber at 90°C with a cleaning solution.</span></li>
             <li><span><b>Ready for the next cup</b>The chamber is clean before the next customer scans.</span></li>
           </ol>
-          <p>This runs automatically after every blend. It keeps the chamber hygienic, stops one flavour carrying into the next, and keeps every smoothie tasting the same.</p>
-          <p class="bench">Because the chamber cleans itself after every blend, the operator's deeper clean (a pot wash) is once per week. Others on the market need 3–4 per week. Source: Juvo operating data.</p>
+          <p>This runs automatically after every blend. It keeps the chamber hygienic and stops one flavour carrying into the next.</p>
+          <p class="bench">Because the chamber rinses itself after every blend, the operator clean is once per week. Others on the market need 3–4 per week. Source: Juvo operating data.</p>
         </div>
       </div>
     </div>
@@ -868,7 +911,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <div class="sub reveal">
       <span class="label">Only water</span>
       <div class="water">
-        <figure><div class="img"><img class="cover" src="images/_DSC0259.jpg" alt="The built-in water tanks behind the blender's lower door" loading="lazy"></div><figcaption>Built-in water tank, behind the Blender's lower door.</figcaption></figure>
+        <figure><div class="img"><img class="cover" src="images/_DSC0259.jpg" alt="The water tanks behind the blender's lower door" loading="lazy"></div><figcaption>Juvo-provided water tank, behind the blender's lower door.</figcaption></figure>
         <div class="stack">
           <h3>Water is the only thing the blender adds</h3>
           <p>Everything else is already in the cup. There are no milks, syrups or other liquids, and no lines to manage. That keeps cleaning, maintenance and food safety simple.</p>
@@ -888,71 +931,73 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <div class="sec-head reveal">
       <div class="chap label"><span>04</span><span>Software</span></div>
       <div class="intro">
-        <h2>Machine software and remote monitoring, under licence</h2>
-        <p class="lede">The machine software and remote monitoring are included in exchange for an ongoing licence fee. Every unit reports in real time. Alerts go to the operator, and Juvo supports remotely and on call.</p>
+        <h2>Machine software, under licence</h2>
+        <p class="lede">The machine software is licensed for an ongoing fee. It includes monitoring, which you access and use yourself. Juvo is on call for support. Add-ons are optional and built on request.</p>
       </div>
     </div>
 
     <div class="stack-lg reveal">
-      <span class="label">How an issue is handled</span>
-      <div class="flow" aria-label="How an issue is handled">
-        <div class="node"><b>Sensors</b>Freezer and Blender report temperature, stock and status</div><span class="arr">&rarr;</span>
-        <div class="node"><b>Remote monitoring</b>Every unit is watched in real time</div><span class="arr">&rarr;</span>
-        <div class="node alert"><b>Alert</b>Sent to the operator when something leaves the normal range</div><span class="arr">&rarr;</span>
-        <div class="node"><b>Operator acts</b>Supported by Juvo remotely and on call</div><span class="arr">&rarr;</span>
-        <div class="node"><b>Resolved</b>Logged with its full history</div>
+      <div class="seg" role="group" aria-label="Show">
+        <button type="button" data-sw="core" aria-pressed="true">Machine software (licensed)</button>
+        <button type="button" data-sw="addons" aria-pressed="false">Optional add-ons (operator portal, rewards app)</button>
       </div>
-      <div class="cards">
-        <div class="card"><svg viewBox="0 0 28 28"><path d="M12 4a2.5 2.5 0 0 1 5 0v12.5a5 5 0 1 1-5 0z"/><path d="M14.5 12v7"/><circle cx="14.5" cy="20.5" r="1.6"/></svg><h4>Temperature</h4><p>Freezer temperature is tracked continuously, with an alert if it leaves the safe range.</p></div>
-        <div class="card"><svg viewBox="0 0 28 28"><path d="M4 9l10-5 10 5-10 5z"/><path d="M4 14l10 5 10-5"/><path d="M4 19l10 5 10-5"/></svg><h4>Stock tracking</h4><p>Stock levels are tracked per flavour, per machine, so restocks can be planned.</p></div>
-        <div class="card"><svg viewBox="0 0 28 28"><path d="M14 4l11 19H3z"/><path d="M14 11v5"/><circle cx="14" cy="19.5" r=".8"/></svg><h4>Alerts</h4><p>The operator is alerted when a unit leaves its normal range or stops working.</p></div>
-        <div class="card"><svg viewBox="0 0 28 28"><path d="M17 4.5a5.5 5.5 0 0 0-6.6 7L4 18l3 3 6.5-6.4A5.5 5.5 0 0 0 20.5 8l-3.2 3.2-2.6-.7-.7-2.6z"/></svg><h4>Remote diagnosis</h4><p>Faults can be diagnosed remotely, with Juvo supporting the operator on call.</p></div>
-        <div class="card"><svg viewBox="0 0 28 28"><rect x="5" y="3.5" width="18" height="21" rx="2"/><path d="M9 10l2 2 4-4"/><path d="M9 17h10M9 21h6"/></svg><h4>Fault tracking</h4><p>Every fault is logged, tracked and resolved, and the history is kept.</p></div>
-        <div class="card"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M6 14h4l2-4 3 7 2-3h5"/><path d="M10 24h8"/></svg><h4>Uptime</h4><p>80–90% for Juvo machines, against 50–60% for others on the market (Juvo operating data). Monitoring flags a breakdown, so the operator knows when a machine is down.</p></div>
+
+      <div class="sw-panel" data-panel="core">
+        <figure>
+          <div class="ph" style="aspect-ratio:21/9;max-width:100%">Photo to come: the machine software dashboard on a screen<br><span class="tbc" style="margin-top:8px">PHOTO: dashboard on screen</span></div>
+        </figure>
+        <div class="stack-lg">
+          <span class="label">How an issue is handled</span>
+          <div class="flow" aria-label="How an issue is handled">
+            <div class="node"><b>Sensors</b>Freezer and blender report temperature, stock and status</div><span class="arr">&rarr;</span>
+            <div class="node"><b>Machine software</b>Shows each unit's status in real time</div><span class="arr">&rarr;</span>
+            <div class="node alert"><b>Alert</b>Sent to you when something leaves the normal range</div><span class="arr">&rarr;</span>
+            <div class="node"><b>You act</b>With Juvo on call if you need support</div><span class="arr">&rarr;</span>
+            <div class="node"><b>Resolved</b>Logged with its full history</div>
+          </div>
+          <div class="cards">
+            <div class="card"><svg viewBox="0 0 28 28"><path d="M12 4a2.5 2.5 0 0 1 5 0v12.5a5 5 0 1 1-5 0z"/><path d="M14.5 12v7"/><circle cx="14.5" cy="20.5" r="1.6"/></svg><h4>Temperature</h4><p>Freezer temperature is tracked continuously, with an alert if it leaves the safe range.</p></div>
+            <div class="card"><svg viewBox="0 0 28 28"><path d="M4 9l10-5 10 5-10 5z"/><path d="M4 14l10 5 10-5"/><path d="M4 19l10 5 10-5"/></svg><h4>Stock management</h4><p>Stock levels are tracked per flavour, per machine, to guide restocking.</p></div>
+            <div class="card"><svg viewBox="0 0 28 28"><path d="M14 4l11 19H3z"/><path d="M14 11v5"/><circle cx="14" cy="19.5" r=".8"/></svg><h4>Alerts</h4><p>You are alerted when a unit leaves its normal range or stops working.</p></div>
+            <div class="card"><svg viewBox="0 0 28 28"><path d="M17 4.5a5.5 5.5 0 0 0-6.6 7L4 18l3 3 6.5-6.4A5.5 5.5 0 0 0 20.5 8l-3.2 3.2-2.6-.7-.7-2.6z"/></svg><h4>Diagnosis</h4><p>Fault data helps you diagnose an issue, with Juvo on call for support.</p></div>
+            <div class="card"><svg viewBox="0 0 28 28"><rect x="5" y="3.5" width="18" height="21" rx="2"/><path d="M9 10l2 2 4-4"/><path d="M9 17h10M9 21h6"/></svg><h4>Fault tracking</h4><p>Every fault is logged, tracked and resolved, and the history is kept.</p></div>
+            <div class="card"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M6 14h4l2-4 3 7 2-3h5"/><path d="M10 24h8"/></svg><h4>Uptime</h4><p>80–90% for Juvo machines, against 50–60% for others on the market (Juvo operating data). The software flags a breakdown, so you know when a machine is down.</p></div>
+          </div>
+        </div>
+        <div class="stack-lg">
+          <span class="label">Machine functions</span>
+          <div class="cover-list">
+            <div>
+              <h4>Freezer</h4>
+              <ul class="fn-list">
+                <li><b>Smart vending</b><span>Purchases are recognised and paid for automatically.</span></li>
+                <li><b>Sales insights</b><span>Sales data from every machine.</span></li>
+                <li><b>Layout and product-mix optimisation</b><span>Sales and stock data inform the freezer layout and product mix.</span></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Blender</h4>
+              <ul class="fn-list">
+                <li><b>Autonomous operation</b><span>Reads the cup, adds water, blends and cleans itself without staff.</span></li>
+                <li><b>Monitoring</b><span>Status and faults are reported to the machine software in real time.</span></li>
+                <li><b>Adjustable settings</b><span>Blend and machine settings can be adjusted.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw-panel" data-panel="addons" hidden>
+        <div class="stack">
+          <div class="values three">
+            <div><h4>Operator portal</h4><p>A web portal for your sales, orders and machine data across sites.</p></div>
+            <div><h4>Rewards app</h4><p>A customer app for points and rewards, linked to purchases at the machine.</p></div>
+            <div><h4>Customised machine software</h4><p>Changes to the machine software to suit your setup or product range.</p></div>
+          </div>
+          <p class="small">Optional. Juvo builds these on request.</p>
+        </div>
       </div>
     </div>
-
-    <div class="sub reveal">
-      <span class="label">Machine functions</span>
-      <div class="cover-list">
-        <div>
-          <h4>Juvo Freezer</h4>
-          <ul class="fn-list">
-            <li><b>Smart vending</b><span>Purchases are recognised and paid for automatically.</span></li>
-            <li><b>Sales insights</b><span>Sales data from every machine.</span></li>
-            <li><b>Layout and product-mix optimisation</b><span>Sales and stock data inform the freezer layout and product mix.</span></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Juvo Blender</h4>
-          <ul class="fn-list">
-            <li><b>Autonomous operation</b><span>Reads the cup, adds water, blends and cleans itself without staff.</span></li>
-            <li><b>Remote monitoring</b><span>Status and faults are reported in real time.</span></li>
-            <li><b>Adjustable settings</b><span>Blend and machine settings can be adjusted.</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="sub reveal">
-      <span class="label">Optional add-ons</span>
-      <div class="stack">
-        <div class="values three">
-          <div><h4>Customised machine software</h4><p>Changes to the machine software to suit an operator's setup or product range.</p></div>
-          <div><h4>Rewards app</h4><p>A customer app for points and rewards, linked to purchases at the machine.</p></div>
-          <div><h4>Operator portal</h4><p>A web portal for an operator's sales, orders and machine data across sites.</p></div>
-        </div>
-        <p class="small">Juvo builds these on request.</p>
-      </div>
-    </div>
-
-    <figure class="sub reveal">
-      <span class="label">Restocking</span>
-      <div>
-        <div style="aspect-ratio:21/9;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band)"><img class="cover" src="images/_DSC1214.jpg" alt="Restocking the freezer from a crate" loading="lazy" style="object-position:50% 30%"></div>
-        <figcaption>Live stock levels for each flavour help plan restocks.</figcaption>
-      </div>
-    </figure>
     <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#menu" data-go="menu"><span class="label">05</span><span class="serif">The menu</span></a></nav>
   </div>
 </section>
@@ -975,7 +1020,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="stack">
         <span class="label">The format</span>
         <p class="serif" style="font-size:1.45rem;line-height:1.35">A single serve of frozen ingredients, in a lidded cup, plus water.</p>
-        <p>The cup is kept frozen in the Juvo Freezer. At the Juvo Blender, the QR code on the lid identifies the product and sets the blend. The blender adds water and blends in the cup. Water is the only thing the machine adds.</p>
+        <p>The cup is kept frozen in the freezer. At the blender, the QR code on the lid identifies the product and sets the blend. The blender adds water and blends in the cup. Water is the only thing the machine adds.</p>
       </div>
     </div>
 
@@ -1020,23 +1065,28 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <div class="sec-head reveal">
       <div class="chap label"><span>06</span><span>About us</span></div>
       <div class="intro">
-        <h2>The team behind Juvo</h2>
+        <h2>The team behind the machine</h2>
       </div>
     </div>
 
-    <figure class="about-hero reveal"><img class="cover" src="images/_DSC9305.jpg" alt="Members of the Juvo team in front of the Juvo Freezer and Blender" loading="lazy" style="object-position:50% 35%"></figure>
+    <figure class="about-hero reveal"><img class="cover" src="images/_DSC9305.jpg" alt="Members of the team in front of the freezer and blender" loading="lazy" style="object-position:50% 35%"></figure>
 
     <div class="values three reveal">
-      <div><span class="n">1</span><h4>The business we built</h4><p>Juvo was founded in Perth by Josh, Kese and Laine. Juvo operates its own machines in market, across Perth and Sydney, at sites that include a gym and a corporate office. The team is ten people.</p></div>
+      <div><span class="n">1</span><h4>The business we built</h4><p>We were fed up with over-processed, sugary and expensive drinks being the only thing on offer after training. Powders were easy to forget and hard to clean. Making a proper smoothie at home took time, and the habit never lasted. Real, wholefood nutrition just wasn't there when we needed it.</p><p>Juvo was founded in Perth by Josh, Kese and Laine. We operate our own machines in market, across Perth and Sydney, at sites that include a gym and a corporate office. The team is ten people.</p></div>
       <div><span class="n">2</span><h4>What operating real machines taught us</h4><p>Running machines at real sites showed where the work is: keeping the blending chamber hygienic between cups, stopping one flavour carrying into the next, keeping machines selling, and knowing when one is down.</p></div>
-      <div><span class="n">3</span><h4>Why we built our own machine</h4><p>We spent months developing our own hardware and software. The result is a blender that cleans itself at 90°C after every blend and adds only water, a freezer that records each cup taken, and remote monitoring on every unit.</p></div>
+      <div><span class="n">3</span><h4>Why we built our own machine</h4><p>We spent months developing our own hardware and software. The result is a blender that rinses itself at 90°C with a cleaning solution after every blend and adds only water, a freezer that records each cup taken, and machine software on every unit.</p></div>
     </div>
 
     <div class="sub reveal">
       <span class="label">In the field</span>
-      <div class="strip">
-        <div class="img wide"><img class="cover" src="images/_DSC0822.jpg" alt="Two members of the Juvo team beside the units" loading="lazy"></div>
-        <div class="img"><img class="cover" src="images/JUVO0672.jpg" alt="A gym member holds a Juvo cup" loading="lazy"></div>
+      <div class="field-grid">
+        <div class="img"><img class="cover" src="images/DSCF4487.jpg" alt="Expo visitors line up at the freezer" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/DSCF4439.jpg" alt="Visitors drink smoothies beside the machine" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/DSCF4430.jpg" alt="A team member shows visitors the freezer" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/DSCF4505.jpg" alt="An expo stand with the machine and a crowd of visitors" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/DSCF4517.jpg" alt="Two expo visitors hold up their smoothies" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/_DSC0822.jpg" alt="Two members of the team beside the units" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/JUVO0672.jpg" alt="A gym member holds a cup" loading="lazy"></div>
         <div class="img"><img class="cover" src="images/_DSC1863.jpg" alt="An opened cup of frozen strawberries, peanut butter and cacao nibs" loading="lazy"></div>
       </div>
     </div>
@@ -1046,33 +1096,6 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="stack-lg">
         <div class="team" id="team"></div>
       </div>
-    </div>
-    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#support" data-go="support"><span class="label">07</span><span class="serif">Support and terms</span></a></nav>
-  </div>
-</section>
-</div>
-
-<!-- 07 SUPPORT AND TERMS -->
-<div class="page" data-page="support" hidden>
-<section class="band" id="support">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="chap label"><span>07</span><span>Support and terms</span></div>
-      <div class="intro">
-        <h2>After the sale</h2>
-        <p class="lede">What Juvo provides once the operator owns the machine.</p>
-      </div>
-    </div>
-    <div class="reveal">
-      <table class="spec">
-        <tbody>
-          <tr><th scope="row">On-call support</th><td>Juvo is on call to support the operator with the machine, including faults and first-line maintenance.</td></tr>
-          <tr><th scope="row">Replacement parts and warranty</th><td>Juvo is responsible for replacement parts and warranty matters.</td></tr>
-          <tr><th scope="row">Software and monitoring</th><td>Juvo provides the machine software and remote monitoring under licence, for an ongoing fee.</td></tr>
-          <tr><th scope="row">Not included</th><td>Product supply, restocking, cleaning, host-site arrangements and food safety compliance. These are the operator's.</td></tr>
-        </tbody>
-      </table>
-      <p class="small" style="margin-top:16px">Detailed terms are set out in the purchase and licence agreements.</p>
     </div>
   </div>
 </section>
@@ -1084,7 +1107,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <div class="foot">
       <div class="lock"><svg viewBox="0 0 722.83 238.11" role="img" aria-label="Juvo"><use href="#juvo"/></svg><span>Real Fuel</span></div>
       <div class="mail"><code id="mailAddr">partners@juvorecovery.com</code><button class="copy" type="button" id="copyMail">Copy</button></div>
-      <div class="foot-meta"><span>Juvo product guide for machine buyers and operators</span><span>Information current as of October 2026</span></div>
+      <div class="foot-meta"><span>Product guide for machine buyers and operators</span><span>Information current as of October 2026</span></div>
     </div>
   </div>
 </footer>
@@ -1105,6 +1128,7 @@ toggle.addEventListener('click', () => {
 });
 const PAGES = $$('.page').map(p => p.dataset.page);
 function show(page, push){
+  if (page === 'support') page = 'business';
   if (!PAGES.includes(page)) page = 'home';
   $$('.page').forEach(p => { p.hidden = p.dataset.page !== page; });
   $$('#navLinks a').forEach(a => a.setAttribute('aria-current', a.dataset.go === page ? 'true' : 'false'));
@@ -1137,14 +1161,24 @@ if (!reduce && 'IntersectionObserver' in window) {
   arm(); document.addEventListener('pagechange', () => requestAnimationFrame(arm));
 }
 
+/* ---------- Software toggle ---------- */
+$$('[data-sw]').forEach(b => b.addEventListener('click', () => {
+  $$('[data-sw]').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+  $$('.sw-panel').forEach(p => { p.hidden = p.dataset.panel !== b.dataset.sw; });
+}));
+
 /* ---------- Operator P&L calculator ---------- */
 const cM = $('#cMachines');
-const F = {cups:'#cCups', price:'#cPrice', fee:'#cFee', product:'#cProduct', purchase:'#cPurchase', licence:'#cLicence', comm:'#cComm', rent:'#cRent', power:'#cPower', labour:'#cLabour', ins:'#cIns'};
-const LBL = {cups:'cups per day', price:'price', fee:'transaction costs', product:'product cost', purchase:'purchase price', licence:'licence fee', comm:'commission', rent:'rent', power:'electricity', labour:'labour and travel', ins:'insurance'};
+const F = {cups:'#cCups', product:'#cProduct', price:'#cPrice', fee:'#cFee', purchase:'#cPurchase', licence:'#cLicence', comm:'#cComm', rent:'#cRent', ins:'#cIns',
+  frz:'#cFrz', bl:'#cBl', blSec:'#cBlSec', kwh:'#cKwh', visits:'#cVisits', mins:'#cMins', rate:'#cRate', travel:'#cTravel'};
+const LBL = {cups:'cups per day', product:'product cost', price:'price', fee:'transaction costs', purchase:'purchase price', licence:'licence fee', comm:'commission', rent:'rent', ins:'insurance',
+  frz:'freezer kW', bl:'blender kW', blSec:'blend time', kwh:'electricity price', visits:'visits per week', mins:'minutes per visit', rate:'hourly rate', travel:'travel cost'};
+const MONTH_DAYS = 365 / 12, MONTH_WEEKS = 52 / 12;
 function fillRange(r){ r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%'); }
 const out = {year:$('#rYear'), month:$('#rMonth'), payback:$('#rPayback'), be:$('#rBe')};
 function set(el, txt, dash){ el.textContent = txt; el.classList.toggle('dash', !!dash); }
-const sgn = v => (v < 0 ? '−' : '') + aud(Math.abs(v));
+const sgn = (v, d=0) => (v < 0 ? '−' : '') + aud(Math.abs(v), d);
+const has = (v, ks) => ks.every(k => k in v);
 function calc(){
   const m = +cM.value;
   $('#oMachines').textContent = m; fillRange(cM);
@@ -1153,27 +1187,36 @@ function calc(){
     const raw = $(sel).value.trim(), n = parseFloat(raw);
     if (raw === '' || !isFinite(n) || n < 0) missing.push(k); else v[k] = n;
   });
+  // electricity: freezer runs 24 h; blender draws only while blending
+  const elecM = has(v, ['frz', 'bl', 'blSec', 'kwh', 'cups']) ? (v.frz * 24 + v.bl * v.blSec / 3600 * v.cups) * v.kwh * MONTH_DAYS : null;
+  const labourM = has(v, ['visits', 'mins', 'rate', 'travel']) ? v.visits * (v.mins / 60 * v.rate + v.travel) * MONTH_WEEKS : null;
+  $('#dElec').textContent = elecM == null ? '—' : aud(elecM, 2);
+  $('#dLabour').textContent = labourM == null ? '—' : aud(labourM, 2);
   if (missing.length) {
     Object.values(out).forEach(el => set(el, '—', true));
-    $('#calcMsg').innerHTML = `Enter ${missing.length === Object.keys(F).length ? 'every field' : missing.map(k => LBL[k]).join(', ')} to see results.`;
+    $('#calcMsg').textContent = `Enter ${missing.length === Object.keys(F).length ? 'every field' : missing.map(k => LBL[k]).join(', ')} to see results.`;
     return;
   }
   const exGst = v.price / 1.1;
   const perCup = exGst * (1 - v.fee / 100 - v.comm / 100) - v.product;
-  const fixedM = v.licence + v.rent + v.power + v.labour + v.ins;       // per machine per month
+  const fixedM = v.licence + v.rent + v.ins + elecM + labourM;   // per machine per month
   const contribYear = m * v.cups * 365 * perCup;
   const fixedYear = m * fixedM * 12;
   const netYear = contribYear - fixedYear, netMonth = netYear / 12;
   const capital = m * v.purchase;
   set(out.year, sgn(netYear)); set(out.month, sgn(netMonth));
   set(out.payback, netMonth > 0 ? (capital / netMonth).toFixed(1) + ' months' : 'Not reached', netMonth <= 0);
-  const be = perCup > 0 ? (fixedM * 12 / 365) / perCup : null;
+  // breakeven: cups needed to cover the fixed costs (the blender's electricity per cup is folded into the per-cup margin)
+  const blKwhCup = v.bl * v.blSec / 3600 * v.kwh;
+  const fixedNoBl = fixedM - v.bl * v.blSec / 3600 * v.cups * v.kwh * MONTH_DAYS;
+  const margin = perCup - blKwhCup;
+  const be = margin > 0 ? (fixedNoBl / MONTH_DAYS) / margin : null;
   set(out.be, be == null ? 'Not reached' : be.toFixed(1), be == null);
   $('#calcMsg').innerHTML =
     `<span class="label" style="display:block;margin-bottom:6px">How it is worked out</span>` +
-    `${aud(v.price,2)} &divide; 1.1 to remove GST = <b>${aud(exGst,2)}</b>. Less ${v.fee}% transaction costs, ${v.comm}% commission and ${aud(v.product,2)} product = <b>${(perCup < 0 ? '−' : '') + aud(Math.abs(perCup), 2)}</b> per cup.<br>` +
+    `${aud(v.price,2)} &divide; 1.1 to remove GST = <b>${aud(exGst,2)}</b>. Less ${v.fee}% transaction costs, ${v.comm}% commission and ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
     `${m} machine${m > 1 ? 's' : ''} &times; ${v.cups} cups &times; 365 days = <b>${sgn(contribYear)}</b> per year.<br>` +
-    `Less monthly costs of ${aud(fixedM)} per machine &times; 12 = <b>${aud(fixedYear)}</b> per year.<br>` +
+    `Monthly costs per machine: licence ${aud(v.licence)}, rent ${aud(v.rent)}, insurance ${aud(v.ins)}, electricity ${aud(elecM)}, labour and travel ${aud(labourM)} = <b>${aud(fixedM)}</b>. &times; 12 &times; ${m} = <b>${aud(fixedYear)}</b> per year.<br>` +
     `Payback: ${aud(capital)} purchase &divide; net per month.`;
 }
 cM.addEventListener('input', calc);
@@ -1210,17 +1253,17 @@ document.addEventListener('pagechange', e => { if (e.detail === 'flow') { curSte
 const HS = [
   {u:'freezer', x:48.8, y:46.2, t:'Payment terminal', d:'Tap to pay by card or phone. A tap places a temporary hold, and the customer is charged only for the cup taken.'},
   {u:'freezer', x:19,   y:59,   t:'Door and lock', d:'Unlocks after payment with a click and a green light, and locks again when closed.'},
-  {u:'freezer', x:33,   y:70,   t:'Freezer storage', d:'Holds up to 240 cups across up to 10 flavours. The freezer records each cup taken.'},
-  {u:'freezer', x:35,   y:86,   t:'Refrigeration', d:'Keeps every cup frozen. Temperature is monitored continuously.'},
+  {u:'freezer', x:33,   y:70,   t:'Freezer storage', d:'Holds ~220 cups across up to 10 flavours. The freezer records each cup taken.'},
+  {u:'freezer', x:35,   y:86,   t:'Refrigeration', d:'Keeps every cup frozen. Temperature is reported continuously to the machine software.'},
   {u:'blender', x:64.3, y:45.5, t:'Touchscreen', d:'Shows step-by-step instructions and the start button.'},
   {u:'blender', x:70.5, y:56.6, t:'QR scanner', d:'Reads the code on the cup lid to identify the blend.'},
-  {u:'blender', x:58.5, y:63,   t:'Blending chamber', d:'The cup sits here while water is added and the smoothie is blended.'},
-  {u:'blender', x:64.5, y:73.5, t:'Cleaning system', d:'Runs 90°C hot water and cleaning solution through the chamber after every blend.'},
-  {u:'blender', x:64.5, y:85,   t:'Water system', d:'Mains connection or a built-in tank good for 120 to 180 cups, behind the lower door.'}
+  {u:'blender', x:58.5, y:63,   t:'Blending chamber', d:'Food-safe stainless steel. The cup sits here while water is added and the smoothie is blended.'},
+  {u:'blender', x:64.5, y:73.5, t:'Cleaning system', d:'Rinses the chamber at 90°C with a cleaning solution after every blend.'},
+  {u:'blender', x:64.5, y:85,   t:'Water system', d:'Mains connection or a Juvo-provided tank good for 120 to 180 cups, behind the lower door.'}
 ];
 const fig = $('#hsFig'), list = $('#hsList');
 let pop = null, openIdx = -1;
-const unitName = {freezer:'Juvo Freezer', blender:'Juvo Blender'};
+const unitName = {freezer:'Freezer', blender:'Blender'};
 let lastUnit = '';
 HS.forEach((h, i) => {
   const b = document.createElement('button');
