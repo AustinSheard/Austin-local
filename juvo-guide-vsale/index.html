@@ -667,6 +667,32 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 .tip.on{opacity:1}
 .tip b{font-weight:500}
 .browser{box-shadow:0 20px 50px rgba(0,0,0,.18);border:1px solid var(--line)}
+/* round 4: operating journey, scrolling software, menu photo */
+.journey{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;counter-reset:j}
+@media (max-width:1000px){.journey{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.journey{grid-template-columns:1fr}}
+.jstage{display:flex;flex-direction:column;border:1px solid var(--line-2);border-radius:var(--radius);background:var(--bg);overflow:hidden;min-width:0;position:relative}
+.jh{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--ink)}
+.jh h3{font-size:1.45rem}
+.sn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:1.2rem;background:var(--juvo-green);color:var(--off-black);flex:none}
+.jrow{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.jrow ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;font-size:.86rem}
+.jrow li{display:flex;gap:8px}
+.jrow li::before{content:"";flex:none;width:6px;height:6px;margin-top:.6em;border-radius:50%;background:var(--ink-3)}
+.jrow.you{flex:1}
+.jrow.juvo{background:var(--off-black);color:#e9e9e3}
+.jrow.juvo .label{color:#9fa293}
+.jrow.juvo li::before{background:var(--juvo-green)}
+.sw-sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);z-index:20;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line)}
+.sw-toggle{flex-wrap:nowrap;overflow-x:auto;max-width:100%;border-radius:999px}
+.sw-toggle button{white-space:nowrap}
+.sw-panel{scroll-margin-top:70px;padding-top:clamp(24px,4vw,40px);border-top:1px solid var(--ink)}
+.sw-head{display:flex;align-items:center;gap:14px}
+.sw-head h3{font-size:clamp(1.6rem,3vw,2.2rem);line-height:1.1}
+.sw-head .sn{width:40px;height:40px;font-size:1.4rem}
+.guide-row{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:center}
+.guide-row .img{aspect-ratio:1;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band)}
+@media (max-width:560px){.guide-row{grid-template-columns:1fr}.guide-row .img{max-width:240px}}
 [hidden]{display:none!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -696,11 +722,11 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
     <ul class="nav-links" id="navLinks">
       <li><a href="#home" data-go="home">Home</a></li>
-      <li><a href="#business" data-go="business">Business model</a></li>
-      <li><a href="#flow" data-go="flow">Customer flow</a></li>
+      <li><a href="#operating" data-go="operating">Operating model</a></li>
       <li><a href="#machine" data-go="machine">The machine</a></li>
-      <li><a href="#software" data-go="software">Software</a></li>
       <li><a href="#menu" data-go="menu">Your menu</a></li>
+      <li><a href="#flow" data-go="flow">Customer flow</a></li>
+      <li><a href="#software" data-go="software">Software</a></li>
       <li><a href="#about" data-go="about">About us</a></li>
     </ul>
   </div>
@@ -741,72 +767,52 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       <div class="intro"><h2>Explore the guide</h2><p class="lede">Each section covers one part of buying and operating the system.</p></div>
     </div>
     <div class="explore">
-      <a class="ex" href="#business" data-go="business"><div class="img"><img class="cover" src="images/_DSC0915.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Business model</h3><span class="label">01</span></div><p>What you buy, what you do and what we do, operator duties and a P&amp;L calculator.</p></a>
-      <a class="ex" href="#flow" data-go="flow"><div class="img"><img class="cover" src="images/_DSC1651.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>Customer flow</h3><span class="label">02</span></div><p>What a customer does, from tapping to pay to collecting a smoothie.</p></a>
-      <a class="ex" href="#machine" data-go="machine"><div class="img"><img class="cover" src="images/_DSC0980-b.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>The machine</h3><span class="label">03</span></div><p>The freezer and blender, installation, specifications and cleaning.</p></a>
-      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">04</span></div><p>The licensed machine software, the operator portal and optional add-ons.</p></a>
-      <a class="ex" href="#menu" data-go="menu"><div class="img"><img class="cover" src="images/_DSC1720.jpg" alt="" loading="lazy"></div><div class="row"><h3>Your menu</h3><span class="label">05</span></div><p>The cup format, and guidance on what suits it.</p></a>
+      <a class="ex" href="#operating" data-go="operating"><div class="img"><img class="cover" src="images/_DSC0915.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Operating model</h3><span class="label">01</span></div><p>How you operate, from buying to running day to day, where Juvo supports, and a P&amp;L calculator.</p></a>
+      <a class="ex" href="#machine" data-go="machine"><div class="img"><img class="cover" src="images/_DSC0980-b.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>The machine</h3><span class="label">02</span></div><p>The freezer and blender, installation, specifications and cleaning.</p></a>
+      <a class="ex" href="#menu" data-go="menu"><div class="img"><img class="cover" src="images/_DSC1720.jpg" alt="" loading="lazy"></div><div class="row"><h3>Your menu</h3><span class="label">03</span></div><p>The cup format, and guidance on what suits it.</p></a>
+      <a class="ex" href="#flow" data-go="flow"><div class="img"><img class="cover" src="images/_DSC1651.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>Customer flow</h3><span class="label">04</span></div><p>What a customer does, from tapping to pay to collecting a smoothie.</p></a>
+      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">05</span></div><p>The licensed machine software, the operator portal and optional add-ons.</p></a>
       <a class="ex" href="#about" data-go="about"><div class="img"><img class="cover" src="images/_DSC9305.jpg" alt="" loading="lazy" style="object-position:50% 30%"></div><div class="row"><h3>About us</h3><span class="label">06</span></div><p>Why we started, what we learned operating machines, and the team.</p></a>
     </div>
   </div>
 </section>
 </div>
 
-<!-- 01 BUSINESS MODEL -->
-<div class="page" data-page="business" hidden>
-<section class="band" id="business">
+<!-- 01 OPERATING MODEL -->
+<div class="page" data-page="operating" hidden>
+<section class="band" id="operating">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="chap label"><span>01</span><span>Business model</span></div>
+      <div class="chap label"><span>01</span><span>Operating model</span></div>
       <div class="intro">
-        <h2>How the sale model works</h2>
-        <p class="lede">You buy the machine and run it. We supply the machine technology and software, and support you after the sale.</p>
+        <h2>How you operate the system</h2>
+        <p class="lede">You buy the machine and run it. Juvo supplies the machine technology and software, and supports you along the way.</p>
       </div>
     </div>
 
-    <div class="share-grid reveal">
-      <div class="stack cost-head">
-        <span class="label">Upfront</span>
-        <h3>Machine purchase</h3>
-        <p>A one-off capital purchase of the freezer and blender. You own the machine.</p>
+    <div class="journey reveal" aria-label="Operating journey">
+      <div class="jstage">
+        <div class="jh"><span class="sn">1</span><h3>Buy</h3></div>
+        <div class="jrow you"><span class="label">You</span><ul><li>Purchase the freezer and blender, upfront</li><li>Take out the software licence</li></ul></div>
+        <div class="jrow juvo"><span class="label">Juvo</span><ul><li>Proprietary machine technology, white-labelled</li><li>Machine software, for an ongoing licence fee</li></ul></div>
       </div>
-      <div class="stack cost-head">
-        <span class="label">Ongoing</span>
-        <h3>Software licence</h3>
-        <p>An ongoing fee for the machine software.</p>
+      <div class="jstage">
+        <div class="jh"><span class="sn">2</span><h3>Set up</h3></div>
+        <div class="jrow you"><span class="label">You</span><ul><li>Agree a host site</li><li>Floor space and a standard outlet</li><li>Liquid: tanks or water mains</li></ul></div>
+        <div class="jrow juvo"><span class="label">Juvo</span><ul><li>On-call support</li></ul></div>
       </div>
-    </div>
-
-    <div class="sub reveal" id="who">
-      <span class="label">What you do, what we do</span>
-      <div class="stack-lg">
-        <div class="cover-list">
-          <div class="venue">
-            <h4>You</h4>
-            <ul>
-              <li>Buy the machine</li>
-              <li>Product and cups</li>
-              <li>Restock</li>
-              <li>Clean</li>
-              <li>First-line maintenance</li>
-              <li>Power and electricity</li>
-              <li>Food safety compliance</li>
-              <li>Host-site arrangements</li>
-            </ul>
-          </div>
-          <div>
-            <h4>We</h4>
-            <ul>
-              <li>Proprietary machine technology, white-labelled</li>
-              <li>Machine software, under licence</li>
-              <li>On-call support</li>
-              <li>Replacement parts, under warranty</li>
-            </ul>
-          </div>
-        </div>
-        <p class="small">Detailed terms, including the warranty, are set out in the purchase and licence agreements.</p>
+      <div class="jstage">
+        <div class="jh"><span class="sn">3</span><h3>Stock</h3></div>
+        <div class="jrow you"><span class="label">You</span><ul><li>Curate flavours and manufacturing processes</li><li>Source cups</li><li>Set the blend for each product</li><li>Food safety compliance</li></ul></div>
+        <div class="jrow juvo"><span class="label">Juvo</span><ul><li>Customisable blend parameters, in the machine software</li></ul></div>
+      </div>
+      <div class="jstage">
+        <div class="jh"><span class="sn">4</span><h3>Run and maintain</h3></div>
+        <div class="jrow you"><span class="label">You</span><ul><li>Restock, guided by stock management software</li><li>Clean once a week</li><li>First-line maintenance</li><li>Power and electricity</li></ul></div>
+        <div class="jrow juvo"><span class="label">Juvo</span><ul><li>On-call support</li><li>Replacement parts, under warranty</li><li>Software flags faults to you</li></ul></div>
       </div>
     </div>
+    <p class="small reveal" style="margin-top:16px">Detailed terms, including the warranty, are set out in the purchase and licence agreements.</p>
 
     <div class="sub reveal" id="duties">
       <span class="label">Operator duties</span>
@@ -906,94 +912,17 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
         <figcaption>Restocking can be done on the same visit as the weekly clean.</figcaption>
       </div>
     </figure>
-    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#flow" data-go="flow"><span class="label">02</span><span class="serif">Customer flow</span></a></nav>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#machine" data-go="machine"><span class="label">02</span><span class="serif">The machine</span></a></nav>
   </div>
 </section>
 </div>
 
-<!-- 02 CUSTOMER FLOW -->
-<div class="page" data-page="flow" hidden>
-<section id="how">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="chap label"><span>02</span><span>Customer flow</span></div>
-      <div class="intro">
-        <h2>From purchase to drink</h2>
-        <p class="lede">What a customer does at the freezer and the blender. Payment is by card or phone on the payment terminal. No staff are needed at any step.</p>
-      </div>
-    </div>
-
-    <div class="steps">
-      <div class="steps-media" aria-hidden="true">
-        <div class="frame" id="stepFrame">
-          <img src="images/_DSC1508.jpg" alt="" data-i="0" class="on">
-          <img src="images/_DSC1651-g.jpg" alt="" data-i="1" loading="lazy">
-          <img src="images/_DSC1700.jpg" alt="" data-i="2" loading="lazy">
-          <img src="images/_DSC1769.jpg" alt="" data-i="3" loading="lazy">
-          <img src="images/_DSC1897.jpg" alt="" data-i="4" loading="lazy">
-          <span class="counter" id="stepCounter">STEP 1 OF 5</span>
-        </div>
-      </div>
-      <ol class="step-list" style="list-style:none;padding:0;margin:0">
-        <li class="step on" data-i="0">
-          <div class="step-img"><img class="cover" src="images/_DSC1508.jpg" alt="A customer taps a card on the freezer's payment terminal" loading="lazy"></div>
-          <span class="where">Freezer</span>
-          <span class="n">1</span>
-          <h3>Tap to pay</h3>
-          <p>The customer taps a card or phone on the payment terminal beside the door. This places a temporary hold. The customer is charged only for what they take.</p>
-        </li>
-        <li class="step" data-i="1">
-          <div class="step-img"><img class="cover" src="images/_DSC1651-g.jpg" alt="A customer opens the freezer door, with the green unlock light shown by the door" loading="lazy"></div>
-          <span class="where">Freezer</span>
-          <span class="n">2</span>
-          <h3>Open the door and take a cup</h3>
-          <p>The door unlocks with a click and a green light. The customer takes any cup. The freezer registers what is taken and charges only for that.</p>
-          <p class="small">About 30 seconds at the freezer.</p>
-        </li>
-        <li class="step" data-i="2">
-          <div class="step-img"><img class="cover" src="images/_DSC1700.jpg" alt="The QR code on the cup lid is scanned at the blender" loading="lazy"></div>
-          <span class="where">Blender</span>
-          <span class="n">3</span>
-          <h3>Scan the cup on the blender</h3>
-          <p>The customer holds the QR code on the lid under the scanner. The blender reads which product it is and sets the blend.</p>
-        </li>
-        <li class="step" data-i="3">
-          <div class="step-img"><img class="cover" src="images/_DSC1769.jpg" alt="The cup goes into the empty blender chamber while the screen shows Start" loading="lazy"></div>
-          <span class="where">Blender</span>
-          <span class="n">4</span>
-          <h3>Lid off, cup in</h3>
-          <p>The customer peels off the lid and places the cup in the empty blending chamber.</p>
-        </li>
-        <li class="step" data-i="4">
-          <div class="step-img"><img class="cover" src="images/_DSC1897.jpg" alt="A customer holds a blended smoothie with a straw" loading="lazy"></div>
-          <span class="where">Blender</span>
-          <span class="n">5</span>
-          <h3>Press start and collect</h3>
-          <p>The blender adds liquid and blends in the cup, in about 60 seconds. The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
-        </li>
-      </ol>
-    </div>
-
-    <div class="timeline reveal" aria-label="Timeline from purchase to drink">
-      <div class="tl-sum"><span class="v">90 sec from purchase to drink</span><span class="small">followed by a 30 sec clean</span></div>
-      <div class="tl-bar">
-        <div class="f"><span>Freezer</span><span class="num">30 s</span></div>
-        <div class="b"><span>Blend</span><span class="num">60 s</span></div>
-        <div class="c"><span>Clean</span><span class="num">30 s</span></div>
-      </div>
-      <div class="tl-axis num"><span>0:00</span><span>0:30</span><span>1:00</span><span>1:30</span><span>2:00</span></div>
-    </div>
-    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#machine" data-go="machine"><span class="label">03</span><span class="serif">The machine</span></a></nav>
-  </div>
-</section>
-</div>
-
-<!-- 03 THE MACHINE -->
+<!-- 02 THE MACHINE -->
 <div class="page" data-page="machine" hidden>
 <section class="band" id="machine">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="chap label"><span>03</span><span>The machine</span></div>
+      <div class="chap label"><span>02</span><span>The machine</span></div>
       <div class="intro">
         <h2>Two units, one system</h2>
         <p class="lede">The freezer stores the cups and handles payment. The blender blends each cup and cleans itself. They stand side by side and run on standard power.</p>
@@ -1142,17 +1071,149 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
         </div>
       </div>
     </div>
-    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#software" data-go="software"><span class="label">04</span><span class="serif">Software</span></a></nav>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#menu" data-go="menu"><span class="label">03</span><span class="serif">Your menu</span></a></nav>
   </div>
 </section>
 </div>
 
-<!-- 04 SOFTWARE -->
+<!-- 03 YOUR MENU -->
+<div class="page" data-page="menu" hidden>
+<section class="band" id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>03</span><span>Your menu</span></div>
+      <div class="intro">
+        <h2>Designing your menu</h2>
+        <p class="lede">The range is yours to design. This section shows how a product moves through the machine, and what suits the format.</p>
+      </div>
+    </div>
+
+    <div class="stack-lg reveal">
+      <span class="label">The format</span>
+      <div class="proc" aria-label="How a product moves through the machine">
+        <div class="stage">
+          <div class="stage-h"><span class="sn">1</span><span><b>Pre-blend</b><small>In the freezer</small></span></div>
+          <div class="pnodes"><div class="pnode"><b>Frozen cup</b>A single serve of frozen ingredients, in a lidded cup</div></div>
+        </div>
+        <div class="proc-arr" aria-hidden="true">&rarr;</div>
+        <div class="stage blend">
+          <div class="stage-h"><span class="sn">2</span><span><b>Blend</b><small>At the blender</small></span></div>
+          <div class="pnodes">
+            <div class="pnode"><b>QR code</b>Recognises the product's unique blend settings</div><span class="parr" aria-hidden="true">&rarr;</span>
+            <div class="pnode"><b>Liquid</b>The machine adds a liquid</div><span class="parr" aria-hidden="true">&rarr;</span>
+            <div class="pnode"><b>Blended in the cup</b>To that product's settings</div>
+          </div>
+        </div>
+      </div>
+      <p class="small">You source the cups.</p>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Product guidance</span>
+      <div class="guide-row">
+        <div class="img"><img class="cover" src="images/_DSC9436-sq.jpg" alt="A cup of frozen berries, banana and coconut, seen from above" loading="lazy"></div>
+        <div class="stack">
+        <p>Anything that works as a single serve of frozen ingredients, blended in its own cup, suits the format. For example:</p>
+        <div class="chips big"><span>Frozen fruit smoothies</span><span>Slushies</span><span>Other frozen blended drinks</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Your product</span>
+      <div class="notice">
+        <h4>You curate your own range</h4>
+        <p>You curate your own flavours and manufacturing processes, and manage food safety compliance for your product.</p>
+      </div>
+    </div>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#flow" data-go="flow"><span class="label">04</span><span class="serif">Customer flow</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 04 CUSTOMER FLOW -->
+<div class="page" data-page="flow" hidden>
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>04</span><span>Customer flow</span></div>
+      <div class="intro">
+        <h2>From purchase to drink</h2>
+        <p class="lede">What a customer does at the freezer and the blender. Payment is by card or phone on the payment terminal. No staff are needed at any step.</p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="steps-media" aria-hidden="true">
+        <div class="frame" id="stepFrame">
+          <img src="images/_DSC1508.jpg" alt="" data-i="0" class="on">
+          <img src="images/_DSC1651-g.jpg" alt="" data-i="1" loading="lazy">
+          <img src="images/_DSC1700.jpg" alt="" data-i="2" loading="lazy">
+          <img src="images/_DSC1769.jpg" alt="" data-i="3" loading="lazy">
+          <img src="images/_DSC1897.jpg" alt="" data-i="4" loading="lazy">
+          <span class="counter" id="stepCounter">STEP 1 OF 5</span>
+        </div>
+      </div>
+      <ol class="step-list" style="list-style:none;padding:0;margin:0">
+        <li class="step on" data-i="0">
+          <div class="step-img"><img class="cover" src="images/_DSC1508.jpg" alt="A customer taps a card on the freezer's payment terminal" loading="lazy"></div>
+          <span class="where">Freezer</span>
+          <span class="n">1</span>
+          <h3>Tap to pay</h3>
+          <p>The customer taps a card or phone on the payment terminal beside the door. This places a temporary hold. The customer is charged only for what they take.</p>
+        </li>
+        <li class="step" data-i="1">
+          <div class="step-img"><img class="cover" src="images/_DSC1651-g.jpg" alt="A customer opens the freezer door, with the green unlock light shown by the door" loading="lazy"></div>
+          <span class="where">Freezer</span>
+          <span class="n">2</span>
+          <h3>Open the door and take a cup</h3>
+          <p>The door unlocks with a click and a green light. The customer takes any cup. The freezer registers what is taken and charges only for that.</p>
+          <p class="small">About 30 seconds at the freezer.</p>
+        </li>
+        <li class="step" data-i="2">
+          <div class="step-img"><img class="cover" src="images/_DSC1700.jpg" alt="The QR code on the cup lid is scanned at the blender" loading="lazy"></div>
+          <span class="where">Blender</span>
+          <span class="n">3</span>
+          <h3>Scan the cup on the blender</h3>
+          <p>The customer holds the QR code on the lid under the scanner. The blender reads which product it is and sets the blend.</p>
+        </li>
+        <li class="step" data-i="3">
+          <div class="step-img"><img class="cover" src="images/_DSC1769.jpg" alt="The cup goes into the empty blender chamber while the screen shows Start" loading="lazy"></div>
+          <span class="where">Blender</span>
+          <span class="n">4</span>
+          <h3>Lid off, cup in</h3>
+          <p>The customer peels off the lid and places the cup in the empty blending chamber.</p>
+        </li>
+        <li class="step" data-i="4">
+          <div class="step-img"><img class="cover" src="images/_DSC1897.jpg" alt="A customer holds a blended smoothie with a straw" loading="lazy"></div>
+          <span class="where">Blender</span>
+          <span class="n">5</span>
+          <h3>Press start and collect</h3>
+          <p>The blender adds liquid and blends in the cup, in about 60 seconds. The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
+        </li>
+      </ol>
+    </div>
+
+    <div class="timeline reveal" aria-label="Timeline from purchase to drink">
+      <div class="tl-sum"><span class="v">90 sec from purchase to drink</span><span class="small">followed by a 30 sec clean</span></div>
+      <div class="tl-bar">
+        <div class="f"><span>Freezer</span><span class="num">30 s</span></div>
+        <div class="b"><span>Blend</span><span class="num">60 s</span></div>
+        <div class="c"><span>Clean</span><span class="num">30 s</span></div>
+      </div>
+      <div class="tl-axis num"><span>0:00</span><span>0:30</span><span>1:00</span><span>1:30</span><span>2:00</span></div>
+    </div>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#software" data-go="software"><span class="label">05</span><span class="serif">Software</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 05 SOFTWARE -->
 <div class="page" data-page="software" hidden>
 <section id="software">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="chap label"><span>04</span><span>Software</span></div>
+      <div class="chap label"><span>05</span><span>Software</span></div>
       <div class="intro">
         <h2>Software for running your machines</h2>
         <p class="lede">Three parts: the machine software, licensed for an ongoing fee; the operator portal; and optional add-ons built on request. Juvo is on call for support.</p>
@@ -1160,11 +1221,11 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
     </div>
 
     <div class="stack-lg reveal">
-      <div class="seg sw-toggle" role="group" aria-label="Show">
+      <div class="sw-sticky"><div class="seg sw-toggle" role="group" aria-label="Jump to">
         <button type="button" data-sw="core" aria-pressed="true">1 · Machine software</button>
         <button type="button" data-sw="portal" aria-pressed="false">2 · Operator portal</button>
         <button type="button" data-sw="addons" aria-pressed="false">3 · Optional add-ons</button>
-      </div>
+      </div></div>
 
       <div class="sw-sum">
         <button type="button" class="sw-card" data-sw="core" aria-pressed="true"><span class="label">1 · Licensed</span><h3>Machine software</h3><p>Runs the freezer and blender: smart vending, autonomous blending, customisable blend parameters, and remote monitoring and issue resolution.</p></button>
@@ -1173,7 +1234,8 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       </div>
 
       <!-- 1 Machine software -->
-      <div class="sw-panel" data-panel="core">
+      <div class="sw-panel" data-panel="core" id="sw-core">
+        <div class="sw-head"><span class="sn">1</span><div><h3>Machine software</h3><span class="label">Licensed</span></div></div>
         <div class="fn-pair">
           <div><span class="label">Freezer</span><h4>Smart vending</h4><p>Recognises each purchase and charges for it automatically.</p></div>
           <div><span class="label">Blender</span><h4>Autonomous operation</h4><p>Reads each cup, blends it to that product's settings and cleans itself, without staff.</p></div>
@@ -1220,7 +1282,8 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       </div>
 
       <!-- 2 Operator portal -->
-      <div class="sw-panel" data-panel="portal" hidden>
+      <div class="sw-panel" data-panel="portal" id="sw-portal">
+        <div class="sw-head"><span class="sn">2</span><div><h3>Operator portal</h3><span class="label">For the operator</span></div></div>
         <div class="portal-sec">
           <div class="stack">
             <h3>One login for your operation</h3>
@@ -1272,64 +1335,13 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
       </div>
 
       <!-- 3 Optional add-ons -->
-      <div class="sw-panel" data-panel="addons" hidden>
+      <div class="sw-panel" data-panel="addons" id="sw-addons">
+        <div class="sw-head"><span class="sn">3</span><div><h3>Optional add-ons</h3><span class="label">On request</span></div></div>
         <div class="values three two">
           <div><h4>Rewards app</h4><p>A customer app for points and rewards, linked to purchases at the machine.</p></div>
           <div><h4>Customised machine software</h4><p>Changes to the machine software to suit your setup or product range.</p></div>
         </div>
         <p class="small">Optional. Juvo builds these on request.</p>
-      </div>
-    </div>
-    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#menu" data-go="menu"><span class="label">05</span><span class="serif">Your menu</span></a></nav>
-  </div>
-</section>
-</div>
-
-<!-- 05 YOUR MENU -->
-<div class="page" data-page="menu" hidden>
-<section class="band" id="menu">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="chap label"><span>05</span><span>Your menu</span></div>
-      <div class="intro">
-        <h2>Designing your menu</h2>
-        <p class="lede">The range is yours to design. This section shows how a product moves through the machine, and what suits the format.</p>
-      </div>
-    </div>
-
-    <div class="stack-lg reveal">
-      <span class="label">The format</span>
-      <div class="proc" aria-label="How a product moves through the machine">
-        <div class="stage">
-          <div class="stage-h"><span class="sn">1</span><span><b>Pre-blend</b><small>In the freezer</small></span></div>
-          <div class="pnodes"><div class="pnode"><b>Frozen cup</b>A single serve of frozen ingredients, in a lidded cup</div></div>
-        </div>
-        <div class="proc-arr" aria-hidden="true">&rarr;</div>
-        <div class="stage blend">
-          <div class="stage-h"><span class="sn">2</span><span><b>Blend</b><small>At the blender</small></span></div>
-          <div class="pnodes">
-            <div class="pnode"><b>QR code</b>Recognises the product's unique blend settings</div><span class="parr" aria-hidden="true">&rarr;</span>
-            <div class="pnode"><b>Liquid</b>The machine adds a liquid</div><span class="parr" aria-hidden="true">&rarr;</span>
-            <div class="pnode"><b>Blended in the cup</b>To that product's settings</div>
-          </div>
-        </div>
-      </div>
-      <p class="small">You source the cups.</p>
-    </div>
-
-    <div class="sub reveal">
-      <span class="label">Product guidance</span>
-      <div class="stack">
-        <p>Anything that works as a single serve of frozen ingredients, blended in its own cup, suits the format. For example:</p>
-        <div class="chips big"><span>Frozen fruit smoothies</span><span>Slushies</span><span>Other frozen blended drinks</span></div>
-      </div>
-    </div>
-
-    <div class="sub reveal">
-      <span class="label">Your product</span>
-      <div class="notice">
-        <h4>You curate your own range</h4>
-        <p>You curate your own flavours and manufacturing processes, and manage food safety compliance for your product.</p>
       </div>
     </div>
     <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#about" data-go="about"><span class="label">06</span><span class="serif">About us</span></a></nav>
@@ -1406,7 +1418,7 @@ toggle.addEventListener('click', () => {
 });
 const PAGES = $$('.page').map(p => p.dataset.page);
 function show(page, push){
-  if (page === 'support') page = 'business';
+  if (page === 'support' || page === 'business') page = 'operating';
   if (!PAGES.includes(page)) page = 'home';
   $$('.page').forEach(p => { p.hidden = p.dataset.page !== page; });
   $$('#navLinks a').forEach(a => a.setAttribute('aria-current', a.dataset.go === page ? 'true' : 'false'));
@@ -1439,13 +1451,25 @@ if (!reduce && 'IntersectionObserver' in window) {
   arm(); document.addEventListener('pagechange', () => requestAnimationFrame(arm));
 }
 
-/* ---------- Software toggle (toggle and summary cards stay in sync) ---------- */
+/* ---------- Software: one scrolling page; the toggle follows the reader ---------- */
+const swPanels = $$('.sw-panel');
+function markSw(k){ $$('[data-sw]').forEach(x => x.setAttribute('aria-pressed', x.dataset.sw === k ? 'true' : 'false')); }
 $$('[data-sw]').forEach(b => b.addEventListener('click', () => {
-  const k = b.dataset.sw;
-  $$('[data-sw]').forEach(x => x.setAttribute('aria-pressed', x.dataset.sw === k ? 'true' : 'false'));
-  $$('.sw-panel').forEach(p => { p.hidden = p.dataset.panel !== k; });
-  document.dispatchEvent(new CustomEvent('swtab', {detail:k}));
+  const p = $('#sw-' + b.dataset.sw); if (!p) return;
+  markSw(b.dataset.sw);
+  p.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
 }));
+function spySw(){
+  const page = swPanels[0] && swPanels[0].closest('.page');
+  if (!page || page.hidden) return;
+  const line = ($('.sw-sticky').getBoundingClientRect().bottom || 120) + 80;
+  let cur = swPanels[0].dataset.panel;
+  swPanels.forEach(p => { if (p.getBoundingClientRect().top <= line) cur = p.dataset.panel; });
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = swPanels[swPanels.length - 1].dataset.panel;
+  markSw(cur);
+}
+let swRaf = 0;
+addEventListener('scroll', () => { if (!swRaf) swRaf = requestAnimationFrame(() => { swRaf = 0; spySw(); }); }, {passive:true});
 
 /* ---------- Operator P&L calculator ---------- */
 const cM = $('#cMachines');
