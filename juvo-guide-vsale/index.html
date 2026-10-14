@@ -703,6 +703,11 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
 .disc li{display:flex;gap:8px}
 .disc > div:first-child li::before{content:"+";color:var(--accent);font-weight:500}
 .disc > div:last-child li::before{content:"–";color:var(--ink-3)}
+.assume .hint.wide{grid-column:1 / -1;margin-top:-4px}
+.disc{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line-2);border-radius:var(--radius);padding:16px 18px;background:var(--bg)}
+.disc ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 24px}
+@media (max-width:600px){.disc ul{grid-template-columns:1fr}}
+.disc li::before{content:"–";color:var(--ink-3)}
 [hidden]{display:none!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -858,11 +863,14 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
             </div>
             <div class="assume">
               <label for="cCups">Cups per machine per day<span class="inp"><input id="cCups" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
-              <label for="cPrice">Price per cup, incl GST<span class="inp"><span>$</span><input id="cPrice" type="number" inputmode="decimal" min="0" step="0.1" value="8.90"></span></label>
-              <label for="cProduct">Product cost per cup, ex GST<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
+              <label for="cPrice">Price per cup, ex sales tax<span class="inp"><span>$</span><input id="cPrice" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Enter"></span></label>
+              <label for="cProduct">Product cost per cup<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
               <label for="cPurchase">Machine purchase price, each<span class="inp"><span>$</span><input id="cPurchase" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter"></span></label>
-              <label for="cRun" class="wide">Running costs per machine, per month<span class="inp"><span>$</span><input id="cRun" type="number" inputmode="decimal" min="0" step="10" placeholder="Enter"></span><span class="hint">Software licence, host-site rent or commission, electricity, restock and service labour, travel and insurance.</span></label>
+              <label for="cLicence">Software licence, per machine per month<span class="inp"><span>$</span><input id="cLicence" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cRun">Operator running costs, per machine per month<span class="inp"><span>$</span><input id="cRun" type="number" inputmode="decimal" min="0" step="10" placeholder="Enter"></span></label>
+              <span class="hint wide">Operator running costs: host-site rent or commission, electricity, restock and service labour, travel and insurance.</span>
             </div>
+            <p class="small">Assumes transaction costs of 3% of sales, and trading 365 days a year.</p>
           </div>
           <div class="calc-out" aria-live="polite">
             <div class="out-main stack">
@@ -878,21 +886,15 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
           </div>
         </div>
         <div class="disc">
-          <div><span class="label">Included</span><ul>
-            <li>Sales, excluding GST</li>
-            <li>Transaction costs, at 3% of sales</li>
-            <li>Product cost per cup, as entered</li>
-            <li>Monthly running costs, as entered</li>
-            <li>Trading 365 days a year</li>
-          </ul></div>
-          <div><span class="label">Not included</span><ul>
-            <li>GST, income tax and financing costs</li>
+          <span class="label">Not included</span>
+          <ul>
+            <li>Taxes: sales taxes such as GST or VAT, and income tax</li>
+            <li>Financing costs</li>
             <li>Depreciation of the machine</li>
             <li>Delivery, installation and set-up</li>
             <li>Wastage, spoilage and refunds</li>
-            <li>Downtime and the time to build sales at a new site</li>
-            <li>Any cost not entered above</li>
-          </ul></div>
+            <li>Downtime</li>
+          </ul>
         </div>
         <p class="small">Figures are illustrative, based only on the numbers you enter. They are a planning aid, not a forecast, and not financial advice.</p>
       </div>
@@ -1478,10 +1480,10 @@ let swRaf = 0;
 addEventListener('scroll', () => { if (!swRaf) swRaf = requestAnimationFrame(() => { swRaf = 0; spySw(); }); }, {passive:true});
 
 /* ---------- Operator P&L calculator ---------- */
-const FEE = 0.03;   // transaction costs, share of sales ex GST
+const FEE = 0.03;   // transaction costs, share of sales
 const cM = $('#cMachines');
-const F = {cups:'#cCups', price:'#cPrice', product:'#cProduct', purchase:'#cPurchase', run:'#cRun'};
-const LBL = {cups:'cups per day', price:'price', product:'product cost', purchase:'purchase price', run:'running costs'};
+const F = {cups:'#cCups', price:'#cPrice', product:'#cProduct', purchase:'#cPurchase', licence:'#cLicence', run:'#cRun'};
+const LBL = {cups:'cups per day', price:'price', product:'product cost', purchase:'purchase price', licence:'software licence', run:'running costs'};
 function fillRange(r){ r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%'); }
 const out = {year:$('#rYear'), month:$('#rMonth'), payback:$('#rPayback'), be:$('#rBe')};
 function set(el, txt, dash){ el.textContent = txt; el.classList.toggle('dash', !!dash); }
@@ -1499,18 +1501,18 @@ function calc(){
     $('#calcMsg').textContent = `Enter ${missing.length === Object.keys(F).length ? 'every field' : missing.map(k => LBL[k]).join(', ')} to see results.`;
     return;
   }
-  const exGst = v.price / 1.1;
-  const perCup = exGst * (1 - FEE) - v.product;
-  const netYear = m * (v.cups * 365 * perCup - v.run * 12), netMonth = netYear / 12;
+  const perCup = v.price * (1 - FEE) - v.product;
+  const monthly = v.licence + v.run;
+  const netYear = m * (v.cups * 365 * perCup - monthly * 12), netMonth = netYear / 12;
   const capital = m * v.purchase;
   set(out.year, sgn(netYear)); set(out.month, sgn(netMonth));
   set(out.payback, netMonth > 0 ? (capital / netMonth).toFixed(1) + ' months' : 'Not reached', netMonth <= 0);
-  const be = perCup > 0 ? (v.run * 12 / 365) / perCup : null;
+  const be = perCup > 0 ? (monthly * 12 / 365) / perCup : null;
   set(out.be, be == null ? 'Not reached' : be.toFixed(1), be == null);
   $('#calcMsg').innerHTML =
     `<span class="label" style="display:block;margin-bottom:6px">How it is worked out</span>` +
-    `${aud(v.price,2)} &divide; 1.1 to remove GST, less 3% transaction costs and ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
-    `(${v.cups} cups &times; 365 days &times; ${sgn(perCup,2)}) less (${aud(v.run)} &times; 12 months) = <b>${sgn(netYear / m)}</b> per machine per year.<br>` +
+    `${aud(v.price,2)} less 3% transaction costs and ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
+    `(${v.cups} cups &times; 365 days &times; ${sgn(perCup,2)}) less (${aud(v.licence)} licence + ${aud(v.run)} running costs) &times; 12 months = <b>${sgn(netYear / m)}</b> per machine per year.<br>` +
     `Payback: ${aud(capital)} purchase &divide; net per month.`;
 }
 cM.addEventListener('input', calc);
@@ -1962,7 +1964,7 @@ function analytics(){
   </div>
   <div class="ad-stats">
     ${stat('Cups sold', int(k.cups), delta(k.cups, pv('cups')))}
-    ${stat('Sales (inc GST)', money0(k.gross), delta(k.gross, pv('gross')))}
+    ${stat('Sales (inc tax)', money0(k.gross), delta(k.gross, pv('gross')))}
     ${stat('Customers', int(k.cust), delta(k.cust, pv('cust')))}
     ${stat('Repeat customers', Math.round(k.rep * 100) + '%', 'Bought more than once')}
     ${stat('Cups per day', k.cpd.toFixed(1), `Over ${days} trading days`)}
@@ -1970,7 +1972,7 @@ function analytics(){
   <div class="ad-card"><h4>Cups per day <small>${rangeTxt}</small></h4><div class="chart" id="adDaily"></div></div>
   <div class="ad-grid">
     <div class="ad-card"><h4>Sales by site <small>${rangeTxt}</small></h4>
-      <table class="ad-t"><thead><tr><th>Site</th><th class="r">Cups</th><th class="r">Sales (inc GST)</th><th class="r">Share</th></tr></thead><tbody>${SITE_KEYS.filter(inSite).map(sk => { const n = list.filter(o => o.site === sk); return `<tr><td>${siteName(sk)}</td><td class="r">${int(n.length)}</td><td class="r">${money0(n.reduce((a, o) => a + o.paid, 0))}</td><td class="r">${pct(n.length, k.cups)}</td></tr>`; }).join('')}</tbody></table>
+      <table class="ad-t"><thead><tr><th>Site</th><th class="r">Cups</th><th class="r">Sales (inc tax)</th><th class="r">Share</th></tr></thead><tbody>${SITE_KEYS.filter(inSite).map(sk => { const n = list.filter(o => o.site === sk); return `<tr><td>${siteName(sk)}</td><td class="r">${int(n.length)}</td><td class="r">${money0(n.reduce((a, o) => a + o.paid, 0))}</td><td class="r">${pct(n.length, k.cups)}</td></tr>`; }).join('')}</tbody></table>
     </div>
     <div class="ad-card"><h4>Repeat purchase <small>${int(k.cust)} customers</small></h4>
       <table class="ad-t ladder"><tbody>${lad.map(x => `<tr><td>${x.l}</td><td class="bar"><span style="width:${x.n / ladMax * 100}%"></span></td><td class="r">${int(x.n)}</td><td class="r">${pct(x.n, k.cust)}</td></tr>`).join('')}</tbody></table>
@@ -2098,7 +2100,7 @@ function orderDrawer(id){
     <div class="ad-card" style="margin:0"><h4>Payment</h4><dl class="kv">
       <dt>Customer</dt><dd>${c.guest ? esc(c.name) : `<button class="ad-link" type="button" data-act="member" data-k="${c.id}">${esc(c.name)}</button>`}</dd>
       <dt>Paid with</dt><dd>${METHOD[o.method]}</dd><dt>Amount</dt><dd>${o.status === 'pending' ? 'Pending' : money(o.paid)}</dd>
-      <dt>GST included</dt><dd>${o.status === 'pending' ? 'Pending' : money(o.paid - exGst)}</dd>
+      <dt>Tax included</dt><dd>${o.status === 'pending' ? 'Pending' : money(o.paid - exGst)}</dd>
       <dt>Site</dt><dd>${siteName(o.site)}</dd><dt>Freezer</dt><dd>${SITES[o.site].cab}</dd></dl></div>
     <div class="ad-card" style="margin:0"><h4>Timeline</h4><ol class="tl">${steps.map(([s, l]) => `<li>${l}<span>${fT(t(s))}</span></li>`).join('')}</ol></div>
     ${o.status === 'review' ? `<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="ad-btn pri" type="button" data-act="refund" data-k="${o.id}">Refund ${money(o.price)}</button><button class="ad-btn" type="button" data-act="resolve">Mark resolved</button><button class="ad-btn" type="button" data-act="message">Message customer</button></div>`
