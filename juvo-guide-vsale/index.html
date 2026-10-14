@@ -870,7 +870,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
               <label for="cRun">Operator running costs, per machine per month<span class="inp"><span>$</span><input id="cRun" type="number" inputmode="decimal" min="0" step="10" placeholder="Enter"></span></label>
               <span class="hint wide">Operator running costs: host-site rent or commission, electricity, restock and service labour, travel and insurance.</span>
             </div>
-            <p class="small">Assumes transaction costs of 3% of sales, and trading 365 days a year.</p>
+            <p class="small">Assumes trading 365 days a year.</p>
           </div>
           <div class="calc-out" aria-live="polite">
             <div class="out-main stack">
@@ -890,6 +890,7 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
           <ul>
             <li>Taxes: sales taxes such as GST or VAT, and income tax</li>
             <li>Financing costs</li>
+            <li>Transaction and payment processing costs</li>
             <li>Depreciation of the machine</li>
             <li>Delivery, installation and set-up</li>
             <li>Wastage, spoilage and refunds</li>
@@ -1186,18 +1187,18 @@ footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + 
           <p>The customer holds the QR code on the lid under the scanner. The blender reads which product it is and sets the blend.</p>
         </li>
         <li class="step" data-i="3">
-          <div class="step-img"><img class="cover" src="images/_DSC1769.jpg" alt="The cup goes into the empty blender chamber while the screen shows Start" loading="lazy"></div>
+          <div class="step-img"><img class="cover" src="images/_DSC1769.jpg" alt="The cup goes into the empty blender chamber, ready to press Start" loading="lazy"></div>
           <span class="where">Blender</span>
           <span class="n">4</span>
-          <h3>Lid off, cup in</h3>
-          <p>The customer peels off the lid and places the cup in the empty blending chamber.</p>
+          <h3>Lid off, cup in, press start</h3>
+          <p>The customer peels off the lid, places the cup in the empty blending chamber and presses start. The blender adds liquid and blends in the cup, in about 60 seconds.</p>
         </li>
         <li class="step" data-i="4">
           <div class="step-img"><img class="cover" src="images/_DSC1897.jpg" alt="A customer holds a blended smoothie with a straw" loading="lazy"></div>
           <span class="where">Blender</span>
           <span class="n">5</span>
-          <h3>Press start and collect</h3>
-          <p>The blender adds liquid and blends in the cup, in about 60 seconds. The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
+          <h3>Collect</h3>
+          <p>The customer takes the smoothie. The blender then rinses itself at 90°C with a cleaning solution, in about 30 seconds.</p>
         </li>
       </ol>
     </div>
@@ -1480,7 +1481,6 @@ let swRaf = 0;
 addEventListener('scroll', () => { if (!swRaf) swRaf = requestAnimationFrame(() => { swRaf = 0; spySw(); }); }, {passive:true});
 
 /* ---------- Operator P&L calculator ---------- */
-const FEE = 0.03;   // transaction costs, share of sales
 const cM = $('#cMachines');
 const F = {cups:'#cCups', price:'#cPrice', product:'#cProduct', purchase:'#cPurchase', licence:'#cLicence', run:'#cRun'};
 const LBL = {cups:'cups per day', price:'price', product:'product cost', purchase:'purchase price', licence:'software licence', run:'running costs'};
@@ -1501,7 +1501,7 @@ function calc(){
     $('#calcMsg').textContent = `Enter ${missing.length === Object.keys(F).length ? 'every field' : missing.map(k => LBL[k]).join(', ')} to see results.`;
     return;
   }
-  const perCup = v.price * (1 - FEE) - v.product;
+  const perCup = v.price - v.product;
   const monthly = v.licence + v.run;
   const netYear = m * (v.cups * 365 * perCup - monthly * 12), netMonth = netYear / 12;
   const capital = m * v.purchase;
@@ -1511,7 +1511,7 @@ function calc(){
   set(out.be, be == null ? 'Not reached' : be.toFixed(1), be == null);
   $('#calcMsg').innerHTML =
     `<span class="label" style="display:block;margin-bottom:6px">How it is worked out</span>` +
-    `${aud(v.price,2)} less 3% transaction costs and ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
+    `${aud(v.price,2)} price less ${aud(v.product,2)} product = <b>${sgn(perCup,2)}</b> per cup.<br>` +
     `(${v.cups} cups &times; 365 days &times; ${sgn(perCup,2)}) less (${aud(v.licence)} licence + ${aud(v.run)} running costs) &times; 12 months = <b>${sgn(netYear / m)}</b> per machine per year.<br>` +
     `Payback: ${aud(capital)} purchase &divide; net per month.`;
 }
