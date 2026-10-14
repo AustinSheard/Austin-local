@@ -1,0 +1,1329 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
+</head><body>
+<title>Juvo Product Guide vSale</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a calm product manual. One reading column inside a 1200px frame, photography breaking out wide,
+   numbered chapters 01 to 07. Single light theme by design (brand palette is light). */
+:root{
+  color-scheme: light;
+  /* Brand palette (Juvo Brand Guidelines 2026) */
+  --juvo-green:#90967b;      /* Juvo Green */
+  --white:#ffffff;
+  --off-black:#191918;       /* Off Black */
+  --choc:#7a6b64;            /* Choc Charge (swatch value) */
+  --berry-baddie:#7e9bb9;    /* Berry Baddie (swatch value) */
+  --wild-berry:#a6868e;      /* Wild Berry */
+  --electrolyte:#dad9b5;     /* Electrolyte Green */
+  --mango:#ead7bf;           /* Creamy Mango */
+  --grey:#c8c6c2;            /* Gradient Grey (swatch value) */
+  --passionfruit:#e6cf9a;    /* proposed, not in guidelines */
+
+  /* Working tokens derived from the palette */
+  --bg:var(--white);
+  --band:#f3f3ef;            /* faint Juvo Green tint */
+  --band-2:#e9eae3;
+  --ink:var(--off-black);
+  --ink-2:#47483f;
+  --ink-3:#73766a;
+  --line:#dcddd4;
+  --line-2:#c7c9bd;
+  --accent:#5f6650;          /* Juvo Green, deepened for text and focus contrast */
+  --tbc-bg:#f1f0d9;
+  --tbc-line:#b9b77a;
+
+  /* Chart series (validated: brand hues, raised chroma for legibility) */
+  --s-choc:#96461a; --s-mango:#d08a2e; --s-wbpb:#a8547a; --s-bb:#4f7db8; --s-el:#a39a1f; --s-pn:#2f8a68;
+
+  --serif:'Athelas','Crimson Pro',Georgia,'Times New Roman',serif;
+  --mono:'Andale Mono','IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+
+  --gutter:clamp(16px,4vw,48px);
+  --frame:1200px;
+  --radius:6px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--frame);margin-inline:auto;padding-inline:var(--gutter)}
+.serif{font-family:var(--serif)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;margin:0;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(2.6rem,6.2vw,5.2rem);line-height:1.02}
+h2{font-size:clamp(2.1rem,4.4vw,3.4rem);line-height:1.05}
+h3{font-size:clamp(1.45rem,2.2vw,1.85rem);line-height:1.15}
+h4{font-size:1.25rem;line-height:1.2}
+p{margin:0;max-width:64ch}
+.lede{font-size:1.05rem;color:var(--ink-2)}
+.small{font-size:.82rem;color:var(--ink-3)}
+.label{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums}
+.stack{display:flex;flex-direction:column;gap:16px}
+.stack-lg{display:flex;flex-direction:column;gap:28px}
+
+/* Placeholder and draft markers */
+.tbc{display:inline-block;font-family:var(--mono);font-size:.72rem;line-height:1.4;letter-spacing:.04em;background:var(--tbc-bg);border:1px dashed var(--tbc-line);color:#5a5826;padding:1px 7px;border-radius:3px;vertical-align:.1em;white-space:normal}
+.draft{position:relative;border-left:2px dashed var(--tbc-line);padding-left:16px}
+.draft::before{content:"Draft";position:absolute;top:-1.6em;left:16px;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#7b7836}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:24px;height:60px}
+.logo{display:inline-flex;align-items:center;color:var(--ink);text-decoration:none}
+.logo svg{height:22px;width:auto}
+.nav-links{display:flex;gap:4px;margin-left:auto;list-style:none;padding:0}
+.nav-links a{display:block;text-decoration:none;font-size:.78rem;letter-spacing:.06em;color:var(--ink-3);padding:8px 10px;border-radius:4px;transition:color .2s,background .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a[aria-current="true"]{color:var(--ink);background:var(--band)}
+.nav-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--line-2);border-radius:4px;padding:6px 12px;font-size:.78rem;letter-spacing:.08em;cursor:pointer}
+.nav-progress{position:absolute;left:0;bottom:-1px;height:1px;background:var(--ink);width:0}
+@media (max-width:980px){
+  .nav-toggle{display:inline-block}
+  .nav-links{position:absolute;top:60px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px var(--gutter) 16px;display:none}
+  .nav.open .nav-links{display:flex}
+  .nav-links a{padding:12px 0;font-size:.9rem;border-bottom:1px solid var(--line);border-radius:0}
+  .nav-links a[aria-current="true"]{background:none;color:var(--ink)}
+  .nav-links a[aria-current="true"]::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--juvo-green);margin-right:10px;vertical-align:.15em}
+}
+
+/* Sections */
+section{padding-block:clamp(64px,9vw,120px)}
+.band{background:var(--band)}
+.sec-head{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:24px 48px;align-items:start;margin-bottom:clamp(40px,6vw,72px)}
+.sec-head .chap{padding-top:.9em;border-top:1px solid var(--ink);display:flex;justify-content:space-between;gap:8px}
+.sec-head .intro{display:flex;flex-direction:column;gap:20px}
+@media (max-width:760px){.sec-head{grid-template-columns:1fr;gap:16px}}
+.sub{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px 48px;padding-top:clamp(40px,5vw,64px);margin-top:clamp(40px,5vw,64px);border-top:1px solid var(--line)}
+.sub > .label{padding-top:.5em}
+@media (max-width:760px){.sub{grid-template-columns:1fr}}
+
+/* Figures */
+figure{margin:0}
+figcaption{font-size:.76rem;color:var(--ink-3);margin-top:10px;letter-spacing:.02em}
+.ph{display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--band) 0 10px,var(--band-2) 10px 20px);border:1px solid var(--line);color:var(--ink-3);font-size:.78rem;text-align:center;padding:24px;border-radius:var(--radius)}
+.cover{width:100%;height:100%;object-fit:cover}
+
+/* Reveal (content is visible at rest; animation only plays on entry) */
+@keyframes rise{from{opacity:.001;transform:translateY(18px)}to{opacity:1;transform:none}}
+.reveal.in{animation:rise .9s var(--ease) both}
+@media (prefers-reduced-motion:reduce){.reveal.in{animation:none}html{scroll-behavior:auto}}
+
+/* Overview */
+.hero{padding-block:clamp(32px,5vw,56px) clamp(64px,9vw,112px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,72px);align-items:end}
+.hero-copy{display:flex;flex-direction:column;gap:28px;padding-bottom:8px}
+.hero-img{aspect-ratio:4/5;overflow:hidden;border-radius:var(--radius);background:var(--band)}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.hero-img{aspect-ratio:4/4.4}}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--ink);margin-top:clamp(48px,6vw,80px)}
+.fact{padding:20px 20px 4px 0;display:flex;flex-direction:column;gap:6px}
+.fact + .fact{padding-left:20px;border-left:1px solid var(--line)}
+.fact .v{font-family:var(--serif);font-size:clamp(2rem,3.6vw,3rem);line-height:1;font-variant-numeric:tabular-nums}
+.fact .v small{font-size:.45em;margin-left:4px;color:var(--ink-2)}
+@media (max-width:760px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.fact:nth-child(3){padding-left:0;border-left:0}.fact:nth-child(n+3){border-top:1px solid var(--line)}}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0;list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
+.toc a{display:flex;gap:10px;padding:12px 12px 12px 0;text-decoration:none;font-size:.82rem;color:var(--ink-2);border-bottom:1px solid var(--line)}
+.toc a span{color:var(--ink-3)}
+.toc a:hover{color:var(--ink)}
+
+/* Business model */
+.share-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+@media (max-width:860px){.share-grid{grid-template-columns:1fr}}
+.big-pct{font-family:var(--serif);font-size:clamp(5rem,13vw,10rem);line-height:.85;letter-spacing:-.03em}
+.split-table{width:100%;border-collapse:collapse}
+.split-table th{text-align:left;font-family:var(--serif);font-weight:400;font-size:1.35rem;padding:0 0 14px;border-bottom:1px solid var(--ink);vertical-align:bottom}
+.split-table td{padding:14px 24px 14px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:.92rem}
+.split-table td:last-child{padding-right:0}
+.split-wrap{overflow-x:auto}
+.cover-list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 clamp(24px,4vw,56px)}
+.cover-list ul{list-style:none;padding:0;margin:0}
+.cover-list li{padding:14px 0;border-bottom:1px solid var(--line);font-size:.92rem;display:flex;gap:12px}
+.cover-list li::before{content:"";flex:none;width:7px;height:7px;margin-top:.6em;border-radius:50%;background:var(--juvo-green)}
+.cover-list .venue li::before{background:none;border:1px solid var(--ink-3)}
+.cover-list h4{padding-bottom:14px;border-bottom:1px solid var(--ink)}
+@media (max-width:700px){.cover-list{grid-template-columns:1fr;gap:40px}}
+
+/* Calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.calc-in{padding:clamp(20px,3vw,36px);display:flex;flex-direction:column;gap:26px}
+.calc-out{padding:clamp(20px,3vw,36px);background:var(--off-black);color:#f4f4ef;display:flex;flex-direction:column;gap:22px}
+@media (max-width:860px){.calc{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:10px}
+.field-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field-top output{font-family:var(--serif);font-size:1.9rem;line-height:1}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:linear-gradient(to right,var(--ink) var(--p,50%),var(--line-2) var(--p,50%))}
+input[type=range]::-moz-range-track{height:2px;background:var(--line-2)}
+input[type=range]::-moz-range-progress{height:2px;background:var(--ink)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--ink);margin-top:-8px}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--ink)}
+.scale{display:flex;justify-content:space-between;font-size:.7rem;color:var(--ink-3)}
+.assume{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding-top:18px;border-top:1px solid var(--line)}
+.assume label{display:flex;flex-direction:column;gap:6px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.inp{display:flex;align-items:center;border:1px solid var(--line-2);border-radius:4px;padding:0 10px;background:var(--bg)}
+.inp span{color:var(--ink-3);font-size:.9rem}
+.inp input{border:0;outline:0;background:transparent;font:inherit;font-size:.95rem;width:100%;padding:8px 4px;color:var(--ink);text-transform:none;letter-spacing:0}
+.inp:focus-within{border-color:var(--ink)}
+.out-main .v{font-family:var(--serif);font-size:clamp(3rem,6vw,4.6rem);line-height:1;font-variant-numeric:tabular-nums}
+.calc-out .label{color:#a9ab9c}
+.out-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid #3a3a36}
+.out-row div{padding:14px 12px 0 0;display:flex;flex-direction:column;gap:4px}
+.out-row div + div{padding-left:16px;border-left:1px solid #3a3a36}
+.out-row .v{font-family:var(--serif);font-size:1.7rem;font-variant-numeric:tabular-nums}
+.formula{font-size:.8rem;color:#cfd0c6;line-height:1.75;border-top:1px solid #3a3a36;padding-top:16px}
+.formula b{font-weight:500;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--ink)}
+.stats > div{padding:18px 16px 0 0;display:flex;flex-direction:column;gap:6px}
+.stats > div + div{padding-left:16px;border-left:1px solid var(--line)}
+.stats .v{font-family:var(--serif);font-size:clamp(1.9rem,3vw,2.5rem);line-height:1;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats>div:nth-child(3){padding-left:0;border-left:0}.stats>div:nth-child(n+3){border-top:1px solid var(--line);margin-top:14px}}
+details.q{border-bottom:1px solid var(--line)}
+details.q summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-family:var(--serif);font-size:1.25rem}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";font-family:var(--mono);color:var(--ink-3);transition:transform .25s var(--ease)}
+details.q[open] summary::after{transform:rotate(45deg)}
+details.q p{padding:0 0 20px;color:var(--ink-2);font-size:.92rem}
+.qs{border-top:1px solid var(--ink)}
+
+/* How it works */
+.steps{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,80px)}
+.steps-media{position:sticky;top:96px;height:calc(100vh - 140px);max-height:760px;min-height:420px}
+.steps-media .frame{position:relative;height:100%;border-radius:var(--radius);overflow:hidden;background:var(--band-2)}
+.steps-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02);transition:opacity .7s var(--ease),transform 1.2s var(--ease)}
+.steps-media img.on{opacity:1;transform:none}
+.steps-media .counter{position:absolute;left:16px;bottom:16px;background:rgba(25,25,24,.78);color:#fff;font-size:.72rem;letter-spacing:.12em;padding:6px 10px;border-radius:3px}
+.step{min-height:68vh;display:flex;flex-direction:column;justify-content:center;gap:14px;padding-block:24px;opacity:.35;transition:opacity .5s var(--ease)}
+.step.on{opacity:1}
+.step:first-child{min-height:52vh}
+.step .n{font-family:var(--serif);font-size:3.2rem;line-height:1;color:var(--juvo-green)}
+.step .where{display:inline-flex;align-self:flex-start;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line-2);border-radius:999px;padding:3px 10px;color:var(--ink-3)}
+.step-img{display:none}
+@media (max-width:900px){
+  .steps{grid-template-columns:1fr}
+  .steps-media{display:none}
+  .step{min-height:0;opacity:1;padding-block:28px;border-top:1px solid var(--line)}
+  .step:first-child{min-height:0}
+  .step-img{display:block;aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){.step{opacity:1}.steps-media img{transition:none}}
+.timeline{margin-top:clamp(48px,6vw,80px);display:flex;flex-direction:column;gap:16px}
+.tl-bar{display:grid;grid-template-columns:1fr 3fr;gap:3px;height:64px}
+.tl-bar div{border-radius:3px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 12px;font-size:.78rem;gap:8px}
+.tl-bar .f{background:var(--band-2);color:var(--ink)}
+.tl-bar .b{background:var(--off-black);color:#fff}
+.tl-axis{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-3)}
+.tl-sum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.tl-sum .v{font-family:var(--serif);font-size:2.4rem;line-height:1}
+
+/* Machine */
+.machine-hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,5vw,72px);align-items:center}
+@media (max-width:860px){.machine-hero{grid-template-columns:1fr}}
+.machine-hero .img{aspect-ratio:2/3;border-radius:var(--radius);overflow:hidden;background:#e5e6e8}
+.unit-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border-top:1px solid var(--ink)}
+.unit-pair > div{padding:18px 20px 0 0;display:flex;flex-direction:column;gap:8px}
+.unit-pair > div + div{padding-left:20px;border-left:1px solid var(--line)}
+.hs-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+@media (max-width:860px){.hs-wrap{grid-template-columns:1fr}}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;background:var(--bg)}
+.seg button{border:0;background:none;padding:7px 16px;border-radius:999px;font-size:.78rem;letter-spacing:.04em;cursor:pointer;color:var(--ink-3)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.hs-fig{position:relative;border-radius:var(--radius);overflow:hidden;background:#e5e6e8;aspect-ratio:2/3;max-height:820px;margin-inline:auto;width:100%}
+.hs-fig img{width:100%;height:100%;object-fit:cover}
+.hs{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;border:0;padding:0;cursor:pointer;background:var(--white);color:var(--ink);font-size:.74rem;font-weight:500;box-shadow:0 0 0 4px rgba(255,255,255,.35),0 2px 10px rgba(0,0,0,.25);transition:transform .25s var(--ease),background .2s,opacity .3s}
+.hs::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(255,255,255,.8);animation:pulse 2.6s var(--ease) infinite}
+@keyframes pulse{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.hs::after{animation:none;opacity:0}}
+.hs:hover,.hs[aria-expanded="true"]{background:var(--off-black);color:#fff;transform:translate(-50%,-50%) scale(1.1)}
+.hs.dim{opacity:.18;pointer-events:none}
+.hs-pop{position:absolute;z-index:3;width:min(270px,70%);background:var(--bg);color:var(--ink);border-radius:var(--radius);padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:.84rem;line-height:1.55}
+.hs-pop h4{font-size:1.15rem;margin-bottom:4px}
+.hs-list{list-style:none;padding:0;margin:0;border-top:1px solid var(--ink)}
+.hs-list li{border-bottom:1px solid var(--line)}
+.hs-list button{width:100%;display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;text-align:left;background:none;border:0;padding:14px 0;cursor:pointer}
+.hs-list .k{width:24px;height:24px;border-radius:50%;border:1px solid var(--ink-3);display:grid;place-items:center;font-size:.7rem;margin-top:2px}
+.hs-list .t{display:flex;flex-direction:column;gap:2px}
+.hs-list .t b{font-family:var(--serif);font-weight:400;font-size:1.15rem}
+.hs-list .t span{font-size:.84rem;color:var(--ink-2)}
+.hs-list li.unit-h{padding:16px 0 6px;border-bottom:0}
+.hs-list li.hide{display:none}
+.hs-list button[aria-current="true"] .k{background:var(--ink);color:#fff;border-color:var(--ink)}
+.details{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.details figure .img{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;background:var(--band)}
+@media (max-width:860px){.details{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.specs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
+@media (max-width:760px){.specs{grid-template-columns:1fr}}
+.spec{width:100%;border-collapse:collapse;font-size:.88rem}
+.spec caption{text-align:left;font-family:var(--serif);font-size:1.5rem;padding-bottom:12px;border-bottom:1px solid var(--ink)}
+.spec th{text-align:left;font-weight:400;color:var(--ink-3);padding:12px 16px 12px 0;border-bottom:1px solid var(--line);width:38%;vertical-align:top}
+.spec td{padding:12px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.clean{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+@media (max-width:860px){.clean{grid-template-columns:1fr}}
+.loop{max-width:420px;width:100%;margin-inline:auto}
+.loop svg{width:100%;height:auto;display:block}
+.loop .node circle{fill:var(--bg);stroke:var(--line-2);stroke-width:1.5;transition:fill .4s,stroke .4s}
+.loop .node text{font-family:var(--mono);font-size:11px;fill:var(--ink-3);transition:fill .4s}
+.loop .node.on circle{fill:var(--off-black);stroke:var(--off-black)}
+.loop .node.on text.i{fill:#fff}
+.loop .node.on text.l{fill:var(--ink)}
+.loop-steps{list-style:none;padding:0;margin:0;border-top:1px solid var(--ink);counter-reset:s}
+.loop-steps li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line);color:var(--ink-3);transition:color .4s;counter-increment:s}
+.loop-steps li::before{content:counter(s);font-family:var(--serif);font-size:1.3rem;line-height:1.2}
+.loop-steps li.on{color:var(--ink)}
+.loop-steps b{font-weight:500;display:block}
+.water{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:center}
+@media (max-width:760px){.water{grid-template-columns:1fr}}
+.water .img{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden}
+.not-list{display:flex;flex-wrap:wrap;gap:8px}
+.not-list span{border:1px solid var(--line-2);border-radius:999px;padding:4px 12px;font-size:.78rem;color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.not-list span.yes{text-decoration:none;color:var(--ink);border-color:var(--ink);background:var(--bg)}
+
+/* Software */
+.flow{display:grid;grid-template-columns:repeat(9,auto);align-items:center;justify-content:start;gap:10px;overflow-x:auto;padding-bottom:6px}
+.flow .node{border:1px solid var(--ink);border-radius:var(--radius);padding:12px 14px;font-size:.8rem;line-height:1.35;background:var(--bg);min-width:120px;max-width:170px}
+.flow .node b{display:block;font-family:var(--serif);font-weight:400;font-size:1.05rem}
+.flow .node.alert{border-color:var(--ink);background:var(--off-black);color:#fff}
+.flow .arr{color:var(--ink-3);font-size:1rem}
+@media (max-width:760px){.flow{grid-template-columns:1fr;justify-items:start}.flow .arr{transform:rotate(90deg);margin-left:20px}.flow .node{max-width:none;width:100%}}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.card{background:var(--bg);padding:24px;display:flex;flex-direction:column;gap:10px}
+.card svg{width:28px;height:28px;stroke:var(--ink);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.card h4{font-size:1.3rem}
+.card p{font-size:.86rem;color:var(--ink-2)}
+.dark{background:var(--off-black);color:#f1f1ec}
+.dark h2,.dark h3,.dark h4{color:#fff}
+.dark .label{color:#9fa293}
+.dark .lede{color:#cfd0c6}
+.dark .sec-head .chap{border-top-color:#f1f1ec}
+.dark .small{color:#9fa293}
+/* Menu */
+.ethos{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(24px,4vw,56px);align-items:center}
+@media (max-width:860px){.ethos{grid-template-columns:1fr}}
+.ethos .img{aspect-ratio:3/2;border-radius:var(--radius);overflow:hidden;background:var(--band)}
+.prod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.prod .img{aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;background:var(--band)}
+@media (max-width:700px){.prod{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}}
+
+/* About */
+.about-hero{aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--band);margin-bottom:clamp(40px,6vw,72px)}
+@media (max-width:700px){.about-hero{aspect-ratio:4/5}}
+.story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:start}
+@media (max-width:860px){.story{grid-template-columns:1fr}}
+.mission{font-family:var(--serif);font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.2;max-width:28ch}
+.values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+@media (max-width:900px){.values{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.values{grid-template-columns:1fr}}
+.values div{background:var(--bg);padding:22px;display:flex;flex-direction:column;gap:8px}
+.values h4{font-size:1.3rem}
+.values p{font-size:.86rem;color:var(--ink-2)}
+.strip{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:12px}
+.strip .img{border-radius:var(--radius);overflow:hidden;background:var(--band);aspect-ratio:4/5}
+.strip .img.wide{aspect-ratio:auto}
+@media (max-width:700px){.strip{grid-template-columns:1fr 1fr}.strip .img.wide{grid-column:1 / -1;aspect-ratio:3/2}}
+.team{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(12px,2vw,24px)}
+@media (max-width:1100px){.team{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:640px){.team{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.person{display:flex;flex-direction:column;gap:10px}
+.person .head{aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden}
+.person .head.ph{font-size:.72rem}
+.person h4{font-size:1.3rem}
+.person .role{font-size:.78rem;color:var(--ink-3)}
+.person .one{font-size:.84rem;color:var(--ink-2)}
+.more{align-self:flex-start;border:0;background:none;padding:0;font-size:.76rem;letter-spacing:.06em;text-decoration:underline;text-underline-offset:3px;cursor:pointer;color:var(--ink-2)}
+.bio{font-size:.84rem;color:var(--ink-2);display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s var(--ease)}
+.bio > div{overflow:hidden}
+.person.open .bio{grid-template-rows:1fr}
+
+/* Footer */
+footer{background:var(--off-black);color:#d9dad2;padding-block:56px calc(40px + env(safe-area-inset-bottom,0px))}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
+.foot .lock{display:flex;align-items:flex-end;gap:12px;color:#fff}
+.foot .lock svg{height:34px;width:auto}
+.foot .lock span{font-size:.9rem;letter-spacing:.06em;padding-bottom:2px}
+.mail{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mail code{font-family:var(--mono);font-size:.95rem;color:#fff;user-select:all}
+.copy{border:1px solid #4a4a45;background:none;color:#d9dad2;border-radius:4px;padding:4px 10px;font-size:.72rem;cursor:pointer}
+.copy:hover{border-color:#d9dad2}
+.foot-meta{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.72rem;color:#8d8f82;border-top:1px solid #33332f;padding-top:18px;margin-top:20px}
+/* Pages (tabbed site) */
+.page[hidden]{display:none!important}
+.page{animation:pagein .5s var(--ease) both}
+@keyframes pagein{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.page{animation:none}}
+.nav-links a{cursor:pointer}
+.next-page{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line);padding-block:28px;margin-top:clamp(40px,6vw,72px);flex-wrap:wrap}
+.next-page a{text-decoration:none;display:flex;flex-direction:column;gap:4px}
+.next-page a .serif{font-size:1.6rem;line-height:1.1}
+.next-page a:hover .serif{text-decoration:underline;text-underline-offset:4px}
+.foot-note{font-size:.76rem;color:var(--ink-3)}
+.fact .v sup{font-size:.45em;vertical-align:super;margin-left:2px}
+
+/* Home cards */
+.explore{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,24px)}
+@media (max-width:900px){.explore{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.explore{grid-template-columns:1fr}}
+.ex{text-decoration:none;display:flex;flex-direction:column;gap:12px;border-radius:var(--radius)}
+.ex .img{aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;background:var(--band)}
+.ex .img img{transition:transform .8s var(--ease)}
+.ex:hover .img img{transform:scale(1.04)}
+.ex .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.ex h3{font-size:1.5rem}
+.ex p{font-size:.86rem;color:var(--ink-2)}
+
+/* Calculator extras */
+.out-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.out-row.three div + div{padding-left:14px;border-left:1px solid #3a3a36}
+.be{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:1px solid #3a3a36;padding-top:14px}
+.be .v{font-family:var(--serif);font-size:1.7rem}
+.neg{color:#d9a59a}
+
+/* ---------- vSale additions ---------- */
+.wrap{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
+.details{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.details{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.details{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cmp-wrap{overflow-x:auto}
+.cmp{width:100%;border-collapse:collapse;font-size:.88rem}
+.cmp th,.cmp td{text-align:left;padding:12px 16px 12px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp thead th{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:400;border-bottom:1px solid var(--ink);white-space:nowrap}
+.cmp tbody th{font-weight:400;color:var(--ink-2);width:30%}
+.cmp td.j{font-family:var(--serif);font-size:1.3rem;line-height:1.2}
+.cmp td.o{color:var(--ink-3)}
+.duty-notes{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
+.duty-notes li{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:4px 24px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.duty-notes li b{font-weight:500}
+@media (max-width:560px){.duty-notes li{grid-template-columns:1fr}}
+.cost-head{display:flex;flex-direction:column;gap:6px}
+.cost-head h3{font-size:clamp(1.6rem,3vw,2.2rem)}
+.assume{grid-template-columns:repeat(2,minmax(0,1fr))}
+.assume .grp{grid-column:1 / -1;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);padding-top:8px}
+@media (max-width:480px){.assume{grid-template-columns:1fr}}
+.inp input::placeholder{color:var(--ink-3);opacity:.7}
+.field-inp{max-width:220px}
+.calc-msg{font-size:.8rem;color:#cfd0c6;line-height:1.7;border-top:1px solid #3a3a36;padding-top:16px}
+.calc-out .v.dash{color:#8d8f82}
+.pos{color:#bcd6b0}
+.values.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.values.three{grid-template-columns:1fr}}
+.values .n{font-family:var(--serif);font-size:2rem;line-height:1;color:var(--juvo-green)}
+.notice{border:1px solid var(--ink);border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.notice h4{font-size:1.3rem}
+.notice p{font-size:.92rem;color:var(--ink-2)}
+.fn-list{list-style:none;padding:0;margin:0}
+.fn-list li{padding:14px 0;border-bottom:1px solid var(--line);font-size:.9rem;display:flex;flex-direction:column;gap:2px}
+.fn-list li b{font-family:var(--serif);font-weight:400;font-size:1.2rem}
+.fn-list li span{color:var(--ink-2)}
+.also{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:clamp(24px,4vw,40px);padding-top:18px;border-top:1px solid var(--line)}
+.also a{text-decoration:none;font-family:var(--serif);font-size:1.4rem}
+.also a:hover{text-decoration:underline;text-underline-offset:4px}
+.bench{font-size:.82rem;color:var(--ink-2);border-left:2px solid var(--juvo-green);padding:4px 0 4px 14px;max-width:64ch}
+.spec td .tbc{margin-left:0}
+.machine-hero > *,.share-grid > *,.hs-wrap > *,.clean > *,.water > *,.ethos > *{min-width:0}
+[hidden]{display:none!important}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="juvo" viewBox="0 0 722.83 238.11">
+<path
+    fill="currentColor"
+    d="M183.57,1.02l-33.94,159.74c-4.15,19.51-10.85,34.98-20.08,46.4-15.47,19.31-38.09,28.96-67.88,28.96s-48.11-7.81-54.96-23.43c-6.85-15.62-7.42-36.93-1.71-63.91l1.09-5.29h45.31l-1.09,5.29c-3.32,17.75-4.02,30.23-2.1,37.45,1.92,7.21,8.59,10.82,20,10.82s19.62-3.94,24.91-11.83c3.22-4.67,6.02-12.56,8.41-23.67L135.62,1.02h47.95Z"
+  />
+<polygon
+    fill="currentColor"
+    points="422.46 179.69 511.93 1.22 562.97 1.22 432.82 236.32 386.41 236.32 356.9 1.22 409.38 1.22 422.46 179.69"
+  />
+<path
+    fill="currentColor"
+    d="M703.35,27.57c18.11,20.43,22.84,51.02,14.19,91.78-8.55,39.95-26.32,70.54-53.28,91.78-20.43,17.31-46.54,25.96-78.34,25.96s-54.29-8.65-67.47-25.96c-18.01-21.23-22.74-51.83-14.19-91.78,8.65-40.76,26.42-71.35,53.28-91.78,20.43-17.31,46.54-25.96,78.34-25.96s54.29,8.65,67.47,25.96ZM627.57,41.01c-18.42,0-34.54,6.79-48.38,20.38s-23.42,32.91-28.75,57.96c-5.33,25.06-3.97,44.38,4.08,57.96s21.28,20.38,39.7,20.38,34.49-6.79,48.23-20.38c13.73-13.59,23.27-32.91,28.6-57.96,5.23-24.96,3.9-44.25-4-57.89-7.9-13.64-21.06-20.45-39.47-20.45Z"
+  />
+<path
+    fill="currentColor"
+    d="M164.5,81.73c4.71-2.38,7.35-4.99,12.97-11.86l.91-1.21c1.04-1.38,3.38-4.41,10.77-13.7,12.39-15.6,29.23-19.03,19.65,6.78-10.19,36.37-80.1,142.67-43.43,169.27,27.83,17.46,57.39-8.34,77.1-26.95,3.85-3.5,7.91-7.33,11.73-10.7,2.08-1.67,5.24-4.61,7.37-4.4,4.1,1.23,1.02,12.25,2.16,19.51,1.05,20.26,17.65,31.04,36.54,23.16,13.66-5.54,23.97-17.91,33.02-29.75,5.9-8.1,25.8-34.61,16.21-43-4.28-1.99-10.42,3.51-14.48,8.09-14.92,18.3-30.34,32.34-19.38-3.71l.11-.39c9.92-41.9,32.6-79.41,45.07-120.58,2.12-7.85,1.46-16.47,1.69-24.54.6-20.99-18.42-16.91-23.48-14.55-11.68,5.47-18.72,23.2-21.75,35.08-14.15,62.1-49.08,122.62-102.78,158.17-7.68,4.16-17.77,3.74-19.36-6.05-1.2-7.31,2.01-15.34,4.53-22.28,13.45-35.22,29.07-69.52,45.73-103.28,9-18.09,22.49-51.11-2.99-61.41-13.34-4.22-29.87-1.09-39.54,8.27q-13.91,13.47-34.82,37.85c-7,8.16-15.02,15.51-15.22,22.75-.23,8.25,7.57,11.5,11.67,9.43Z"
+  />
+  </symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#home" data-go="home" aria-label="Juvo product guide home"><svg viewBox="0 0 722.83 238.11" role="img" aria-hidden="true"><use href="#juvo"/></svg></a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" data-go="home">Home</a></li>
+      <li><a href="#business" data-go="business">Business model</a></li>
+      <li><a href="#flow" data-go="flow">Customer flow</a></li>
+      <li><a href="#machine" data-go="machine">The machine</a></li>
+      <li><a href="#software" data-go="software">Software</a></li>
+      <li><a href="#menu" data-go="menu">The menu</a></li>
+      <li><a href="#about" data-go="about">About us</a></li>
+      <li><a href="#support" data-go="support">Support and terms</a></li>
+    </ul>
+  </div>
+  <div class="nav-progress" id="navProgress"></div>
+</header>
+
+<main id="main">
+<!-- HOME -->
+<div class="page" data-page="home">
+<section class="hero" id="home">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="label">Product guide for machine buyers and operators</span>
+        <h1>The Juvo smoothie vending system, for operators.</h1>
+        <p class="lede">Juvo sells its two-unit smoothie system as an upfront capital purchase. Customers tap to pay at the Juvo Freezer and take a cup of frozen ingredients. The Juvo Blender adds water, blends it and then cleans itself.</p>
+        <p class="lede">The buyer owns the machine and operates it: sourcing product, restocking, cleaning and food safety compliance. Juvo provides the machine software and remote monitoring for an ongoing licence fee, on-call support and replacement parts.</p>
+      </div>
+      <figure>
+        <div class="hero-img"><img class="cover" src="images/_DSC1665.jpg" alt="A customer opens the Juvo Freezer door beside the Juvo Blender" fetchpriority="high"></div>
+        <figcaption>The Juvo Freezer (left) and Juvo Blender (right).</figcaption>
+      </figure>
+    </div>
+    <div class="facts" aria-label="Key facts">
+      <div class="fact"><span class="label">Purchase to drink</span><span class="v">2<small>min, about</small></span></div>
+      <div class="fact"><span class="label">Freezer capacity</span><span class="v">240<small>cups</small></span><span class="small">Up to 10 flavours</span></div>
+      <div class="fact"><span class="label">Operator deep clean</span><span class="v">1<small>per week</small></span><span class="small">Others on the market: 3–4 per week</span></div>
+      <div class="fact"><span class="label">Uptime</span><span class="v">80–90<small>%</small></span><span class="small">Others on the market: 50–60%</span></div>
+    </div>
+    <p class="foot-note" style="margin-top:12px">Cleaning and uptime figures are from Juvo operating data, compared with others on the market. The deep clean is a pot wash by the operator.</p>
+  </div>
+</section>
+
+<section class="band" style="padding-top:clamp(48px,7vw,88px)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="chap label"><span>Guide</span><span>Contents</span></div>
+      <div class="intro"><h2>Explore the guide</h2><p class="lede">Each section covers one part of buying and operating the system.</p></div>
+    </div>
+    <div class="explore">
+      <a class="ex" href="#business" data-go="business"><div class="img"><img class="cover" src="images/_DSC0915.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Business model</h3><span class="label">01</span></div><p>What the operator buys, who does what, operator duties and a P&amp;L calculator.</p></a>
+      <a class="ex" href="#flow" data-go="flow"><div class="img"><img class="cover" src="images/_DSC1651.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>Customer flow</h3><span class="label">02</span></div><p>What a customer does, from tapping to pay to collecting a smoothie.</p></a>
+      <a class="ex" href="#machine" data-go="machine"><div class="img"><img class="cover" src="images/_DSC0980.jpg" alt="" loading="lazy" style="object-position:50% 45%"></div><div class="row"><h3>The machine</h3><span class="label">03</span></div><p>The Juvo Freezer and Juvo Blender, installation, specifications and cleaning.</p></a>
+      <a class="ex" href="#software" data-go="software"><div class="img"><img class="cover" src="images/_DSC1626.jpg" alt="" loading="lazy" style="object-position:50% 35%"></div><div class="row"><h3>Software</h3><span class="label">04</span></div><p>Machine software and remote monitoring under licence, and optional add-ons.</p></a>
+      <a class="ex" href="#menu" data-go="menu"><div class="img"><img class="cover" src="images/_DSC9284.jpg" alt="" loading="lazy"></div><div class="row"><h3>The menu</h3><span class="label">05</span></div><p>The cup format and the kinds of product that can be run through it.</p></a>
+      <a class="ex" href="#about" data-go="about"><div class="img"><img class="cover" src="images/_DSC9305.jpg" alt="" loading="lazy" style="object-position:50% 30%"></div><div class="row"><h3>About us</h3><span class="label">06</span></div><p>The business we built, what we learned operating machines, and the team.</p></a>
+    </div>
+    <div class="also"><span class="label">07</span><a href="#support" data-go="support">Support and terms</a></div>
+  </div>
+</section>
+</div>
+
+<!-- 01 BUSINESS MODEL -->
+<div class="page" data-page="business" hidden>
+<section class="band" id="business">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>01</span><span>Business model</span></div>
+      <div class="intro">
+        <h2>How the sale model works</h2>
+        <p class="lede">The operator buys the Juvo Freezer and Juvo Blender and runs them. Juvo provides the machine software and remote monitoring under licence, and supports the operator after the sale.</p>
+      </div>
+    </div>
+
+    <div class="share-grid reveal">
+      <div class="stack cost-head">
+        <span class="label">Upfront</span>
+        <h3>Machine purchase</h3>
+        <p>A one-off capital purchase of the Juvo Freezer and Juvo Blender. The operator owns the machine.</p>
+      </div>
+      <div class="stack cost-head">
+        <span class="label">Ongoing</span>
+        <h3>Software licence</h3>
+        <p>An ongoing licence fee for the machine software and remote monitoring.</p>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Responsibilities</span>
+      <div class="cover-list">
+        <div class="venue">
+          <h4>Operator</h4>
+          <ul>
+            <li>Purchases the Juvo Freezer and Juvo Blender</li>
+            <li>Sources and stocks product</li>
+            <li>Restocking</li>
+            <li>Deep cleans (a pot wash)</li>
+            <li>First-line maintenance, supported by Juvo</li>
+            <li>Power: a standard outlet, and the electricity it uses</li>
+            <li>Food safety compliance</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Juvo</h4>
+          <ul>
+            <li>The machine: Juvo Freezer and Juvo Blender</li>
+            <li>Machine software and remote monitoring, under licence</li>
+            <li>On-call support</li>
+            <li>Replacement parts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub reveal" id="duties">
+      <span class="label">Operator duties</span>
+      <div class="stack-lg">
+        <div class="cmp-wrap">
+          <table class="cmp">
+            <thead><tr><th scope="col">Duty</th><th scope="col">Juvo</th><th scope="col">Others on the market</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Deep clean (pot wash)</th><td class="j">Once per week</td><td class="o">3–4 times per week</td></tr>
+              <tr><th scope="row">Uptime</th><td class="j">80–90%</td><td class="o">50–60%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="duty-notes">
+          <li><b>Cleaning</b><span>The Blender cleans itself after every blend. The operator does a deeper clean once per week. This covers operator deep cleans only, not spill wipe-downs at the host site.</span></li>
+          <li><b>Restocking</b><span>Aligned to the weekly cleaning cycle, so no extra visits.</span></li>
+          <li><b>Maintenance</b><span>First-line maintenance by the operator, supported by Juvo.</span></li>
+          <li><b>Breakdowns</b><span>Remote monitoring flags breakdowns, so the operator knows when a machine is down.</span></li>
+          <li><b>Power</b><span>A standard outlet. No special electrical work.</span></li>
+        </ul>
+        <p class="small">Juvo figures are from Juvo operating data.</p>
+      </div>
+    </div>
+
+    <div class="sub reveal" id="calculator">
+      <span class="label">Operator P&amp;L calculator</span>
+      <div class="stack-lg">
+        <div class="calc">
+          <div class="calc-in">
+            <div class="field">
+              <div class="field-top"><label for="cMachines" class="label">Number of machines</label><output id="oMachines" for="cMachines" class="num">1</output></div>
+              <input type="range" id="cMachines" min="1" max="100" step="1" value="1">
+              <div class="scale"><span>1</span><span>100</span></div>
+            </div>
+            <div class="assume">
+              <label for="cCups">Cups per machine per day<span class="inp"><input id="cCups" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cPrice">Price per cup, incl GST<span class="inp"><span>$</span><input id="cPrice" type="number" inputmode="decimal" min="0" step="0.1" value="8.90"></span></label>
+              <label for="cFee">Transaction costs<span class="inp"><input id="cFee" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="3"><span>%</span></span></label>
+              <label for="cProduct">Product cost per cup, ex GST<span class="inp"><span>$</span><input id="cProduct" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter"></span></label>
+              <span class="grp">Per machine</span>
+              <label for="cPurchase">Machine purchase price<span class="inp"><span>$</span><input id="cPurchase" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter"></span></label>
+              <label for="cLicence">Licence fee, per month<span class="inp"><span>$</span><input id="cLicence" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cComm">Host-site commission, % of sales<span class="inp"><input id="cComm" type="number" inputmode="decimal" min="0" max="100" step="0.5" placeholder="Enter"><span>%</span></span></label>
+              <label for="cRent">Host-site rent, per month<span class="inp"><span>$</span><input id="cRent" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cPower">Electricity, per month<span class="inp"><span>$</span><input id="cPower" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cLabour">Restock and service labour and travel, per month<span class="inp"><span>$</span><input id="cLabour" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+              <label for="cIns">Insurance, per month<span class="inp"><span>$</span><input id="cIns" type="number" inputmode="decimal" min="0" step="1" placeholder="Enter"></span></label>
+            </div>
+            <p class="small">Enter 0 for any cost that does not apply. Commission is taken on sales ex GST. Assumes the machines trade 365 days a year.</p>
+          </div>
+          <div class="calc-out" aria-live="polite">
+            <div class="out-main stack">
+              <span class="label">Net profit per year, before the machine purchase</span>
+              <span class="v dash" id="rYear">—</span>
+            </div>
+            <div class="out-row">
+              <div><span class="label">Net per month</span><span class="v dash" id="rMonth" style="font-size:1.25rem">—</span></div>
+              <div><span class="label">Payback period</span><span class="v dash" id="rPayback" style="font-size:1.25rem">—</span></div>
+            </div>
+            <div class="be"><span class="label">Breakeven</span><span class="v dash" id="rBe">—</span><span class="small" style="color:#a9ab9c">cups per machine per day</span></div>
+            <div class="calc-msg" id="calcMsg"></div>
+          </div>
+        </div>
+        <p class="small">Figures are illustrative and depend entirely on the numbers entered. They are not a forecast of sales.</p>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Common questions</span>
+      <div class="qs">
+        <details class="q"><summary>What do I buy?</summary><p>The Juvo Freezer and Juvo Blender, as an upfront capital purchase. You own the machine. The machine software and remote monitoring are provided under an ongoing licence.</p></details>
+        <details class="q"><summary>What do I pay on an ongoing basis?</summary><p>The licence fee to Juvo for the machine software and remote monitoring. Your other running costs are your own: product, any host-site commission or rent, electricity, restocking and service labour and travel, and insurance.</p></details>
+        <details class="q"><summary>What does Juvo support?</summary><p>Juvo is on call for support, is responsible for replacement parts, and provides the machine software and remote monitoring under licence.</p></details>
+        <details class="q"><summary>Who sources the product?</summary><p>The operator. Juvo does not supply product to buyers of the machine.</p></details>
+        <details class="q"><summary>Who handles food safety compliance?</summary><p>The operator is responsible for their own food safety compliance.</p></details>
+        <details class="q"><summary>What happens if a part fails?</summary><p>Remote monitoring flags the fault, so you know the machine is down. Juvo supports you remotely and on call, and supplies the replacement part.</p></details>
+      </div>
+    </div>
+
+    <figure class="sub reveal">
+      <span class="label">Restocking</span>
+      <div>
+        <div style="aspect-ratio:3/2;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band-2)"><img class="cover" src="images/_DSC0915.jpg" alt="Restocking the Juvo Freezer from boxes of cups" loading="lazy" style="object-position:50% 40%"></div>
+        <figcaption>Restocking can be done on the same visit as the weekly deep clean.</figcaption>
+      </div>
+    </figure>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#flow" data-go="flow"><span class="label">02</span><span class="serif">Customer flow</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 02 CUSTOMER FLOW -->
+<div class="page" data-page="flow" hidden>
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>02</span><span>Customer flow</span></div>
+      <div class="intro">
+        <h2>From purchase to drink</h2>
+        <p class="lede">What a customer does at the Juvo Freezer and the Juvo Blender. Payment is by card or phone on the payment terminal. No staff are needed at any step.</p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="steps-media" aria-hidden="true">
+        <div class="frame" id="stepFrame">
+          <img src="images/_DSC1508.jpg" alt="" data-i="0" class="on">
+          <img src="images/_DSC1665.jpg" alt="" data-i="1" loading="lazy">
+          <img src="images/_DSC1651.jpg" alt="" data-i="2" loading="lazy">
+          <img src="images/_DSC1700.jpg" alt="" data-i="3" loading="lazy">
+          <img src="images/_DSC1789.jpg" alt="" data-i="4" loading="lazy">
+          <img src="images/_DSC1897.jpg" alt="" data-i="5" loading="lazy">
+          <span class="counter" id="stepCounter">STEP 1 OF 6</span>
+        </div>
+      </div>
+      <ol class="step-list" style="list-style:none;padding:0;margin:0">
+        <li class="step on" data-i="0">
+          <div class="step-img"><img class="cover" src="images/_DSC1508.jpg" alt="A customer taps a card on the freezer's payment terminal" loading="lazy"></div>
+          <span class="where">Juvo Freezer</span>
+          <span class="n">1</span>
+          <h3>Tap to pay</h3>
+          <p>The customer taps a card or phone on the payment terminal beside the door. This places a temporary hold. The customer is charged only for what they take.</p>
+        </li>
+        <li class="step" data-i="1">
+          <div class="step-img"><img class="cover" src="images/_DSC1665.jpg" alt="A customer opens the freezer door" loading="lazy"></div>
+          <span class="where">Juvo Freezer</span>
+          <span class="n">2</span>
+          <h3>The freezer unlocks</h3>
+          <p>The door unlocks with a click and a green light.</p>
+        </li>
+        <li class="step" data-i="2">
+          <div class="step-img"><img class="cover" src="images/_DSC1651.jpg" alt="A customer takes a cup from the freezer" loading="lazy"></div>
+          <span class="where">Juvo Freezer</span>
+          <span class="n">3</span>
+          <h3>Take a cup</h3>
+          <p>The customer takes any cup and closes the door. The freezer records what was taken and charges for that.</p>
+          <p class="small">About 30 seconds at the freezer.</p>
+        </li>
+        <li class="step" data-i="3">
+          <div class="step-img"><img class="cover" src="images/_DSC1700.jpg" alt="The QR code on the cup lid is scanned at the blender" loading="lazy"></div>
+          <span class="where">Juvo Blender</span>
+          <span class="n">4</span>
+          <h3>Scan the cup on the blender</h3>
+          <p>The customer holds the QR code on the lid under the scanner. The blender reads which product it is and sets the blend.</p>
+        </li>
+        <li class="step" data-i="4">
+          <div class="step-img"><img class="cover" src="images/_DSC1789.jpg" alt="A customer places the open cup in the blender" loading="lazy"></div>
+          <span class="where">Juvo Blender</span>
+          <span class="n">5</span>
+          <h3>Lid off, cup in</h3>
+          <p>The customer peels off the lid and places the cup in the blending chamber.</p>
+        </li>
+        <li class="step" data-i="5">
+          <div class="step-img"><img class="cover" src="images/_DSC1897.jpg" alt="A customer holds a blended smoothie with a straw" loading="lazy"></div>
+          <span class="where">Juvo Blender</span>
+          <span class="n">6</span>
+          <h3>Press start and collect</h3>
+          <p>The blender adds water and blends in the cup, in under a minute. The customer takes the smoothie. The blender then cleans itself with hot water and cleaning solution, ready for the next cup.</p>
+          <p class="small">About 90 seconds at the blender, including the clean.</p>
+        </li>
+      </ol>
+    </div>
+
+    <div class="timeline reveal" aria-label="Timeline from purchase to drink">
+      <div class="tl-sum"><span class="v">About 2 minutes</span><span class="small">from tap to pay to the blender being ready again</span></div>
+      <div class="tl-bar">
+        <div class="f"><span>Freezer: tap, take</span><span class="num">30 s</span></div>
+        <div class="b"><span>Blender: scan, blend, self-clean</span><span class="num">90 s</span></div>
+      </div>
+      <div class="tl-axis num"><span>0:00</span><span>0:30</span><span>1:00</span><span>1:30</span><span>2:00</span></div>
+    </div>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#machine" data-go="machine"><span class="label">03</span><span class="serif">The machine</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 03 THE MACHINE -->
+<div class="page" data-page="machine" hidden>
+<section class="band" id="machine">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>03</span><span>The machine</span></div>
+      <div class="intro">
+        <h2>Two units, one system</h2>
+        <p class="lede">The Juvo Freezer stores the cups and handles payment. The Juvo Blender blends each cup and cleans itself. They stand side by side and run on standard power.</p>
+      </div>
+    </div>
+
+    <div class="machine-hero reveal">
+      <figure>
+        <div class="img"><img class="cover" src="images/_DSC0980.jpg" alt="The Juvo Freezer and Juvo Blender, fully stocked" loading="lazy"></div>
+      </figure>
+      <div class="stack-lg">
+        <div class="unit-pair">
+          <div><span class="label">Unit 1</span><h3>Juvo Freezer</h3><p class="small">Glass-door freezer holding up to 240 cups across up to 10 flavours. Unlocks after payment and records each cup taken.</p></div>
+          <div><span class="label">Unit 2</span><h3>Juvo Blender</h3><p class="small">Reads the cup, adds water, blends, then rinses itself at 90°C with cleaning solution before the next cup.</p></div>
+        </div>
+        <div class="cmp-wrap">
+          <table class="cmp">
+            <thead><tr><th scope="col">Operator benchmark</th><th scope="col">Juvo</th><th scope="col">Others on the market</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Deep clean</th><td class="j">Once per week</td><td class="o">3–4 times per week</td></tr>
+              <tr><th scope="row">Uptime</th><td class="j">80–90%</td><td class="o">50–60%</td></tr>
+            </tbody>
+          </table>
+          <p class="small" style="margin-top:8px">From Juvo operating data.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Installation requirements</span>
+      <table class="spec">
+        <tbody>
+          <tr><th scope="row">Power</th><td>A standard power outlet. No special electrical work.</td></tr>
+          <tr><th scope="row">Water</th><td>A mains connection, or the Blender's built-in tank, good for 120 to 180 cups between refills. Either works.</td></tr>
+          <tr><th scope="row">Floor space</th><td>Room for the Juvo Freezer and Juvo Blender side by side. <span class="tbc">CONFIRM: combined footprint W x D</span></td></tr>
+          <tr><th scope="row">Connectivity</th><td>Wifi, with a backup SIM</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Explore the units</span>
+      <div class="stack-lg">
+        <div class="seg" role="group" aria-label="Show hotspots for">
+          <button type="button" data-unit="all" aria-pressed="true">Both</button>
+          <button type="button" data-unit="freezer" aria-pressed="false">Juvo Freezer</button>
+          <button type="button" data-unit="blender" aria-pressed="false">Juvo Blender</button>
+        </div>
+        <div class="hs-wrap">
+          <div class="hs-fig" id="hsFig">
+            <img src="images/_DSC0982.jpg" alt="Front view of the Juvo Freezer and Juvo Blender with numbered points of interest" loading="lazy">
+          </div>
+          <ul class="hs-list" id="hsList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Details</span>
+      <div class="details">
+        <figure><div class="img"><img class="cover" src="images/_DSC1496.jpg" alt="A card tapped on the freezer payment terminal" loading="lazy"></div><figcaption>Payment terminal</figcaption></figure>
+        <figure><div class="img"><img class="cover" src="images/_DSC0249.jpg" alt="The blender QR scanner above the cup opening" loading="lazy"></div><figcaption>QR scanner and cup opening</figcaption></figure>
+        <figure><div class="img"><img class="cover" src="images/_DSC0248.jpg" alt="Inside the stainless steel blending chamber" loading="lazy"></div><figcaption>Blending chamber</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Specifications</span>
+      <div class="specs">
+        <table class="spec">
+          <caption>Juvo Freezer</caption>
+          <tbody>
+            <tr><th scope="row">Capacity</th><td>240 cups</td></tr>
+            <tr><th scope="row">Flavours</th><td>Up to 10</td></tr>
+            <tr><th scope="row">Payment</th><td>Tap to pay, by card or phone, on the payment terminal</td></tr>
+            <tr><th scope="row">Access</th><td>Door unlocks after payment; each cup taken is recorded</td></tr>
+            <tr><th scope="row">Power</th><td>Standard power outlet</td></tr>
+            <tr><th scope="row">Connectivity</th><td>Wifi with a backup SIM</td></tr>
+          </tbody>
+        </table>
+        <table class="spec">
+          <caption>Juvo Blender</caption>
+          <tbody>
+            <tr><th scope="row">Time per cup</th><td>About 90 seconds, including the clean</td></tr>
+            <tr><th scope="row">Water</th><td>Mains connection, or a built-in tank good for 120 to 180 cups between refills</td></tr>
+            <tr><th scope="row">Cleaning</th><td>90°C hot water and cleaning solution after every blend</td></tr>
+            <tr><th scope="row">Power</th><td>Standard power outlet</td></tr>
+            <tr><th scope="row">Connectivity</th><td>Wifi with a backup SIM</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Cleaning after every smoothie</span>
+      <div class="clean">
+        <div class="loop" id="loop" aria-hidden="true">
+          <svg viewBox="0 0 320 320">
+            <circle cx="160" cy="160" r="112" fill="none" stroke="var(--line-2)" stroke-width="1.5" stroke-dasharray="3 5"/>
+            <circle id="loopDot" cx="160" cy="48" r="5" fill="var(--off-black)"/>
+            <g class="node" data-k="0"><circle cx="160" cy="48" r="26"/><text class="i" x="160" y="52" text-anchor="middle">1</text><text class="l" x="160" y="14" text-anchor="middle">Blend</text></g>
+            <g class="node" data-k="1"><circle cx="272" cy="160" r="26"/><text class="i" x="272" y="164" text-anchor="middle">2</text><text class="l" x="272" y="208" text-anchor="middle">Cup out</text></g>
+            <g class="node" data-k="2"><circle cx="160" cy="272" r="26"/><text class="i" x="160" y="276" text-anchor="middle">3</text><text class="l" x="160" y="314" text-anchor="middle">90°C rinse</text></g>
+            <g class="node" data-k="3"><circle cx="48" cy="160" r="26"/><text class="i" x="48" y="164" text-anchor="middle">4</text><text class="l" x="48" y="208" text-anchor="middle">Ready</text></g>
+            <text x="160" y="154" text-anchor="middle" font-family="var(--serif)" font-size="22" fill="var(--ink)" id="loopCenter">Blend</text>
+            <text x="160" y="176" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink-3)" letter-spacing="1.5">EVERY CUP</text>
+          </svg>
+        </div>
+        <div class="stack-lg">
+          <ol class="loop-steps" id="loopSteps">
+            <li class="on"><span><b>Blend</b>The smoothie is blended in its own cup.</span></li>
+            <li><span><b>Cup removed</b>The customer takes the smoothie.</span></li>
+            <li><span><b>90°C rinse with cleaning solution</b>Hot water and cleaning solution run through the chamber.</span></li>
+            <li><span><b>Ready for the next cup</b>The chamber is clean before the next customer scans.</span></li>
+          </ol>
+          <p>This runs automatically after every blend. It keeps the chamber hygienic, stops one flavour carrying into the next, and keeps every smoothie tasting the same.</p>
+          <p class="bench">Because the chamber cleans itself after every blend, the operator's deeper clean (a pot wash) is once per week. Others on the market need 3–4 per week. Source: Juvo operating data.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Only water</span>
+      <div class="water">
+        <figure><div class="img"><img class="cover" src="images/_DSC0259.jpg" alt="The built-in water tanks behind the blender's lower door" loading="lazy"></div><figcaption>Built-in water tank, behind the Blender's lower door.</figcaption></figure>
+        <div class="stack">
+          <h3>Water is the only thing the blender adds</h3>
+          <p>Everything else is already in the cup. There are no milks, syrups or other liquids, and no lines to manage. That keeps cleaning, maintenance and food safety simple.</p>
+          <div class="not-list" aria-label="What the blender adds"><span class="yes">Water</span><span>Milk</span><span>Syrup</span><span>Ice</span><span>Concentrate</span></div>
+        </div>
+      </div>
+    </div>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#software" data-go="software"><span class="label">04</span><span class="serif">Software</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 04 SOFTWARE -->
+<div class="page" data-page="software" hidden>
+<section id="software">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>04</span><span>Software</span></div>
+      <div class="intro">
+        <h2>Machine software and remote monitoring, under licence</h2>
+        <p class="lede">The machine software and remote monitoring are included in exchange for an ongoing licence fee. Every unit reports in real time. Alerts go to the operator, and Juvo supports remotely and on call.</p>
+      </div>
+    </div>
+
+    <div class="stack-lg reveal">
+      <span class="label">How an issue is handled</span>
+      <div class="flow" aria-label="How an issue is handled">
+        <div class="node"><b>Sensors</b>Freezer and Blender report temperature, stock and status</div><span class="arr">&rarr;</span>
+        <div class="node"><b>Remote monitoring</b>Every unit is watched in real time</div><span class="arr">&rarr;</span>
+        <div class="node alert"><b>Alert</b>Sent to the operator when something leaves the normal range</div><span class="arr">&rarr;</span>
+        <div class="node"><b>Operator acts</b>Supported by Juvo remotely and on call</div><span class="arr">&rarr;</span>
+        <div class="node"><b>Resolved</b>Logged with its full history</div>
+      </div>
+      <div class="cards">
+        <div class="card"><svg viewBox="0 0 28 28"><path d="M12 4a2.5 2.5 0 0 1 5 0v12.5a5 5 0 1 1-5 0z"/><path d="M14.5 12v7"/><circle cx="14.5" cy="20.5" r="1.6"/></svg><h4>Temperature</h4><p>Freezer temperature is tracked continuously, with an alert if it leaves the safe range.</p></div>
+        <div class="card"><svg viewBox="0 0 28 28"><path d="M4 9l10-5 10 5-10 5z"/><path d="M4 14l10 5 10-5"/><path d="M4 19l10 5 10-5"/></svg><h4>Stock tracking</h4><p>Stock levels are tracked per flavour, per machine, so restocks can be planned.</p></div>
+        <div class="card"><svg viewBox="0 0 28 28"><path d="M14 4l11 19H3z"/><path d="M14 11v5"/><circle cx="14" cy="19.5" r=".8"/></svg><h4>Alerts</h4><p>The operator is alerted when a unit leaves its normal range or stops working.</p></div>
+        <div class="card"><svg viewBox="0 0 28 28"><path d="M17 4.5a5.5 5.5 0 0 0-6.6 7L4 18l3 3 6.5-6.4A5.5 5.5 0 0 0 20.5 8l-3.2 3.2-2.6-.7-.7-2.6z"/></svg><h4>Remote diagnosis</h4><p>Faults can be diagnosed remotely, with Juvo supporting the operator on call.</p></div>
+        <div class="card"><svg viewBox="0 0 28 28"><rect x="5" y="3.5" width="18" height="21" rx="2"/><path d="M9 10l2 2 4-4"/><path d="M9 17h10M9 21h6"/></svg><h4>Fault tracking</h4><p>Every fault is logged, tracked and resolved, and the history is kept.</p></div>
+        <div class="card"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M6 14h4l2-4 3 7 2-3h5"/><path d="M10 24h8"/></svg><h4>Uptime</h4><p>80–90% for Juvo machines, against 50–60% for others on the market (Juvo operating data). Monitoring flags a breakdown, so the operator knows when a machine is down.</p></div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Machine functions</span>
+      <div class="cover-list">
+        <div>
+          <h4>Juvo Freezer</h4>
+          <ul class="fn-list">
+            <li><b>Smart vending</b><span>Purchases are recognised and paid for automatically.</span></li>
+            <li><b>Sales insights</b><span>Sales data from every machine.</span></li>
+            <li><b>Layout and product-mix optimisation</b><span>Sales and stock data inform the freezer layout and product mix.</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Juvo Blender</h4>
+          <ul class="fn-list">
+            <li><b>Autonomous operation</b><span>Reads the cup, adds water, blends and cleans itself without staff.</span></li>
+            <li><b>Remote monitoring</b><span>Status and faults are reported in real time.</span></li>
+            <li><b>Adjustable settings</b><span>Blend and machine settings can be adjusted.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Optional add-ons</span>
+      <div class="stack">
+        <div class="values three">
+          <div><h4>Customised machine software</h4><p>Changes to the machine software to suit an operator's setup or product range.</p></div>
+          <div><h4>Rewards app</h4><p>A customer app for points and rewards, linked to purchases at the machine.</p></div>
+          <div><h4>Operator portal</h4><p>A web portal for an operator's sales, orders and machine data across sites.</p></div>
+        </div>
+        <p class="small">Juvo builds these on request.</p>
+      </div>
+    </div>
+
+    <figure class="sub reveal">
+      <span class="label">Restocking</span>
+      <div>
+        <div style="aspect-ratio:21/9;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--band)"><img class="cover" src="images/_DSC1214.jpg" alt="Restocking the freezer from a crate" loading="lazy" style="object-position:50% 30%"></div>
+        <figcaption>Live stock levels for each flavour help plan restocks.</figcaption>
+      </div>
+    </figure>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#menu" data-go="menu"><span class="label">05</span><span class="serif">The menu</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 05 THE MENU -->
+<div class="page" data-page="menu" hidden>
+<section class="band" id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>05</span><span>The menu</span></div>
+      <div class="intro">
+        <h2>What can be run through the machine</h2>
+        <p class="lede">The system blends a pre-portioned frozen cup with water, in its own cup. Products that suit that format can be run through it.</p>
+      </div>
+    </div>
+
+    <div class="ethos reveal">
+      <figure><div class="img"><img class="cover" src="images/_DSC9284.jpg" alt="Five cups from above, each filled with frozen ingredients" loading="lazy"></div><figcaption>Illustrative photo of the cup format.</figcaption></figure>
+      <div class="stack">
+        <span class="label">The format</span>
+        <p class="serif" style="font-size:1.45rem;line-height:1.35">A single serve of frozen ingredients, in a lidded cup, plus water.</p>
+        <p>The cup is kept frozen in the Juvo Freezer. At the Juvo Blender, the QR code on the lid identifies the product and sets the blend. The blender adds water and blends in the cup. Water is the only thing the machine adds.</p>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Product categories</span>
+      <div class="stack">
+        <div class="values">
+          <div><h4>Frozen fruit smoothies</h4><p>Whole frozen fruit, blended with water.</p></div>
+          <div><h4>Protein and functional smoothies</h4><p>Fruit with protein or other functional ingredients.</p></div>
+          <div><h4>Electrolyte slushies</h4><p>Frozen hydration blends.</p></div>
+          <div><h4>Other frozen blended products</h4><p>Anything that works as a cup of frozen ingredients plus water.</p></div>
+        </div>
+        <p class="small">Illustrative categories only.</p>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Product and compliance</span>
+      <div class="notice">
+        <h4>Operators source their own product</h4>
+        <p>Operators source their own product and are responsible for their own food safety compliance. Juvo does not supply product to buyers of the machine.</p>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">The cup</span>
+      <div class="prod">
+        <div class="img"><img class="cover" src="images/JUVO0285.jpg" alt="Goji berries poured into a cup" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/JUVO0499.jpg" alt="Passionfruit squeezed into a cup" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/JUVO0119.jpg" alt="Close view of strawberries and blueberries inside a cup" loading="lazy"></div>
+      </div>
+    </div>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#about" data-go="about"><span class="label">06</span><span class="serif">About us</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 06 ABOUT US -->
+<div class="page" data-page="about" hidden>
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>06</span><span>About us</span></div>
+      <div class="intro">
+        <h2>The team behind Juvo</h2>
+      </div>
+    </div>
+
+    <figure class="about-hero reveal"><img class="cover" src="images/_DSC9305.jpg" alt="Members of the Juvo team in front of the Juvo Freezer and Blender" loading="lazy" style="object-position:50% 35%"></figure>
+
+    <div class="values three reveal">
+      <div><span class="n">1</span><h4>The business we built</h4><p>Juvo was founded in Perth by Josh, Kese and Laine. Juvo operates its own machines in market, across Perth and Sydney, at sites that include a gym and a corporate office. The team is ten people.</p></div>
+      <div><span class="n">2</span><h4>What operating real machines taught us</h4><p>Running machines at real sites showed where the work is: keeping the blending chamber hygienic between cups, stopping one flavour carrying into the next, keeping machines selling, and knowing when one is down.</p></div>
+      <div><span class="n">3</span><h4>Why we built our own machine</h4><p>We spent months developing our own hardware and software. The result is a blender that cleans itself at 90°C after every blend and adds only water, a freezer that records each cup taken, and remote monitoring on every unit.</p></div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">In the field</span>
+      <div class="strip">
+        <div class="img wide"><img class="cover" src="images/_DSC0822.jpg" alt="Two members of the Juvo team beside the units" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/JUVO0672.jpg" alt="A gym member holds a Juvo cup" loading="lazy"></div>
+        <div class="img"><img class="cover" src="images/_DSC1863.jpg" alt="An opened cup of frozen strawberries, peanut butter and cacao nibs" loading="lazy"></div>
+      </div>
+    </div>
+
+    <div class="sub reveal">
+      <span class="label">Our team</span>
+      <div class="stack-lg">
+        <div class="team" id="team"></div>
+      </div>
+    </div>
+    <nav class="next-page" aria-label="Next section"><span class="label">Next</span><a href="#support" data-go="support"><span class="label">07</span><span class="serif">Support and terms</span></a></nav>
+  </div>
+</section>
+</div>
+
+<!-- 07 SUPPORT AND TERMS -->
+<div class="page" data-page="support" hidden>
+<section class="band" id="support">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="chap label"><span>07</span><span>Support and terms</span></div>
+      <div class="intro">
+        <h2>After the sale</h2>
+        <p class="lede">What Juvo provides once the operator owns the machine.</p>
+      </div>
+    </div>
+    <div class="reveal">
+      <table class="spec">
+        <tbody>
+          <tr><th scope="row">On-call support</th><td>Juvo is on call to support the operator with the machine, including faults and first-line maintenance.</td></tr>
+          <tr><th scope="row">Replacement parts and warranty</th><td>Juvo is responsible for replacement parts and warranty matters.</td></tr>
+          <tr><th scope="row">Software and monitoring</th><td>Juvo provides the machine software and remote monitoring under licence, for an ongoing fee.</td></tr>
+          <tr><th scope="row">Not included</th><td>Product supply, restocking, cleaning, host-site arrangements and food safety compliance. These are the operator's.</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:16px">Detailed terms are set out in the purchase and licence agreements.</p>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="lock"><svg viewBox="0 0 722.83 238.11" role="img" aria-label="Juvo"><use href="#juvo"/></svg><span>Real Fuel</span></div>
+      <div class="mail"><code id="mailAddr">partners@juvorecovery.com</code><button class="copy" type="button" id="copyMail">Copy</button></div>
+      <div class="foot-meta"><span>Juvo product guide for machine buyers and operators</span><span>Information current as of October 2026</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const aud = (n, d=0) => '$' + n.toLocaleString('en-AU', {minimumFractionDigits:d, maximumFractionDigits:d});
+
+/* ---------- Nav + router (tabbed pages) ---------- */
+const nav = $('#nav'), toggle = $('#navToggle');
+toggle.addEventListener('click', () => {
+  const open = !nav.classList.contains('open');
+  nav.classList.toggle('open', open); toggle.setAttribute('aria-expanded', open);
+});
+const PAGES = $$('.page').map(p => p.dataset.page);
+function show(page, push){
+  if (!PAGES.includes(page)) page = 'home';
+  $$('.page').forEach(p => { p.hidden = p.dataset.page !== page; });
+  $$('#navLinks a').forEach(a => a.setAttribute('aria-current', a.dataset.go === page ? 'true' : 'false'));
+  nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false');
+  if (push && location.hash !== '#' + page) { try { history.pushState(null, '', '#' + page); } catch (e) { location.hash = page; } }
+  window.scrollTo({top:0, behavior:'auto'});
+  document.dispatchEvent(new CustomEvent('pagechange', {detail:page}));
+  requestAnimationFrame(progress);
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-go]');
+  if (!a) return;
+  e.preventDefault(); show(a.dataset.go, true);
+});
+window.addEventListener('popstate', () => show((location.hash || '#home').slice(1), false));
+window.addEventListener('hashchange', () => show((location.hash || '#home').slice(1), false));
+function progress(){
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  $('#navProgress').style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+}
+window.addEventListener('scroll', progress, {passive:true});
+show((location.hash || '#home').slice(1), false);
+
+/* ---------- Reveal ---------- */
+if (!reduce && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), {rootMargin: '0px 0px -8% 0px'});
+  const arm = () => $$('.page:not([hidden]) .reveal:not(.in)').forEach(el => { if (el.getBoundingClientRect().top > window.innerHeight) io.observe(el); });
+  arm(); document.addEventListener('pagechange', () => requestAnimationFrame(arm));
+}
+
+/* ---------- Operator P&L calculator ---------- */
+const cM = $('#cMachines');
+const F = {cups:'#cCups', price:'#cPrice', fee:'#cFee', product:'#cProduct', purchase:'#cPurchase', licence:'#cLicence', comm:'#cComm', rent:'#cRent', power:'#cPower', labour:'#cLabour', ins:'#cIns'};
+const LBL = {cups:'cups per day', price:'price', fee:'transaction costs', product:'product cost', purchase:'purchase price', licence:'licence fee', comm:'commission', rent:'rent', power:'electricity', labour:'labour and travel', ins:'insurance'};
+function fillRange(r){ r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%'); }
+const out = {year:$('#rYear'), month:$('#rMonth'), payback:$('#rPayback'), be:$('#rBe')};
+function set(el, txt, dash){ el.textContent = txt; el.classList.toggle('dash', !!dash); }
+const sgn = v => (v < 0 ? '−' : '') + aud(Math.abs(v));
+function calc(){
+  const m = +cM.value;
+  $('#oMachines').textContent = m; fillRange(cM);
+  const v = {}, missing = [];
+  Object.entries(F).forEach(([k, sel]) => {
+    const raw = $(sel).value.trim(), n = parseFloat(raw);
+    if (raw === '' || !isFinite(n) || n < 0) missing.push(k); else v[k] = n;
+  });
+  if (missing.length) {
+    Object.values(out).forEach(el => set(el, '—', true));
+    $('#calcMsg').innerHTML = `Enter ${missing.length === Object.keys(F).length ? 'every field' : missing.map(k => LBL[k]).join(', ')} to see results.`;
+    return;
+  }
+  const exGst = v.price / 1.1;
+  const perCup = exGst * (1 - v.fee / 100 - v.comm / 100) - v.product;
+  const fixedM = v.licence + v.rent + v.power + v.labour + v.ins;       // per machine per month
+  const contribYear = m * v.cups * 365 * perCup;
+  const fixedYear = m * fixedM * 12;
+  const netYear = contribYear - fixedYear, netMonth = netYear / 12;
+  const capital = m * v.purchase;
+  set(out.year, sgn(netYear)); set(out.month, sgn(netMonth));
+  set(out.payback, netMonth > 0 ? (capital / netMonth).toFixed(1) + ' months' : 'Not reached', netMonth <= 0);
+  const be = perCup > 0 ? (fixedM * 12 / 365) / perCup : null;
+  set(out.be, be == null ? 'Not reached' : be.toFixed(1), be == null);
+  $('#calcMsg').innerHTML =
+    `<span class="label" style="display:block;margin-bottom:6px">How it is worked out</span>` +
+    `${aud(v.price,2)} &divide; 1.1 to remove GST = <b>${aud(exGst,2)}</b>. Less ${v.fee}% transaction costs, ${v.comm}% commission and ${aud(v.product,2)} product = <b>${(perCup < 0 ? '−' : '') + aud(Math.abs(perCup), 2)}</b> per cup.<br>` +
+    `${m} machine${m > 1 ? 's' : ''} &times; ${v.cups} cups &times; 365 days = <b>${sgn(contribYear)}</b> per year.<br>` +
+    `Less monthly costs of ${aud(fixedM)} per machine &times; 12 = <b>${aud(fixedYear)}</b> per year.<br>` +
+    `Payback: ${aud(capital)} purchase &divide; net per month.`;
+}
+cM.addEventListener('input', calc);
+Object.values(F).forEach(sel => $(sel).addEventListener('input', calc));
+calc();
+
+/* ---------- Customer flow (scroll-driven) ---------- */
+const steps = $$('.step'), stepImgs = $$('#stepFrame > [data-i]'), counter = $('#stepCounter');
+function setStep(i){
+  steps.forEach(s => s.classList.toggle('on', +s.dataset.i === i));
+  stepImgs.forEach(im => im.classList.toggle('on', +im.dataset.i === i));
+  counter.textContent = `STEP ${i+1} OF ${steps.length}`;
+}
+let curStep = 0;
+function pickStep(){
+  const page = steps[0] && steps[0].closest('.page');
+  if (page && page.hidden) return;
+  const line = innerHeight * 0.45;
+  let best = 0, bd = Infinity;
+  for (let i = 0; i < steps.length; i++) {
+    const r = steps[i].getBoundingClientRect();
+    if (r.top <= line && r.bottom >= line) { best = i; break; }
+    const d = Math.min(Math.abs(r.top - line), Math.abs(r.bottom - line));
+    if (d < bd) { bd = d; best = i; }
+  }
+  if (best !== curStep) { curStep = best; setStep(best); }
+}
+let stepRaf = 0;
+addEventListener('scroll', () => { if (!stepRaf) stepRaf = requestAnimationFrame(() => { stepRaf = 0; pickStep(); }); }, {passive:true});
+addEventListener('resize', pickStep);
+document.addEventListener('pagechange', e => { if (e.detail === 'flow') { curStep = -1; requestAnimationFrame(pickStep); } });
+
+/* ---------- Hotspots ---------- */
+const HS = [
+  {u:'freezer', x:48.8, y:46.2, t:'Payment terminal', d:'Tap to pay by card or phone. A tap places a temporary hold, and the customer is charged only for the cup taken.'},
+  {u:'freezer', x:19,   y:59,   t:'Door and lock', d:'Unlocks after payment with a click and a green light, and locks again when closed.'},
+  {u:'freezer', x:33,   y:70,   t:'Freezer storage', d:'Holds up to 240 cups across up to 10 flavours. The freezer records each cup taken.'},
+  {u:'freezer', x:35,   y:86,   t:'Refrigeration', d:'Keeps every cup frozen. Temperature is monitored continuously.'},
+  {u:'blender', x:64.3, y:45.5, t:'Touchscreen', d:'Shows step-by-step instructions and the start button.'},
+  {u:'blender', x:70.5, y:56.6, t:'QR scanner', d:'Reads the code on the cup lid to identify the blend.'},
+  {u:'blender', x:58.5, y:63,   t:'Blending chamber', d:'The cup sits here while water is added and the smoothie is blended.'},
+  {u:'blender', x:64.5, y:73.5, t:'Cleaning system', d:'Runs 90°C hot water and cleaning solution through the chamber after every blend.'},
+  {u:'blender', x:64.5, y:85,   t:'Water system', d:'Mains connection or a built-in tank good for 120 to 180 cups, behind the lower door.'}
+];
+const fig = $('#hsFig'), list = $('#hsList');
+let pop = null, openIdx = -1;
+const unitName = {freezer:'Juvo Freezer', blender:'Juvo Blender'};
+let lastUnit = '';
+HS.forEach((h, i) => {
+  const b = document.createElement('button');
+  b.className = 'hs'; b.type = 'button'; b.textContent = i + 1;
+  b.style.left = h.x + '%'; b.style.top = h.y + '%';
+  b.dataset.u = h.u; b.dataset.i = i;
+  b.setAttribute('aria-label', `${i+1}: ${h.t}`); b.setAttribute('aria-expanded', 'false');
+  b.addEventListener('click', e => { e.stopPropagation(); openHs(i === openIdx ? -1 : i); });
+  fig.appendChild(b);
+  if (h.u !== lastUnit) { const li = document.createElement('li'); li.className = 'unit-h'; li.dataset.u = h.u; li.innerHTML = `<span class="label">${unitName[h.u]}</span>`; list.appendChild(li); lastUnit = h.u; }
+  const li = document.createElement('li'); li.dataset.u = h.u;
+  li.innerHTML = `<button type="button" data-i="${i}"><span class="k">${i+1}</span><span class="t"><b>${h.t}</b><span>${h.d}</span></span></button>`;
+  li.querySelector('button').addEventListener('click', () => openHs(i === openIdx ? -1 : i));
+  list.appendChild(li);
+});
+function openHs(i){
+  openIdx = i;
+  if (pop) { pop.remove(); pop = null; }
+  $$('.hs', fig).forEach(b => b.setAttribute('aria-expanded', +b.dataset.i === i ? 'true' : 'false'));
+  $$('button[data-i]', list).forEach(b => b.setAttribute('aria-current', +b.dataset.i === i ? 'true' : 'false'));
+  if (i < 0) return;
+  const h = HS[i];
+  pop = document.createElement('div'); pop.className = 'hs-pop'; pop.setAttribute('role', 'note');
+  pop.innerHTML = `<span class="label">${unitName[h.u]}</span><h4>${h.t}</h4><p>${h.d}</p>`;
+  fig.appendChild(pop);
+  const fw = fig.clientWidth, fh = fig.clientHeight, pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let left = h.x / 100 * fw + (h.x > 50 ? -pw - 24 : 24);
+  left = Math.max(8, Math.min(fw - pw - 8, left));
+  let top = h.y / 100 * fh - ph / 2;
+  top = Math.max(8, Math.min(fh - ph - 8, top));
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
+}
+document.addEventListener('click', e => { if (openIdx >= 0 && !fig.contains(e.target) && !list.contains(e.target)) openHs(-1); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && openIdx >= 0) openHs(-1); });
+$$('.seg button[data-unit]').forEach(b => b.addEventListener('click', () => {
+  const u = b.dataset.unit;
+  $$('.seg button[data-unit]').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+  $$('.hs', fig).forEach(h => h.classList.toggle('dim', u !== 'all' && h.dataset.u !== u));
+  $$('li[data-u]', list).forEach(li => li.classList.toggle('hide', u !== 'all' && li.dataset.u !== u));
+  if (openIdx >= 0 && u !== 'all' && HS[openIdx].u !== u) openHs(-1);
+}));
+
+/* ---------- Cleaning loop ---------- */
+const loopNodes = $$('#loop .node'), loopLis = $$('#loopSteps li'), loopDot = $('#loopDot'), loopCenter = $('#loopCenter');
+const loopNames = ['Blend', 'Cup out', '90°C rinse', 'Ready'];
+let lk = 0, angle = -90;
+function setLoop(k){
+  loopNodes.forEach(n => n.classList.toggle('on', +n.dataset.k === k));
+  loopLis.forEach((li, j) => li.classList.toggle('on', j === k));
+  loopCenter.textContent = loopNames[k];
+}
+setLoop(0);
+if (!reduce) {
+  let last = performance.now(), visible = false;
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe($('#loop'));
+  (function tick(t){
+    const dt = t - last; last = t;
+    if (visible) {
+      angle += dt * 0.09;
+      const a = angle * Math.PI / 180;
+      loopDot.setAttribute('cx', 160 + 112 * Math.cos(a)); loopDot.setAttribute('cy', 160 + 112 * Math.sin(a));
+      const k = Math.floor((((angle + 90) % 360) + 360) % 360 / 90);
+      if (k !== lk) { lk = k; setLoop(k); }
+    }
+    requestAnimationFrame(tick);
+  })(last);
+} else {
+  loopNodes.forEach(n => n.classList.add('on')); loopLis.forEach(li => li.classList.add('on')); loopDot.style.display = 'none';
+}
+
+/* ---------- Team ---------- */
+const TEAM = [
+  {n:'Kese Gasbarri', r:'Co-founder and Co-CEO', img:'kese', one:'Runs operations: food manufacturing, logistics and unit economics.', bio:'Kese studied a Bachelor of Commerce in Finance and Data Science and worked in investment banking before co-founding Juvo. He leads the operations side of the business, from our kitchen and production capacity to logistics and the cost of every cup.'},
+  {n:'Joshua Taylor', r:'Co-founder and Co-CEO', img:'josh', one:'Works with venue partners and leads the rollout of new sites.', bio:'Josh studied a Bachelor of Science in Mechanical Engineering and Finance and worked in investment banking before co-founding Juvo. He works with venue partners and leads the rollout of new sites.'},
+  {n:'Laine Mulvay', r:'Co-founder and Head of Product', img:'laine', one:'Leads the machine, the software and the customer experience.', bio:'Laine holds a Bachelor of Science in Mathematics and Engineering and a Master of Data Science. He leads machine development, the Juvo app and venue portal, and the product range.'},
+  {n:'Austin Sheard', r:'Head of Manufacturing and Operations', img:'austin', one:'Runs production scheduling, procurement and inventory.', bio:'Austin holds a Master of Engineering from UWA. He spent three years at Bain after working as a process engineer at Wesfarmers, and now runs production scheduling, procurement, inventory and the scale-up of our facility.'},
+  {n:'Ava Willow-Wilson', r:'Brand and Marketing Lead', img:'ava', one:'Leads the brand, content and activations.', bio:'Ava joined from a boutique fashion brand in Melbourne. She leads the Juvo brand, content, social channels, campaigns and in-venue activations.'},
+  {n:'Zac Barrett', r:'Food Manufacturing Lead', img:'zac', one:'Leads daily production at our Midland kitchen.', bio:'Zac leads daily manufacturing at our Midland kitchen, and looks after machine servicing, restocking and logistics.'},
+  {n:'Peter Tanner', r:'Software and Hardware Engineer', img:'peter', one:'Builds the machine software and hardware improvements.', bio:'Peter is completing a Master of Professional Engineering at UWA. He builds our machine software and works on hardware improvements.'},
+  {n:'Katherina Cooper', r:'Product Innovation and Nutrition', img:'katherina', one:'Develops new blends and supports quality control.', bio:'Katherina is studying nutrition and has a background in quality assurance and quality control in food manufacturing. She drives new product ideas and formulations.'},
+  {n:'Thomas Lenette', r:'Admin and Operations', img:'thomas', one:'Covers compliance, finance, HR and internal systems.', bio:'Thomas is studying Philosophy and Politics at UWA. He covers compliance, legal and finance workstreams, HR and our internal systems.'},
+  {n:'Mariann Hetland', r:'Accounting and Bookkeeping', img:'mariann', one:'Runs accounts and payroll.', bio:'Mariann is an experienced finance controller and previously worked as a senior financial officer in public health. She runs our accounts and payroll.'}
+];
+const team = $('#team');
+TEAM.forEach((p, i) => {
+  const el = document.createElement('div'); el.className = 'person';
+  const bid = 'bio' + i;
+  el.innerHTML = `<div class="head"><img class="cover" src="images/team-${p.img}.jpg" alt="${p.n}" loading="lazy" width="480" height="600"></div><div class="stack" style="gap:4px"><h4>${p.n}</h4><span class="role">${p.r}</span></div>
+    <p class="one">${p.one}</p><div class="bio" id="${bid}"><div><p>${p.bio}</p></div></div>
+    <button class="more" type="button" aria-expanded="false" aria-controls="${bid}">Read bio</button>`;
+  const btn = el.querySelector('.more');
+  btn.addEventListener('click', () => { const o = !el.classList.contains('open'); el.classList.toggle('open', o); btn.setAttribute('aria-expanded', o); btn.textContent = o ? 'Close bio' : 'Read bio'; });
+  team.appendChild(el);
+});
+
+/* ---------- Copy email ---------- */
+$('#copyMail').addEventListener('click', e => {
+  const btn = e.currentTarget, txt = $('#mailAddr').textContent;
+  const done = ok => { btn.textContent = ok ? 'Copied' : 'Select and copy'; setTimeout(() => btn.textContent = 'Copy', 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => done(true), () => { selectText(); done(false); });
+  else { selectText(); done(false); }
+  function selectText(){ const r = document.createRange(); r.selectNodeContents($('#mailAddr')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+});
+})();
+</script>
+</body></html>
