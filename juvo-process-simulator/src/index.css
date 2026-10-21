@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body { @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100; -webkit-tap-highlight-color: transparent; }
+.react-flow__attribution { display: none; }
+.dark .react-flow__controls button { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+.dark .react-flow__controls button svg { fill: #e2e8f0; }
+.dark .react-flow__minimap { background: #0f172a; }

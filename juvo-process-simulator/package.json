@@ -12,6 +12,7 @@
     "catalogue": "node scripts/build-catalogue.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.137.0",
     "@xyflow/react": "^12.12.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
