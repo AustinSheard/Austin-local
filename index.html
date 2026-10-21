@@ -33,6 +33,11 @@ main{padding:16px;max-width:760px;width:100%}
 .card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:2px solid transparent;transition:border-color .2s;scroll-margin-top:12px}
 @media(max-width:899px){.card{scroll-margin-top:calc(42vh + 12px)}}
 .card.active{border-color:var(--ocean)}
+.card.today{background:#f0f8ee;box-shadow:0 0 0 3px var(--green2)}
+.badge{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:var(--green2);color:#fff;font-size:.72rem;font-weight:700;vertical-align:middle}
+.num.flex{background:#c08a3e}
+.dayx{display:inline-block;margin-top:8px!important;padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.18);font-weight:700;opacity:1!important}
+.dayx:empty{display:none}
 .card-h{display:flex;align-items:center;gap:10px;cursor:pointer}
 .num{flex:0 0 32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
 .card h3{margin:0;font-size:1.1rem}
@@ -63,8 +68,9 @@ a.tel{color:var(--ocean);font-weight:700}
 </head>
 <body>
 <header>
-  <h1>Sri Lanka · 14 nights</h1>
-  <p>Late October 2026 · Austin &amp; Shari · culture, hills, safari &amp; surf</p>
+  <h1>Sri Lanka · 17 nights</h1>
+  <p>21 Oct – 7 Nov 2026 · Austin &amp; Shari · culture, hills, safari &amp; surf</p>
+  <p id="dayx" class="dayx"></p>
 </header>
 <div class="layout">
   <div id="mapwrap"><div id="map"></div></div>
@@ -110,19 +116,19 @@ a.tel{color:var(--ocean);font-weight:700}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
-const COLORS=['#1f5a44','#2e7d5b','#1a7fb5','#c08a3e','#3b9a8f','#0f5f8a','#7a5c3a'];
+const COLORS=['#1f5a44','#2e7d5b','#1a7fb5','#3b9a8f','#0f5f8a','#7a5c3a'],FLEX='#c08a3e';
 
 const STOPS=[
- {id:'colombo',name:'Colombo Airport',sub:'Arrive',nights:0,ll:[7.1808,79.8841],q:'7.1808,79.8841',acts:[]},
- {id:'sigiriya',name:'Sigiriya',nights:2,ll:[7.957,80.7603],q:'Sigiriya, Sri Lanka',acts:[
+ {id:'colombo',name:'Colombo Airport',sub:'Arrived',from:'2026-10-21',nights:0,ll:[7.1808,79.8841],q:'7.1808,79.8841',acts:[]},
+ {id:'sigiriya',name:'Sigiriya',from:'2026-10-21',to:'2026-10-23',nights:2,ll:[7.957,80.7603],q:'Sigiriya, Sri Lanka',acts:[
    ['Pidurangala Rock at sunrise','7.9664,80.7618'],
    ['Sigiriya Rock','7.9570,80.7603'],
    ['Dambulla cave temples','Dambulla Cave Temple, Sri Lanka']]},
- {id:'kandy',name:'Kandy',nights:1,ll:[7.2936,80.6413],q:'Kandy, Sri Lanka',acts:[
+ {id:'kandy',name:'Kandy',from:'2026-10-23',to:'2026-10-24',nights:1,ll:[7.2936,80.6413],q:'Kandy, Sri Lanka',acts:[
    ['Temple of the Tooth (Sri Dalada Maligawa), evening puja','Temple of the Tooth, Kandy, Sri Lanka','Drummers and incense. Check ceremony times on arrival. Dress code: cover shoulders and knees, shoes and hats off.'],
    ['Udawatta Kele forest walk','7.2989,80.6424'],
    ['Matale spice gardens','Spice garden Matale, Sri Lanka']]},
- {id:'ella',name:'Ella',nights:3,ll:[6.8667,81.0466],q:'Ella, Sri Lanka',note:'Rent scooters here.',acts:[
+ {id:'ella',name:'Ella',from:'2026-10-24',to:'2026-10-27',nights:3,ll:[6.8667,81.0466],q:'Ella, Sri Lanka',note:'Rent scooters here.',acts:[
    ['Scenic Kandy to Ella train','Kandy Railway Station, Sri Lanka','Check times the night before.'],
    ['Nine Arches Bridge','6.8775,81.0602'],
    ['Little Adam\'s Peak at sunrise','6.8692,81.0602','Crowded, go early.'],
@@ -132,13 +138,13 @@ const STOPS=[
    ['Diyaluma Falls + hike to the top infinity pools','6.7331,81.0314'],
    ['Quiet waterfall near Pallewella & Ravana Adventure Park','Ravana Adventure Park, Ella, Sri Lanka'],
    ['One Love bar at the top of the hill (night out)','One Love Ella, Sri Lanka']]},
- {id:'udawalawe',name:'Udawalawe',nights:1,ll:[6.4384,80.8889],q:'6.4384,80.8889',swap:true,acts:[
+ {id:'udawalawe',name:'Udawalawe',from:'2026-10-27',to:'2026-10-28',nights:1,ll:[6.4384,80.8889],q:'6.4384,80.8889',swap:true,acts:[
    ['Afternoon private jeep safari for elephants','6.4384,80.8889','Optional 6am second safari.']]},
- {id:'hiriketiya',name:'Hiriketiya',nights:3,ll:[5.9624,80.7068],q:'5.9624,80.7068',acts:[
+ {id:'hiriketiya',name:'Hiriketiya',from:'2026-10-28',to:'2026-10-31',nights:3,ll:[5.9624,80.7068],q:'5.9624,80.7068',acts:[
    ['Surf the bay (Shari can surf here)','5.9624,80.7068'],
    ['Dickwella beach, by scooter','Dickwella Beach, Sri Lanka'],
    ['Jungle bars at night','Hiriketiya bars, Dickwella, Sri Lanka']]},
- {id:'ahangama',name:'Ahangama',nights:4,ll:[5.9733,80.3622],q:'Ahangama, Sri Lanka',
+ {id:'ahangama',name:'Ahangama',from:'2026-10-31',to:'2026-11-05',nights:5,ll:[5.9733,80.3622],q:'Ahangama, Sri Lanka',note:'Main surf base.',
   stay:['Cinnamon 17','5.9778,80.3574','Cheap, family-run, best if comfortable on a scooter.'],acts:[
    ['Stay at Cinnamon 17','5.9778,80.3574','Cheap, family-run, best if comfortable on a scooter.'],
    ['Surf Kabalana / The Rock','5.9770,80.3515'],
@@ -146,8 +152,12 @@ const STOPS=[
    ['Homestay cooking class','cooking class Ahangama, Sri Lanka'],
    ['Koggala Lake paddle','Koggala Lake, Sri Lanka'],
    ['Mirissa whale and turtle trip','5.9426,80.4624','Whale season only just starting.']]},
- {id:'hikkaduwa',name:'Hikkaduwa → Airport',sub:'Last day, fly out',nights:0,ll:[6.1395,80.1063],q:'Hikkaduwa Beach, Sri Lanka',acts:[
-   ['Hikkaduwa turtles on the way back','Hikkaduwa Beach, Sri Lanka'],
+ {id:'flex',name:'Flex: decide on the ground',flex:true,from:'2026-11-05',to:'2026-11-06',nights:1,
+  note:'Go back to whichever stop you loved most: more surf in Ahangama or Hiriketiya, or Ella for more hikes. No fixed pin.',acts:[]},
+ {id:'hikkaduwa',name:'Hikkaduwa',from:'2026-11-06',to:'2026-11-07',nights:1,ll:[6.1395,80.1063],q:'Hikkaduwa Beach, Sri Lanka',acts:[
+   ['Hikkaduwa turtles and snorkelling','Hikkaduwa Beach, Sri Lanka']]},
+ {id:'flyout',name:'Fly out · Colombo Airport',sub:'Morning flight',from:'2026-11-07',nights:0,ll:[7.1808,79.8841],q:'7.1808,79.8841',
+  note:'Drive Hikkaduwa → Colombo Airport the morning of 7 Nov (about 2.5 hours, leave early). If the flight is before midday, sleep near the airport instead.',acts:[
    ['Airport, fly out','7.1808,79.8841']]}
 ];
 const YALA={name:'Yala',ll:[6.3684,81.517],q:'Yala National Park, Sri Lanka',acts:[
@@ -164,24 +174,35 @@ const gm=(q,label='Open in Google Maps')=>`<a class="gm" href="${gmUrl(q)}" targ
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const view=s=>s.swap&&useYala?{...s,...YALA,id:s.id}:s;
 
+// Dates / today
+const D=s=>new Date(s+'T00:00:00');
+const fmt=s=>D(s).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+const dates=s=>s.to?`${fmt(s.from)} – ${fmt(s.to)}`:s.from?fmt(s.from):'';
+const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+const START=D('2026-10-21'),END=D('2026-11-07');
+const dayNum=Math.round((today-START)/864e5)+1;
+let todayIdx=STOPS.findIndex(s=>s.to&&D(s.from)<=today&&today<D(s.to));
+if(+today===+END)todayIdx=STOPS.findIndex(s=>s.id==='flyout');
+document.getElementById('dayx').textContent=today<START?`Starts in ${1-dayNum} day${1-dayNum>1?'s':''}`:today>END?'Trip complete':`Day ${Math.min(dayNum,17)} of 17`;
+
 // Map
 const map=L.map('map',{scrollWheelZoom:false});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
 let markers=[],line;
 function drawMap(){
-  markers.forEach(m=>m.remove());if(line)line.remove();
-  markers=STOPS.map((s0,i)=>{const s=view(s0);
+  markers.forEach(m=>m&&m.remove());if(line)line.remove();
+  markers=STOPS.map((s0,i)=>{const s=view(s0);if(!s.ll)return null;
     const m=L.marker(s.ll,{icon:L.divIcon({className:'pin',html:String(i),iconSize:[28,28]})}).addTo(map);
     m.bindPopup(`<b>${i}. ${esc(s.name)}</b><br>${s.nights?s.nights+' night'+(s.nights>1?'s':''):esc(s.sub||'')}<br>${gm(s.q)}`);
     m.on('click',()=>focus(i,false));return m});
-  const pts=STOPS.map(s=>view(s).ll);pts.push(STOPS[0].ll);
+  const pts=STOPS.map(s=>view(s).ll).filter(Boolean);
   line=L.polyline(pts,{color:'#1a7fb5',weight:3,dashArray:'6 6'}).addTo(map);
   map.fitBounds(line.getBounds(),{padding:[24,24]});
 }
 function focus(i,fromCard){
   document.querySelectorAll('.card').forEach((c,j)=>c.classList.toggle('active',j===i));
-  markers.forEach((m,j)=>m.getElement()&&m.getElement().classList.toggle('hl',j===i));
-  if(fromCard){map.setView(markers[i].getLatLng(),Math.max(map.getZoom(),10));markers[i].openPopup();}
+  markers.forEach((m,j)=>m&&m.getElement()&&m.getElement().classList.toggle('hl',j===i));
+  if(fromCard&&markers[i]){map.setView(markers[i].getLatLng(),Math.max(map.getZoom(),10));markers[i].openPopup();}
   else document.getElementById('stop-'+i).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -189,17 +210,17 @@ function focus(i,fromCard){
 function render(){
   const all=[];
   document.getElementById('stops').innerHTML=STOPS.map((s0,i)=>{const s=view(s0);
-    const next=STOPS[i+1]?view(STOPS[i+1]):null;
+    const next=s.q&&STOPS.slice(i+1).map(view).find(n=>n.q);
     const acts=s.acts.map((a,j)=>{const k=s.name+'|'+j;all.push(k);
       return `<li class="${done[k]?'done':''}"><label><input type="checkbox" data-k="${esc(k)}" ${done[k]?'checked':''}><span><span class="t">${esc(a[0])}</span>${a[2]?`<br><span class="sub">${esc(a[2])}</span>`:''}</span></label>${gm(a[1])}</li>`}).join('');
-    return `<article class="card" id="stop-${i}">
-      <div class="card-h" data-i="${i}"><div class="num">${i}</div><div><h3>${esc(s.name)}</h3>
-      <div class="nights">${s.nights?s.nights+' night'+(s.nights>1?'s':''):esc(s.sub||'')}</div></div></div>
+    return `<article class="card${i===todayIdx?' today':''}" id="stop-${i}">
+      <div class="card-h" data-i="${i}"><div class="num${s.flex?' flex':''}">${i}</div><div><h3>${esc(s.name)}${i===todayIdx?'<span class="badge">Today</span>':''}</h3>
+      <div class="nights">${dates(s)}${s.nights?' · '+s.nights+' night'+(s.nights>1?'s':''):s.sub?' · '+esc(s.sub):''}</div></div></div>
       ${s0.swap?`<div class="swap"><button data-y="0" class="${useYala?'':'on'}">Udawalawe (elephants)</button><button data-y="1" class="${useYala?'on':''}">Swap: Yala (leopards, busier)</button></div>`:''}
       ${s.note?`<div class="note">${esc(s.note)}</div>`:''}
       ${s.stay?`<div class="note">🏠 Stay: <b>${esc(s.stay[0])}</b> — ${esc(s.stay[2])}<br>${gm(s.stay[1],'Accommodation in Google Maps').replace('class="gm"','class="gm" style="margin-left:0"')}</div>`:''}
       ${acts?`<ul class="acts">${acts}</ul>`:''}
-      <div class="links">${gm(s.q,'Stop in Google Maps')}${next?` <a class="gm" href="${dirUrl(s.q,next.q)}" target="_blank" rel="noopener">${PIN}Directions to next stop: ${esc(next.name)}</a>`:''}</div>
+      <div class="links">${s.q?gm(s.q,'Stop in Google Maps'):''}${next?` <a class="gm" href="${dirUrl(s.q,next.q)}" target="_blank" rel="noopener">${PIN}Directions to next stop: ${esc(next.name)}</a>`:''}</div>
     </article>`}).join('');
   window._all=all;progress();nightsbar();
 }
@@ -211,8 +232,8 @@ function progress(){
 function nightsbar(){
   const st=STOPS.map((s,i)=>({s:view(s),i})).filter(o=>o.s.nights);
   const tot=st.reduce((a,o)=>a+o.s.nights,0);
-  document.getElementById('nightsbar').innerHTML=st.map((o,k)=>`<div data-i="${o.i}" style="flex:${o.s.nights};background:${COLORS[k]}" title="${esc(o.s.name)}">${o.s.nights}</div>`).join('');
-  document.getElementById('legend').innerHTML=st.map((o,k)=>`<span style="--c:${COLORS[k]}">${esc(o.s.name)} ${o.s.nights}</span>`).join('')+`<span style="--c:transparent"><b>Total ${tot}</b></span>`;
+  document.getElementById('nightsbar').innerHTML=st.map((o,k)=>`<div data-i="${o.i}" style="flex:${o.s.nights};background:${o.s.flex?FLEX:COLORS[k%COLORS.length]}" title="${esc(o.s.name)}">${o.s.nights}</div>`).join('');
+  document.getElementById('legend').innerHTML=st.map((o,k)=>`<span style="--c:${o.s.flex?FLEX:COLORS[k%COLORS.length]}">${esc(o.s.flex?'Flex':o.s.name)} ${o.s.nights}</span>`).join('')+`<span style="--c:transparent"><b>Total ${tot}</b></span>`;
 }
 document.addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;
   if(e.target.checked)done[k]=true;else delete done[k];LS.set('sl-done',done);
@@ -224,6 +245,7 @@ document.addEventListener('click',e=>{
     if(window.innerWidth<900)window.scrollTo({top:0,behavior:'smooth'});}
 });
 render();drawMap();
+if(todayIdx>=0)setTimeout(()=>focus(todayIdx,true),300);
 </script>
 </body>
 </html>
