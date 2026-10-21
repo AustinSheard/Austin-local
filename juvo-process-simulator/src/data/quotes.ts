@@ -3,7 +3,7 @@ import type { Quote } from '../engine/types';
 // Real supplier quotes for labellers (USD, EXW China). Dates as supplied.
 export const seedQuotes: Quote[] = [
   {
-    id: 'q-ym140', variantId: 'labeller.ym140', supplier: 'Yimu', ref: 'YM140', date: '2026-08-28', validUntil: '2026-09-27',
+    id: 'q-ym140', variantId: 'labeller.ym140', supplier: 'Yimu', ref: 'YM140', date: '2026-08-28', expired: true,
     currency: 'USD', incoterm: 'EXW', freight: 0, dutyPct: 0, gstPct: 10, gstClaimable: true, installPct: 0,
     lines: [
       { description: 'YM140 semi-auto labeller', price: 3700, included: true },

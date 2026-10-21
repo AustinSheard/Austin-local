@@ -213,6 +213,8 @@ export interface Quote {
   ref?: string;
   date?: string;
   validUntil?: string;
+  /** Set when the supplier has said the quote lapsed but gave no validity date. */
+  expired?: boolean;
   currency: Currency;
   incoterm?: string;
   lines: QuoteLine[];

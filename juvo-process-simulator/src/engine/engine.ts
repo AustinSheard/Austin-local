@@ -61,6 +61,10 @@ export interface StepResult {
   depreciationMonth: number;
   frozenStock: number;
   refrigeration: boolean;
+  /** Good-path cups leaving the step per production hour. */
+  cupsOutPerHour: number;
+  /** Running out-of-freezer time when a cup leaves this step (min). */
+  oofClockMin: number;
 }
 
 export interface Results {
@@ -271,6 +275,7 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
       fte: g.shiftHours > 0 ? labourHoursDay / g.shiftHours : 0,
       equipmentAUD: equipmentAUD + customCapex, materialsPerGoodCup, maintenanceMonth, depreciationMonth,
       frozenStock, refrigeration: sp.state === 'frozen' && (sp.kind === 'storage' || sp.alwaysOn),
+      cupsOutPerHour: g.shiftHours > 0 ? (reqActual * (1 - sp.loss)) / g.shiftHours : 0, oofClockMin: 0,
     });
   }
 
@@ -353,6 +358,7 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
       if (ambient(n.id) && allFrozenUp && pf.length) fruitAge = Math.max(fruitAge, Math.max(...(pf as number[])));
     }
   }
+  for (const st of steps) st.oofClockMin = run.get(st.id) ?? 0;
   const startToFinish = graph.main.length ? Math.max(...graph.main.map((n) => longest.get(n.id)!)) : 0;
 
   return {

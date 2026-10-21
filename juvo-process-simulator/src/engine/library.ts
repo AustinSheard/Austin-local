@@ -1,7 +1,7 @@
 // Catalogue (library) operations: validation, overrides, variant swap, save-to-palette, warnings, CSV.
 
-import { resolveSpec, simulate } from './engine';
-import type { Catalogue, EquipmentSpec, FlowNode, Quote, Results, Scenario, Variant } from './types';
+import { resolveSpec, simulate, type Results } from './engine';
+import type { Catalogue, EquipmentSpec, FlowNode, Quote, Scenario, Variant } from './types';
 
 const SPEC_NUMBERS: (keyof EquipmentSpec)[] = [
   'cupsHeld', 'oee', 'usableFill', 'loss', 'dwellMin', 'duty', 'operators', 'life', 'maintPct', 'L', 'W', 'H', 'clearance',

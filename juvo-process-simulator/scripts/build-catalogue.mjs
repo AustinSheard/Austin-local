@@ -28,7 +28,7 @@ function type(category, id, name, list) {
 
 const day = 1440;
 const store = (o) => ({ kind: 'storage', state: 'frozen', alwaysOn: true, duty: 0.45, dwellUnit: 'd', dwellMin: 3 * day, oee: 1, clearance: 0.3, maintPct: 0.02, ...o });
-const coolRoom = (m3) => store({ volumeM3: m3, cupsHeld: m3 * 1000, usableFill: 0.7, kW: { typ: 1.5 + m3 * 0.12 }, duty: 0.5, cost: { min: 15000 + m3 * 1500, typ: 20000 + m3 * 2000, max: 25000 + m3 * 2600 }, L: Math.max(2.5, Math.sqrt(m3 / 2.4) * 1.2), W: Math.max(2.4, Math.sqrt(m3 / 2.4) / 1.2), H: 2.7, life: 15 });
+const coolRoom = (m3) => store({ volumeM3: m3, cupsHeld: m3 * 1000, usableFill: 0.7, kW: { typ: 1.5 + m3 * 0.12 }, duty: 0.5, cost: { min: 15000 + m3 * 1500, typ: 20000 + m3 * 2000, max: 25000 + m3 * 2600 }, L: +Math.max(2.5, Math.sqrt(m3 / 2.4) * 1.2).toFixed(1), W: +Math.max(2.4, Math.sqrt(m3 / 2.4) / 1.2).toFixed(1), H: 2.7, life: 15 });
 
 // Cold storage
 type('Cold storage', 'chest-freezer', 'Chest freezer', [

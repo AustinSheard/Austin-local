@@ -28,6 +28,7 @@ export function landedCost(q: Quote, usdToAud: number): LandedCost {
 export type QuoteStatus = 'valid' | 'expiring' | 'expired' | 'unknown';
 
 export function quoteStatus(q: Quote, today = new Date(), warnDays = 30): QuoteStatus {
+  if (q.expired) return 'expired';
   if (!q.validUntil) return 'unknown';
   const end = new Date(q.validUntil + 'T23:59:59');
   if (Number.isNaN(end.getTime())) return 'unknown';
