@@ -723,9 +723,6 @@ ul.acts li.done .t{text-decoration:line-through;color:var(--muted)}
 .gm:hover{background:#d0e9f6}
 .gm svg{width:12px;height:12px;fill:currentColor}
 .links .gm{margin-left:0}
-.swap{display:flex;gap:6px;margin:10px 0}
-.swap button{flex:1;padding:7px;border-radius:10px;border:1px solid var(--green2);background:#fff;color:var(--green);font-weight:600;cursor:pointer}
-.swap button.on{background:var(--green2);color:#fff}
 details{background:var(--card);border-radius:var(--r);margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 summary{padding:14px 16px;font-weight:700;color:var(--green);cursor:pointer}
 details>div{padding:0 16px 14px}
@@ -806,7 +803,7 @@ const STOPS=[
    ['Galwala Ella Falls','Galwala Ella Falls, Sri Lanka','Quiet, tranquil waterfall.'],
    ['Pedro Tea Estate factory tour and tea tasting','Pedro Tea Estate, Nuwara Eliya, Sri Lanka'],
    ["Horton Plains and World's End at dawn",'Horton Plains National Park, Sri Lanka',"Leave around 5am; clouds roll in by 10am. Includes Baker's Falls. Could fill the morning before the train."]]},
- {id:'ella',name:'Ella',from:'2026-10-24',to:'2026-10-27',nights:3,ll:[6.8667,81.0466],q:'Ella, Sri Lanka',note:'Rent scooters here.',acts:[
+ {id:'ella',name:'Ella',from:'2026-10-24',to:'2026-10-27',nights:3,ll:[6.8667,81.0466],q:'Ella, Sri Lanka',note:'Rent scooters here. You have a full extra day here on 27 Oct, then drive to Yala late afternoon (about 2 hours) for the night.',acts:[
    ['Scenic Nanu Oya (Nuwara Eliya) to Ella train','Nanu Oya Railway Station, Sri Lanka','The prettiest stretch of the line, about 3 hours. Check times the night before; sit on the right-hand side for the best views.'],
    ['Nine Arches Bridge','6.8775,81.0602'],
    ['Little Adam\'s Peak at sunrise','6.8692,81.0602','Crowded, go early.'],
@@ -815,9 +812,14 @@ const STOPS=[
    ['Demodara loop and viewpoint','Demodara Nine Arch Loop, Sri Lanka'],
    ['Diyaluma Falls + hike to the top infinity pools','6.7331,81.0314'],
    ['Quiet waterfall near Pallewella & Ravana Adventure Park','Ravana Adventure Park, Ella, Sri Lanka'],
-   ['One Love bar at the top of the hill (night out)','One Love Ella, Sri Lanka']]},
- {id:'udawalawe',name:'Udawalawe',from:'2026-10-27',to:'2026-10-28',nights:1,ll:[6.4384,80.8889],q:'6.4384,80.8889',swap:true,acts:[
-   ['Afternoon private jeep safari for elephants','6.4384,80.8889','Optional 6am second safari.']]},
+   ['One Love bar at the top of the hill (night out)','One Love Ella, Sri Lanka'],
+   ['27 Oct: Ravana Falls (on the road out, quick stop)','Ravana Falls, Ella, Sri Lanka'],
+   ['27 Oct: Ella zipline or a slow café morning','Flying Ravana Zipline, Ella, Sri Lanka'],
+   ['27 Oct: Buduruwagala rock carvings (on the way to Yala)','Buduruwagala Temple, Sri Lanka','Ancient Buddha figures carved into a cliff, a short detour near Wellawaya.']]},
+ {id:'yala',name:'Yala',from:'2026-10-27',to:'2026-10-28',nights:1,ll:[6.3684,81.517],q:'Yala National Park, Sri Lanka',
+  stay:['Stay near the park entrance (Tissamaharama or Kirinda)','Tissamaharama, Sri Lanka','Arrive the evening of 27 Oct; sleep close to the gate for the early start.'],
+  note:'One dawn safari only, no safari the day before. Check that Block 1 has reopened after its seasonal closure before booking.',acts:[
+   ['Dawn jeep safari for leopards, 28 Oct','Yala National Park, Sri Lanka','Pickup around 5am; back by about 10 to 11am, then drive to Hiriketiya (about 2.5 hours). Private jeep via your hotel or Stef.']]},
  {id:'hiriketiya',name:'Hiriketiya',from:'2026-10-28',to:'2026-10-31',nights:3,ll:[5.9624,80.7068],q:'5.9624,80.7068',acts:[
    ['Surf the bay (Shari can surf here)','5.9624,80.7068'],
    ['Dickwella beach, by scooter','Dickwella Beach, Sri Lanka'],
@@ -841,20 +843,17 @@ const STOPS=[
   note:'Flight departs 1am on 8 Nov, so arrive by about 10pm on 7 Nov at the latest. The drive from Sinharaja can be slow after dark; leave buffer time.',acts:[
    ['Airport, fly out','7.1808,79.8841']]}
 ];
-const YALA={name:'Yala',ll:[6.3684,81.517],q:'Yala National Park, Sri Lanka',acts:[
-  ['Jeep safari for leopards (busier park)','Yala National Park, Sri Lanka','Book early; go at dawn for the best leopard odds.']]};
 
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
           set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let done=LS.get('sl-done',{});
-let useYala=LS.get('sl-yala',false);
 let custom=LS.get('sl-custom',{}),hidden=LS.get('sl-hidden',{});
 
 const gmUrl=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
 const dirUrl=(a,b)=>`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(a)}&destination=${encodeURIComponent(b)}&travelmode=driving`;
 const gm=(q,label='Open in Google Maps')=>`<a class="gm" href="${gmUrl(q)}" target="_blank" rel="noopener">${PIN}${label}</a>`;
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const view=s=>s.swap&&useYala?{...s,...YALA,id:s.id}:s;
+const view=s=>s;
 
 // Dates / today
 const D=s=>new Date(s+'T00:00:00');
@@ -901,7 +900,6 @@ function render(){
     return `<article class="card${i===todayIdx?' today':''}" id="stop-${i}">
       <div class="card-h" data-i="${i}"><div class="num${s.flex?' flex':''}">${i}</div><div><h3>${esc(s.name)}${i===todayIdx?'<span class="badge">Today</span>':''}</h3>
       <div class="nights">${dates(s)}${s.nights?' · '+s.nights+' night'+(s.nights>1?'s':''):s.sub?' · '+esc(s.sub):''}</div></div></div>
-      ${s0.swap?`<div class="swap"><button data-y="0" class="${useYala?'':'on'}">Udawalawe (elephants)</button><button data-y="1" class="${useYala?'on':''}">Swap: Yala (leopards, busier)</button></div>`:''}
       ${s.note?`<div class="note">${esc(s.note)}</div>`:''}
       ${s.stay?`<div class="note">🏠 Stay: <b>${esc(s.stay[0])}</b> — ${esc(s.stay[2])}<br>${gm(s.stay[1],'Accommodation in Google Maps').replace('class="gm"','class="gm" style="margin-left:0"')}</div>`:''}
       ${acts?`<ul class="acts">${acts}</ul>`:''}
@@ -937,7 +935,6 @@ document.addEventListener('click',e=>{
     delete done[k];LS.set('sl-done',done);render();return}
   const rs=e.target.closest('[data-restore]');if(rs){const st=view(STOPS.find(s=>s.id===rs.dataset.restore));
     st.acts.forEach((a,j)=>delete hidden[st.name+'|'+j]);LS.set('sl-hidden',hidden);render();return}
-  const y=e.target.closest('[data-y]');if(y){useYala=y.dataset.y==='1';LS.set('sl-yala',useYala);render();drawMap();focus(4,true);return}
   const h=e.target.closest('.card-h,.nightsbar div');if(h){const i=+h.dataset.i;focus(i,true);
     if(h.matches('.nightsbar div'))document.getElementById('stop-'+i).scrollIntoView({behavior:'smooth'});
     if(window.innerWidth<900)window.scrollTo({top:0,behavior:'smooth'});}
