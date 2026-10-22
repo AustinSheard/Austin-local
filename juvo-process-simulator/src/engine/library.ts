@@ -188,3 +188,76 @@ export function libraryCsv(cat: Catalogue): string {
 }
 
 export { simulate };
+
+// ---------- Rewiring ----------
+
+/** Put a new node on an existing arrow: source → node → target. */
+export function insertOnEdge(s: Scenario, edgeId: string, node: FlowNode): Scenario {
+  const e = s.edges.find((x) => x.id === edgeId);
+  if (!e) return { ...s, nodes: [...s.nodes, node] };
+  return {
+    ...s,
+    nodes: [...s.nodes, node],
+    edges: s.edges.filter((x) => x.id !== edgeId).concat(
+      { id: uid('e'), source: e.source, target: node.id },
+      { id: uid('e'), source: node.id, target: e.target },
+    ),
+  };
+}
+
+/** Take a node out of the line and join its upstream steps straight to its downstream steps. */
+export function removeAndBridge(s: Scenario, nodeId: string): Scenario {
+  const ins = s.edges.filter((e) => e.target === nodeId).map((e) => e.source);
+  const outs = s.edges.filter((e) => e.source === nodeId).map((e) => e.target);
+  const kept = s.edges.filter((e) => e.source !== nodeId && e.target !== nodeId);
+  const bridges = ins.flatMap((a) => outs.filter((b) => a !== b && !kept.some((e) => e.source === a && e.target === b))
+    .map((b) => ({ id: uid('e'), source: a, target: b })));
+  return { ...s, nodes: s.nodes.filter((n) => n.id !== nodeId), edges: [...kept, ...bridges] };
+}
+
+/**
+ * Swap a step with the next (or previous) step on the cup path.
+ * Arrows are rewired and the two boxes swap places; side streams stay with the step they feed.
+ */
+export function moveStep(s: Scenario, cat: Catalogue, nodeId: string, dir: 'earlier' | 'later'): Scenario {
+  const isMain = (id: string) => {
+    const n = s.nodes.find((x) => x.id === id);
+    const sp = n && resolveSpec(cat, n);
+    return !!sp && !sp.sideStream && !sp.facilityOnly;
+  };
+  const mainOut = (id: string) => s.edges.filter((e) => e.source === id && isMain(e.target)).map((e) => e.target);
+  const mainIn = (id: string) => s.edges.filter((e) => e.target === id && isMain(e.source)).map((e) => e.source);
+  let a: string; // the earlier of the pair
+  let b: string;
+  if (dir === 'later') {
+    const o = mainOut(nodeId);
+    if (o.length !== 1) return s;
+    [a, b] = [nodeId, o[0]];
+  } else {
+    const i = mainIn(nodeId);
+    if (i.length !== 1) return s;
+    [a, b] = [i[0], nodeId];
+  }
+  if (mainOut(a).length !== 1 || mainIn(b).length !== 1) return s;
+  const swap = (id: string) => (id === a ? b : id === b ? a : id);
+  const edges = s.edges.map((e) => {
+    const sideIn = !isMain(e.source) && (e.target === a || e.target === b);
+    if (sideIn) return e; // side stream keeps feeding the same step
+    return { ...e, source: swap(e.source), target: swap(e.target) };
+  });
+  const na = s.nodes.find((n) => n.id === a)!;
+  const nb = s.nodes.find((n) => n.id === b)!;
+  const dx = nb.x - na.x;
+  const dy = nb.y - na.y;
+  const sideOf = (id: string) => s.edges.filter((e) => e.target === id && !isMain(e.source)).map((e) => e.source);
+  const sa = sideOf(a);
+  const sb = sideOf(b);
+  const nodes = s.nodes.map((n) => {
+    if (n.id === a) return { ...n, x: nb.x, y: nb.y };
+    if (n.id === b) return { ...n, x: na.x, y: na.y };
+    if (sa.includes(n.id)) return { ...n, x: n.x + dx, y: n.y + dy };
+    if (sb.includes(n.id)) return { ...n, x: n.x - dx, y: n.y - dy };
+    return n;
+  });
+  return { ...s, nodes, edges };
+}

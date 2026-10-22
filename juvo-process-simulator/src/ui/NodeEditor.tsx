@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { resolveSpec } from '../engine/engine';
-import { isOverridden, resetOverride, saveNodeAsVariant, setOverride, uid } from '../engine/library';
+import { isOverridden, moveStep, removeAndBridge, resetOverride, saveNodeAsVariant, setOverride, uid } from '../engine/library';
 import { quoteStatus } from '../engine/quotes';
 import type { EquipmentSpec, SpecKey } from '../engine/types';
 import { useActive, useStore } from '../store/store';
@@ -75,6 +75,10 @@ export function NodeEditor() {
         isOverridden={(k) => isOverridden(node, k)} onReset={(k) => patchNode((n) => resetOverride(n, k))}
         units={{ value: node.units, onChange: (u) => patchNode((n) => ({ ...n, units: u })) }} />
       <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-200 pt-3 dark:border-slate-700">
+        {!spec.sideStream && <>
+          <Btn title="Swap with the step before" onClick={() => update((sc) => moveStep(sc, cat, node.id, 'earlier'))}>← Move earlier</Btn>
+          <Btn title="Swap with the step after" onClick={() => update((sc) => moveStep(sc, cat, node.id, 'later'))}>Move later →</Btn>
+        </>}
         <Btn onClick={() => patchNode((n) => ({ ...n, units: n.units + 1 }))}>Add a station</Btn>
         <Btn onClick={() => {
           const nid = uid('n');
@@ -84,7 +88,7 @@ export function NodeEditor() {
         {isOverridden(node) && <Btn onClick={() => patchNode((n) => resetOverride(n))}>Reset to library</Btn>}
         <Btn onClick={() => setSaveName(`${node.label ?? v.name} (my version)`)}>Save to palette</Btn>
         <Btn kind="danger" onClick={() => {
-          update((sc) => ({ ...sc, nodes: sc.nodes.filter((n) => n.id !== node.id), edges: sc.edges.filter((e) => e.source !== node.id && e.target !== node.id) }));
+          update((sc) => removeAndBridge(sc, node.id));
           set({ editorOpen: false, selectedNodeId: undefined });
         }}>Delete</Btn>
       </div>

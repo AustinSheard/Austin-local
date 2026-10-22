@@ -33,6 +33,8 @@ interface State extends Persisted {
   selectedNodeId?: string;
   editorOpen: boolean;
   editingVariantId?: string;
+  /** Arrow chosen with “Insert equipment here”; the next palette add goes on it. */
+  insertEdgeId?: string;
   past: Scenario[];
   future: Scenario[];
   toast?: string;

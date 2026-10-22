@@ -1,6 +1,6 @@
 import { simulate } from '../src/engine/engine';
 import {
-  exportLibrary, flowWarnings, importLibrary, isOverridden, resetOverride, saveNodeAsVariant, setOverride,
+  exportLibrary, flowWarnings, importLibrary, insertOnEdge, isOverridden, moveStep, removeAndBridge, resetOverride, saveNodeAsVariant, setOverride,
   swapVariant, validateCatalogue,
 } from '../src/engine/library';
 import { applyQuote, compareQuotes, landedCost, quoteStatus, revertQuote } from '../src/engine/quotes';
@@ -113,5 +113,25 @@ describe('library', () => {
     const back = importLibrary(text);
     expect(back.catalogue).toEqual(cat);
     expect(back.quotes).toEqual(seedQuotes);
+  });
+});
+
+describe('rewiring', () => {
+  const s = templates.midland.build();
+  const path = (sc: typeof s) => simulate(sc, cat).steps.filter((x) => !x.sideStream).map((x) => x.id);
+  it('inserts equipment on an arrow', () => {
+    const e = s.edges.find((x) => x.source === 'n2' && x.target === 'n4')!;
+    const out = insertOnEdge(s, e.id, { id: 'new', variantId: 'checkweigher.basic', units: 1, overrides: {}, x: 0, y: 0 });
+    expect(path(out)).toEqual(['n1', 'n2', 'new', 'n4', 'n5', 'n6', 'n7', 'n8']);
+  });
+  it('swaps portioning and auger filler, keeping the mixer on the filler', () => {
+    const out = moveStep(s, cat, 'n4', 'earlier');
+    expect(path(out)).toEqual(['n1', 'n4', 'n2', 'n5', 'n6', 'n7', 'n8']);
+    expect(out.edges.some((e) => e.source === 'n3' && e.target === 'n4')).toBe(true);
+    expect(moveStep(out, cat, 'n4', 'later')).toMatchObject({ edges: expect.any(Array) });
+    expect(path(moveStep(out, cat, 'n4', 'later'))).toEqual(path(s));
+  });
+  it('removes a step and joins the line back up', () => {
+    expect(path(removeAndBridge(s, 'n5'))).toEqual(['n1', 'n2', 'n4', 'n6', 'n7', 'n8']);
   });
 });

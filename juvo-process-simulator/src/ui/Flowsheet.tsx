@@ -1,12 +1,12 @@
 import {
   Background, BaseEdge, Controls, EdgeLabelRenderer, Handle, MiniMap, Position, ReactFlow, ReactFlowProvider,
-  getBezierPath, useReactFlow, type Connection, type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
+  getBezierPath, reconnectEdge, useReactFlow, type Connection, type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
   applyNodeChanges,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { relieveBottleneck, resolveSpec, rightSize } from '../engine/engine';
-import { flowWarnings, uid } from '../engine/library';
+import { flowWarnings, insertOnEdge, moveStep, removeAndBridge, uid } from '../engine/library';
 import type { Results, Scenario, StepResult } from '../engine';
 import { templates } from '../data/templates';
 import { useActive, useStore } from '../store/store';
@@ -135,6 +135,34 @@ function appendTemplate(s: Scenario, templateId: string, ox: number, oy: number)
   };
 }
 
+export const OPEN_PALETTE = 'juvo-open-palette';
+
+/** Put new equipment on an arrow, shifting everything downstream one column right. */
+function insertNodeOnEdge(s: Scenario, edgeId: string, variantId: string): { s: Scenario; id: string } {
+  const e = s.edges.find((x) => x.id === edgeId);
+  const tgt = s.nodes.find((n) => n.id === e?.target);
+  const src = s.nodes.find((n) => n.id === e?.source);
+  const id = uid('n');
+  const x = tgt ? tgt.x : (src?.x ?? 0) + 260;
+  const y = tgt && src ? Math.min(tgt.y, src.y) : tgt?.y ?? 40;
+  const shifted = { ...s, nodes: s.nodes.map((n) => (tgt && n.x >= tgt.x && n.id !== src?.id ? { ...n, x: n.x + 260 } : n)) };
+  const st = useStore.getState();
+  st.touchRecent(variantId);
+  // An arrow out of a side stream stays a side stream, so the new step does not start a second cup path.
+  const srcSide = src ? resolveSpec(st.catalogue, src)?.sideStream : false;
+  const overrides = srcSide ? { sideStream: true } : {};
+  return { s: insertOnEdge(shifted, edgeId, { id, variantId, units: 1, overrides, x, y: srcSide ? (src?.y ?? y) : y }), id };
+}
+
+function edgeAt(x: number, y: number): string | undefined {
+  for (const el of document.elementsFromPoint(x, y)) {
+    const g = (el as Element).closest?.('.react-flow__edge');
+    const id = g?.getAttribute('data-id') ?? g?.getAttribute('data-testid')?.replace('rf__edge-', '');
+    if (id) return id;
+  }
+  return undefined;
+}
+
 function Canvas() {
   const s = useActive();
   const cat = useStore((x) => x.catalogue);
@@ -144,6 +172,8 @@ function Canvas() {
   const r = useResults();
   const rf = useReactFlow();
   const wrap = useRef<HTMLDivElement>(null);
+  const [selEdge, setSelEdge] = useState<string>();
+  const insertEdgeId = useStore((x) => x.insertEdgeId);
 
   const stepById = useMemo(() => new Map(r.steps.map((st) => [st.id, st])), [r]);
   const derived: PNode[] = useMemo(() => s.nodes.map((n) => ({
@@ -167,10 +197,7 @@ function Canvas() {
     setNodes((ns) => applyNodeChanges(ch, ns));
     const removed = ch.filter((c) => c.type === 'remove').map((c) => (c as { id: string }).id);
     if (removed.length) {
-      update((sc) => ({
-        ...sc, nodes: sc.nodes.filter((n) => !removed.includes(n.id)),
-        edges: sc.edges.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)),
-      }));
+      update((sc) => removed.reduce(removeAndBridge, sc));
       set({ selectedNodeId: undefined, editorOpen: false });
     }
   }, [update, set]);
@@ -200,7 +227,8 @@ function Canvas() {
       if (d.templateId) update((sc) => appendTemplate(sc, d.templateId!, p.x, p.y));
       else if (d.variantId) {
         let newId = '';
-        update((sc) => { const o = addNodeAt(sc, d.variantId!, p.x - 96, p.y - 40); newId = o.id; return o.s; });
+        const onEdge = edgeAt(d.x, d.y);
+        update((sc) => { const o = onEdge ? insertNodeOnEdge(sc, onEdge, d.variantId!) : addNodeAt(sc, d.variantId!, p.x - 96, p.y - 40); newId = o.id; return o.s; });
         set({ selectedNodeId: newId });
       }
       useStore.getState().dismissHint('drag');
@@ -212,6 +240,13 @@ function Canvas() {
       const sel = sc.nodes.find((n) => n.id === st.selectedNodeId);
       const maxX = sc.nodes.length ? Math.max(...sc.nodes.map((n) => n.x)) : -260;
       if (d.templateId) { update((x) => appendTemplate(x, d.templateId!, 0, (Math.max(0, ...sc.nodes.map((n) => n.y)) + 320))); return; }
+      if (st.insertEdgeId && sc.edges.some((e) => e.id === st.insertEdgeId)) {
+        let nid = '';
+        update((x0) => { const o = insertNodeOnEdge(x0, st.insertEdgeId!, d.variantId!); nid = o.id; return o.s; });
+        set({ selectedNodeId: nid, insertEdgeId: undefined });
+        setSelEdge(undefined);
+        return;
+      }
       const v = st.catalogue.variants.find((m) => m.id === d.variantId);
       const x = sel ? sel.x + (v?.spec.sideStream ? 0 : 260) : maxX + 260;
       const y = sel ? sel.y + (v?.spec.sideStream ? 200 : 0) : 40;
@@ -234,14 +269,35 @@ function Canvas() {
       <div ref={wrap} className="h-full w-full">
         <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
           onNodesChange={onNodesChange} onNodeDragStop={onNodeDragStop} onConnect={onConnect}
+          edgesReconnectable
+          onReconnect={(old, c) => update((sc) => ({
+            ...sc,
+            edges: reconnectEdge({ ...old }, c, sc.edges.map((e) => ({ ...e })), { shouldReplaceId: false })
+              .map((e) => ({ id: e.id, source: e.source, target: e.target })),
+          }))}
+          onEdgeClick={(_, e) => { setSelEdge(e.id); set({ selectedNodeId: undefined }); }}
           onEdgesDelete={(es) => update((sc) => ({ ...sc, edges: sc.edges.filter((e) => !es.some((x) => x.id === e.id)) }))}
           onNodeClick={(_, n) => { set({ selectedNodeId: n.id, editorOpen: true }); useStore.getState().dismissHint('tap'); }}
-          onPaneClick={() => set({ selectedNodeId: undefined })}
+          onPaneClick={() => { set({ selectedNodeId: undefined, insertEdgeId: undefined }); setSelEdge(undefined); }}
           fitView fitViewOptions={{ padding: 0.15 }} minZoom={0.2} deleteKeyCode={['Delete', 'Backspace']} proOptions={{ hideAttribution: true }}>
           <Background gap={20} />
           <Controls showInteractive={false} />
           <MiniMap pannable zoomable className="!hidden md:!block" />
         </ReactFlow>
+        {selEdge && s.edges.some((e) => e.id === selEdge) && (() => {
+          const e = s.edges.find((x) => x.id === selEdge)!;
+          const name = (id: string) => { const n = s.nodes.find((m) => m.id === id); return n ? (n.label ?? cat.variants.find((v) => v.id === n.variantId)?.name ?? '') : ''; };
+          return (
+            <div className="absolute bottom-20 left-1/2 z-10 flex max-w-[95%] -translate-x-1/2 flex-wrap items-center gap-2 rounded-lg bg-white p-2 text-sm shadow-lg dark:bg-slate-900 md:bottom-4">
+              <span className="text-xs text-slate-500">{name(e.source)} → {name(e.target)}</span>
+              {insertEdgeId === selEdge
+                ? <span className="text-xs font-medium text-sky-700 dark:text-sky-300">Now pick equipment from the list (+)</span>
+                : <Btn kind="primary" onClick={() => { set({ insertEdgeId: selEdge }); window.dispatchEvent(new Event(OPEN_PALETTE)); }}>Insert equipment here</Btn>}
+              <Btn kind="danger" onClick={() => { update((sc) => ({ ...sc, edges: sc.edges.filter((x) => x.id !== selEdge) })); setSelEdge(undefined); set({ insertEdgeId: undefined }); }}>Delete arrow</Btn>
+              <button aria-label="Close" className="px-1 text-lg" onClick={() => { setSelEdge(undefined); set({ insertEdgeId: undefined }); }}>×</button>
+            </div>
+          );
+        })()}
       </div>
     </ResultsCtx.Provider>
   );
@@ -291,6 +347,11 @@ export function FlowsheetScreen() {
   const warnings = useMemo(() => flowWarnings(s, cat), [s, cat]);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [showWarn, setShowWarn] = useState(false);
+  useEffect(() => {
+    const open = () => { if (window.innerWidth < 768) setPaletteOpen(true); };
+    window.addEventListener(OPEN_PALETTE, open);
+    return () => window.removeEventListener(OPEN_PALETTE, open);
+  }, []);
   return (
     <div className="flex h-full min-h-0">
       <aside className="hidden w-72 shrink-0 border-r border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 md:block">
@@ -314,7 +375,7 @@ export function FlowsheetScreen() {
           )}
           <div className="flex flex-col items-start gap-1">
             <Hint id="drag">Drag equipment in from the list{' '}<span className="md:hidden">(tap “Add equipment”)</span></Hint>
-            <Hint id="tap">Tap a step to edit it</Hint>
+            <Hint id="tap">Tap a step to edit it. Tap an arrow to insert equipment, or drag its end to rewire</Hint>
           </div>
         </div>
         <button onClick={() => setPaletteOpen(true)}
