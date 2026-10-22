@@ -709,6 +709,14 @@ ul.acts{list-style:none;padding:0;margin:10px 0}
 ul.acts li{padding:8px 0;border-top:1px solid var(--sand2)}
 ul.acts label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 ul.acts input{margin-top:3px;width:18px;height:18px;accent-color:var(--green2);flex:0 0 auto}
+ul.acts li{position:relative;padding-right:30px}
+.del{position:absolute;top:6px;right:0;width:26px;height:26px;border:0;border-radius:50%;background:transparent;color:var(--muted);font-size:16px;cursor:pointer}
+.del:hover{background:#f6dede;color:#a33}
+.mine{font-size:.7rem;color:var(--ocean);font-weight:700;margin-left:4px}
+form.add{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+form.add input{flex:1 1 140px;min-width:0;padding:8px 10px;border:1px solid var(--sand2);border-radius:10px;font:inherit;background:#fff}
+form.add button{padding:8px 14px;border:0;border-radius:10px;background:var(--green2);color:#fff;font-weight:700;cursor:pointer}
+.restore{background:none;border:0;color:var(--ocean);font-size:.78rem;cursor:pointer;padding:0;text-decoration:underline}
 ul.acts li.done .t{text-decoration:line-through;color:var(--muted)}
 .sub{font-size:.82rem;color:var(--muted)}
 .gm{display:inline-flex;align-items:center;gap:4px;margin:6px 6px 0 28px;padding:3px 10px;border-radius:999px;background:var(--ocean-l);color:var(--ocean);font-size:.78rem;font-weight:600;text-decoration:none;border:1px solid #bfe0f1}
@@ -840,6 +848,7 @@ const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.
           set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let done=LS.get('sl-done',{});
 let useYala=LS.get('sl-yala',false);
+let custom=LS.get('sl-custom',{}),hidden=LS.get('sl-hidden',{});
 
 const gmUrl=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
 const dirUrl=(a,b)=>`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(a)}&destination=${encodeURIComponent(b)}&travelmode=driving`;
@@ -884,8 +893,11 @@ function render(){
   const all=[];
   document.getElementById('stops').innerHTML=STOPS.map((s0,i)=>{const s=view(s0);
     const next=s.q&&STOPS.slice(i+1).map(view).find(n=>n.q);
-    const acts=s.acts.map((a,j)=>{const k=s.name+'|'+j;all.push(k);
-      return `<li class="${done[k]?'done':''}"><label><input type="checkbox" data-k="${esc(k)}" ${done[k]?'checked':''}><span><span class="t">${esc(a[0])}</span>${a[2]?`<br><span class="sub">${esc(a[2])}</span>`:''}</span></label>${gm(a[1])}</li>`}).join('');
+    const items=[...s.acts.map((a,j)=>({a,k:s.name+'|'+j})),
+      ...(custom[s.id]||[]).map(c=>({a:[c.t,c.q||c.t+', Sri Lanka',c.n],k:'c:'+c.id,mine:1}))];
+    const nHidden=items.filter(o=>hidden[o.k]).length;
+    const acts=items.filter(o=>!hidden[o.k]).map(({a,k,mine})=>{all.push(k);
+      return `<li class="${done[k]?'done':''}"><button class="del" data-del="${esc(k)}" data-mine="${mine?1:''}" data-sid="${s.id}" aria-label="Delete activity" title="Delete">✕</button><label><input type="checkbox" data-k="${esc(k)}" ${done[k]?'checked':''}><span><span class="t">${esc(a[0])}</span>${mine?'<span class="mine">added</span>':''}${a[2]?`<br><span class="sub">${esc(a[2])}</span>`:''}</span></label>${gm(a[1])}</li>`}).join('');
     return `<article class="card${i===todayIdx?' today':''}" id="stop-${i}">
       <div class="card-h" data-i="${i}"><div class="num${s.flex?' flex':''}">${i}</div><div><h3>${esc(s.name)}${i===todayIdx?'<span class="badge">Today</span>':''}</h3>
       <div class="nights">${dates(s)}${s.nights?' · '+s.nights+' night'+(s.nights>1?'s':''):s.sub?' · '+esc(s.sub):''}</div></div></div>
@@ -893,6 +905,8 @@ function render(){
       ${s.note?`<div class="note">${esc(s.note)}</div>`:''}
       ${s.stay?`<div class="note">🏠 Stay: <b>${esc(s.stay[0])}</b> — ${esc(s.stay[2])}<br>${gm(s.stay[1],'Accommodation in Google Maps').replace('class="gm"','class="gm" style="margin-left:0"')}</div>`:''}
       ${acts?`<ul class="acts">${acts}</ul>`:''}
+      <form class="add" data-sid="${s.id}"><input name="t" placeholder="Add an activity…" required maxlength="120"><input name="q" placeholder="Place or lat,lng for Maps (optional)" maxlength="120"><button>Add</button></form>
+      ${nHidden?`<button class="restore" data-restore="${s.id}">Restore ${nHidden} deleted</button>`:''}
       <div class="links">${s.q?gm(s.q,'Stop in Google Maps'):''}${next?` <a class="gm" href="${dirUrl(s.q,next.q)}" target="_blank" rel="noopener">${PIN}Directions to next stop: ${esc(next.name)}</a>`:''}</div>
     </article>`}).join('');
   window._all=all;progress();nightsbar();
@@ -911,7 +925,18 @@ function nightsbar(){
 document.addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;
   if(e.target.checked)done[k]=true;else delete done[k];LS.set('sl-done',done);
   e.target.closest('li').classList.toggle('done',e.target.checked);progress();});
+document.addEventListener('submit',e=>{const f=e.target.closest('form.add');if(!f)return;e.preventDefault();
+  const t=f.t.value.trim();if(!t)return;const sid=f.dataset.sid;
+  (custom[sid]=custom[sid]||[]).push({id:Date.now().toString(36),t,q:f.q.value.trim()});
+  LS.set('sl-custom',custom);render();});
 document.addEventListener('click',e=>{
+  const d=e.target.closest('[data-del]');if(d){e.preventDefault();const k=d.dataset.del;
+    if(!confirm('Delete this activity?'))return;
+    if(d.dataset.mine){const sid=d.dataset.sid;custom[sid]=(custom[sid]||[]).filter(c=>'c:'+c.id!==k);LS.set('sl-custom',custom);}
+    else{hidden[k]=true;LS.set('sl-hidden',hidden);}
+    delete done[k];LS.set('sl-done',done);render();return}
+  const rs=e.target.closest('[data-restore]');if(rs){const st=view(STOPS.find(s=>s.id===rs.dataset.restore));
+    st.acts.forEach((a,j)=>delete hidden[st.name+'|'+j]);LS.set('sl-hidden',hidden);render();return}
   const y=e.target.closest('[data-y]');if(y){useYala=y.dataset.y==='1';LS.set('sl-yala',useYala);render();drawMap();focus(4,true);return}
   const h=e.target.closest('.card-h,.nightsbar div');if(h){const i=+h.dataset.i;focus(i,true);
     if(h.matches('.nightsbar div'))document.getElementById('stop-'+i).scrollIntoView({behavior:'smooth'});
