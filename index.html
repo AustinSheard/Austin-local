@@ -731,7 +731,7 @@ a.tel{color:var(--ocean);font-weight:700}
 <body>
 <header>
   <h1>Sri Lanka · 17 nights</h1>
-  <p>21 Oct – 7 Nov 2026 · Austin &amp; Shari · culture, hills, safari &amp; surf</p>
+  <p>21 Oct – 8 Nov 2026 (1am flight) · Austin &amp; Shari · culture, hills, safari &amp; surf</p>
   <p id="dayx" class="dayx"></p>
 </header>
 <div class="layout">
@@ -825,10 +825,12 @@ const STOPS=[
  {id:'flex',name:'Flex: decide on the ground',flex:true,from:'2026-11-05',to:'2026-11-06',nights:1,
   note:'Go back to whichever stop you loved most: more surf in Ahangama or Hiriketiya, or Ella for more hikes. No fixed pin.',acts:[]},
  {id:'hikkaduwa',name:'Hikkaduwa',from:'2026-11-06',to:'2026-11-07',nights:1,ll:[6.1395,80.1063],q:'Hikkaduwa Beach, Sri Lanka',acts:[
-   ['Sinharaja Rainforest on the way','Sinharaja Forest Reserve, Sri Lanka','UNESCO rainforest, best for birds and endemic wildlife. Do it on the 6 Nov drive: go in from the Deniyaya/Mederipitiya entrance (about 2 hours from Ahangama) with a local guide, then on to Hikkaduwa. Leeches in wet season, so wear leech socks. Too far to fit in on the morning of the 7 Nov flight.'],
    ['Hikkaduwa turtles and snorkelling','Hikkaduwa Beach, Sri Lanka']]},
- {id:'flyout',name:'Fly out · Colombo Airport',sub:'Morning flight',from:'2026-11-07',nights:0,ll:[7.1808,79.8841],q:'7.1808,79.8841',
-  note:'Drive Hikkaduwa → Colombo Airport the morning of 7 Nov (about 2.5 hours, leave early). If the flight is before midday, sleep near the airport instead.',acts:[
+ {id:'sinharaja',name:'Sinharaja Rainforest',sub:'Day trip en route to the airport',from:'2026-11-07',nights:0,ll:[6.4,80.45],q:'Sinharaja Forest Reserve, Sri Lanka',
+  note:'Full day on 7 Nov: leave Hikkaduwa early (around 6am), about 3 hours to the Kudawa entrance, a guided walk of 3 to 4 hours, then about 4 to 4.5 hours to the airport. Aim to leave Sinharaja by 3pm to reach the airport around 8pm.',acts:[
+   ['Guided rainforest walk at Sinharaja (UNESCO site)','Sinharaja Forest Reserve Kudawa entrance, Sri Lanka','Best for birds and endemic wildlife. Book a local guide at the entrance; wear leech socks.']]},
+ {id:'flyout',name:'Fly out · Colombo Airport',sub:'Flight 1am, 8 Nov',from:'2026-11-07',nights:0,ll:[7.1808,79.8841],q:'7.1808,79.8841',
+  note:'Flight departs 1am on 8 Nov, so arrive by about 10pm on 7 Nov at the latest. The drive from Sinharaja can be slow after dark; leave buffer time.',acts:[
    ['Airport, fly out','7.1808,79.8841']]}
 ];
 const YALA={name:'Yala',ll:[6.3684,81.517],q:'Yala National Park, Sri Lanka',acts:[
@@ -853,7 +855,7 @@ const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate
 const START=D('2026-10-21'),END=D('2026-11-07');
 const dayNum=Math.round((today-START)/864e5)+1;
 let todayIdx=STOPS.findIndex(s=>s.to&&D(s.from)<=today&&today<D(s.to));
-if(+today===+END)todayIdx=STOPS.findIndex(s=>s.id==='flyout');
+if(+today===+END)todayIdx=STOPS.findIndex(s=>s.id==='sinharaja');
 document.getElementById('dayx').textContent=today<START?`Starts in ${1-dayNum} day${1-dayNum>1?'s':''}`:today>END?'Trip complete':`Day ${Math.min(dayNum,17)} of 17`;
 
 // Map
