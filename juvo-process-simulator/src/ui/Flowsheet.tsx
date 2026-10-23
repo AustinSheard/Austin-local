@@ -1,6 +1,6 @@
 import {
   Background, BaseEdge, Controls, EdgeLabelRenderer, Handle, MiniMap, Position, ReactFlow, ReactFlowProvider,
-  getBezierPath, reconnectEdge, useReactFlow, type Connection, type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
+  ConnectionMode, getBezierPath, reconnectEdge, useReactFlow, type Connection, type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
   applyNodeChanges,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -43,26 +43,28 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
     <div style={{ borderLeftColor: role.colour, borderLeftWidth: 6 }} className={`w-48 rounded-lg border-2 bg-white p-2 text-[11px] shadow-sm dark:bg-slate-900 ${
       st?.isBottleneck ? 'border-red-500' : selected ? 'border-sky-500' : 'border-slate-200 dark:border-slate-700'}
       ${sp?.sideStream ? 'border-dashed' : ''}`}>
-      <Handle type="target" position={Position.Left} className="!h-3 !w-3" />
-      <Handle type="source" position={Position.Right} className="!h-3 !w-3" />
-      {(() => {
-        const next = neighbourFor(s, n.id, !!sp?.sideStream);
+      {SIDES.map((side) => (
+        <span key={side}>
+          <Handle type="source" id={`s-${side}`} position={POS[side]} className="!h-2.5 !w-2.5" />
+          <Handle type="target" id={`t-${side}`} position={POS[side]} className="!h-2.5 !w-2.5 !opacity-0" />
+        </span>
+      ))}
+      {SIDES.map((side) => {
+        const next = neighbourFor(s, n.id, side);
         if (!next) return null;
         const name = next.label ?? cat.variants.find((x) => x.id === next.variantId)?.name ?? 'next step';
         return (
-          <button aria-label={`Connect to ${name}`} title={`Connect to ${name}`}
+          <button key={side} aria-label={`Connect to ${name}`} title={`Connect to ${name}`}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               useStore.getState().update((sc) => ({ ...sc, edges: [...sc.edges, { id: uid('e'), source: n.id, target: next.id }] }));
             }}
-            className="nodrag absolute -right-7 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-sky-600 text-[11px] font-bold text-white shadow hover:bg-sky-700">
-            →
+            className={`nodrag absolute z-10 flex h-5 w-5 items-center justify-center rounded-full bg-sky-600 text-[11px] font-bold text-white shadow hover:bg-sky-700 ${BTN_POS[side]}`}>
+            {ARROW[side]}
           </button>
         );
-      })()}
-      <Handle type="source" id="bottom" position={Position.Bottom} className="!h-2.5 !w-2.5" />
-      <Handle type="target" id="top" position={Position.Top} className="!h-2.5 !w-2.5" />
+      })}
       <div className="mb-1 flex items-start gap-1">
         <span className={`mt-0.5 h-2 w-2 shrink-0 rounded-full ${frozen ? 'bg-sky-500' : 'bg-amber-500'}`} title={frozen ? 'Frozen' : 'Out of freezer'} />
         <div className="min-w-0 flex-1 font-semibold leading-tight">{n.label ?? v?.name ?? 'Missing equipment'}</div>
@@ -125,24 +127,59 @@ function FlowEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
   );
 }
 
+type Side = 'top' | 'right' | 'bottom' | 'left';
+const SIDES: Side[] = ['top', 'right', 'bottom', 'left'];
+const POS: Record<Side, Position> = { top: Position.Top, right: Position.Right, bottom: Position.Bottom, left: Position.Left };
+const ARROW: Record<Side, string> = { top: '↑', right: '→', bottom: '↓', left: '←' };
+const BTN_POS: Record<Side, string> = {
+  top: 'left-1/2 -top-7 -translate-x-1/2', right: '-right-7 top-1/2 -translate-y-1/2',
+  bottom: 'left-1/2 -bottom-7 -translate-x-1/2', left: '-left-7 top-1/2 -translate-y-1/2',
+};
+// Approximate node box, used to pick the side an arrow leaves and enters by.
+const NODE_W = 192;
+const NODE_H = 110;
+const centre = (n: { x: number; y: number }) => ({ x: n.x + NODE_W / 2, y: n.y + NODE_H / 2 });
+
+/** Which side of `from` faces `to`. Boxes are wider than tall, so vertical is scaled. */
+export function sideToward(from: { x: number; y: number }, to: { x: number; y: number }): Side {
+  const a = centre(from);
+  const b = centre(to);
+  const dx = b.x - a.x;
+  const dy = (b.y - a.y) * (NODE_W / NODE_H);
+  if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 'right' : 'left';
+  return dy >= 0 ? 'bottom' : 'top';
+}
+
+/** Nearest step lying off the given side, unless the two are already joined. */
+function neighbourFor(s: Scenario, id: string, side: Side) {
+  const link = bestLink(s, id);
+  return link?.side === side ? link.node : undefined;
+}
+
 /**
- * The nearest step to connect to: for the cup line, the closest step to the right;
- * for a side stream, the closest cup-line step. Undefined when already connected.
+ * Where a one-tap arrow should go from this step: the neighbouring step in whichever
+ * direction is closest, offered only where the line is broken.
  */
-function neighbourFor(s: Scenario, id: string, side: boolean) {
+function bestLink(s: Scenario, id: string) {
   const me = s.nodes.find((n) => n.id === id);
-  if (!me) return undefined;
+  if (!me || s.edges.some((e) => e.source === id)) return undefined;
   const cat = useStore.getState().catalogue;
-  const linked = new Set(s.edges.filter((e) => e.source === id).map((e) => e.target));
-  const candidates = s.nodes.filter((n) => {
-    if (n.id === id) return false;
-    const sp = resolveSpec(cat, n);
-    if (!sp || sp.facilityOnly || sp.sideStream) return false;
-    return side || n.x > me.x + 20;
-  });
-  const dist = (n: { x: number; y: number }) => Math.hypot(n.x - me.x, (n.y - me.y) * 2);
-  const best = candidates.sort((a, b) => dist(a) - dist(b))[0];
-  return best && !linked.has(best.id) && !s.edges.some((e) => e.source === best.id && e.target === id) ? best : undefined;
+  const isSide = (nid: string) => { const n = s.nodes.find((m) => m.id === nid); return !!(n && resolveSpec(cat, n)?.sideStream); };
+  const mineIsSide = isSide(id);
+  const c = centre(me);
+  const dist = (n: { x: number; y: number }) => { const o = centre(n); return Math.hypot(o.x - c.x, o.y - c.y); };
+  const others = s.nodes.filter((n) => n.id !== id && !resolveSpec(cat, n)?.facilityOnly);
+  let out: { side: Side; node: (typeof others)[number]; d: number } | undefined;
+  for (const side of SIDES) {
+    const near = others.filter((n) => sideToward(me, n) === side).sort((p, q) => dist(p) - dist(q))[0];
+    if (!near || isSide(near.id)) continue;
+    if (s.edges.some((e) => e.source === near.id && e.target === id)) continue;
+    // A cup step only joins a step with no cup coming in yet; a batch feed can join any cup step.
+    if (!mineIsSide && s.edges.some((e) => e.target === near.id && !isSide(e.source))) continue;
+    const d = dist(near);
+    if (!out || d < out.d) out = { side, node: near, d };
+  }
+  return out;
 }
 
 const nodeTypes = { process: ProcessNode };
@@ -234,6 +271,9 @@ function Canvas() {
     const tsp = tgt ? resolveSpec(cat, tgt) : undefined;
     return {
       id: e.id, source: e.source, target: e.target, type: 'flow',
+      // Lines leave and enter by the sides that face each other, so they can run in any direction.
+      sourceHandle: src && tgt ? `s-${sideToward(src, tgt)}` : undefined,
+      targetHandle: src && tgt ? `t-${sideToward(tgt, src)}` : undefined,
       data: {
         step: sp?.sideStream ? undefined : stepById.get(e.source),
         frozen: sp?.state === 'frozen' && tsp?.state === 'frozen',
@@ -319,7 +359,7 @@ function Canvas() {
       <div ref={wrap} className="h-full w-full">
         <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
           onNodesChange={onNodesChange} onNodeDragStop={onNodeDragStop} onConnect={onConnect}
-          edgesReconnectable
+          edgesReconnectable connectionMode={ConnectionMode.Loose}
           onReconnect={(old, c) => update((sc) => ({
             ...sc,
             edges: reconnectEdge({ ...old }, c, sc.edges.map((e) => ({ ...e })), { shouldReplaceId: false })
