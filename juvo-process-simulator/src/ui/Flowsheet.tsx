@@ -16,6 +16,7 @@ import { NodeEditor } from './NodeEditor';
 import { PALETTE_ADD, PALETTE_DROP, Palette, type PaletteDrop } from './Palette';
 import { effective, useResults } from './useResults';
 import { Hint } from './Hints';
+import { ROLES, roleOf, type Role } from './roles';
 import { simulate } from '../engine/engine';
 
 const ResultsCtx = createContext<Results | null>(null);
@@ -37,8 +38,9 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
   const src = sp?.sources.rate?.kind ?? sp?.sources.cost?.kind ?? 'placeholder';
   const overridden = Object.keys(n.overrides).length > 0;
   const frozen = sp?.state === 'frozen';
+  const role = ROLES[roleOf(v?.typeId, sp?.sideStream)];
   return (
-    <div className={`w-48 rounded-lg border-2 bg-white p-2 text-[11px] shadow-sm dark:bg-slate-900 ${
+    <div style={{ borderLeftColor: role.colour, borderLeftWidth: 6 }} className={`w-48 rounded-lg border-2 bg-white p-2 text-[11px] shadow-sm dark:bg-slate-900 ${
       st?.isBottleneck ? 'border-red-500' : selected ? 'border-sky-500' : 'border-slate-200 dark:border-slate-700'}
       ${sp?.sideStream ? 'border-dashed' : ''}`}>
       <Handle type="target" position={Position.Left} className="!h-3 !w-3" />
@@ -51,7 +53,10 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
         {n.units > 1 && <span className="rounded bg-slate-100 px-1 dark:bg-slate-800">×{n.units}</span>}
       </div>
       {st?.isBottleneck && <div className="mb-1 rounded bg-red-100 px-1 font-semibold text-red-800 dark:bg-red-900/50 dark:text-red-200">Slowest step</div>}
-      {sp?.sideStream && <div className="mb-1 text-slate-500">Side stream</div>}
+      <div className="mb-1 flex items-center gap-1">
+        <span className="rounded px-1 text-[10px] font-medium text-white" style={{ background: role.colour }}>{role.label}</span>
+        {sp?.sideStream && <span className="text-slate-500">batch feed</span>}
+      </div>
       <div className="mb-1 h-1.5 w-full rounded bg-slate-100 dark:bg-slate-800" title={`Utilisation ${pct(util)}`}>
         <div className={`h-1.5 rounded ${utilColour}`} style={{ width: `${Math.min(100, util * 100)}%` }} />
       </div>
@@ -79,14 +84,18 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
   );
 });
 
-type FEdge = Edge<{ step?: StepResult; frozen: boolean }>;
+type FEdge = Edge<{ step?: StepResult; frozen: boolean; batch: boolean; role: Role }>;
 function FlowEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, selected }: EdgeProps<FEdge>) {
   const [path, lx, ly] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
-  const colour = data?.frozen ? '#0ea5e9' : '#f59e0b';
+  // Batch feeds are dotted; the cup line is solid, coloured by the step it feeds (blue while frozen).
+  const colour = data?.batch ? ROLES.batch.colour : data?.frozen ? ROLES.storage.colour : ROLES[data?.role ?? 'other'].colour;
   const st = data?.step;
   return (
     <>
-      <BaseEdge id={id} path={path} style={{ stroke: colour, strokeWidth: selected ? 4 : 2.5 }} />
+      <BaseEdge id={id} path={path} style={{
+        stroke: colour, strokeWidth: selected ? 5 : data?.batch ? 2.5 : 3.5,
+        strokeDasharray: data?.batch ? '2 6' : undefined, strokeLinecap: 'round',
+      }} />
       {st && (
         <EdgeLabelRenderer>
           <div style={{ transform: `translate(-50%,-50%) translate(${lx}px,${ly}px)` }}
@@ -189,7 +198,12 @@ function Canvas() {
     const tsp = tgt ? resolveSpec(cat, tgt) : undefined;
     return {
       id: e.id, source: e.source, target: e.target, type: 'flow',
-      data: { step: sp?.sideStream ? undefined : stepById.get(e.source), frozen: sp?.state === 'frozen' && tsp?.state === 'frozen' },
+      data: {
+        step: sp?.sideStream ? undefined : stepById.get(e.source),
+        frozen: sp?.state === 'frozen' && tsp?.state === 'frozen',
+        batch: !!sp?.sideStream,
+        role: roleOf(tgt && cat.variants.find((v) => v.id === tgt.variantId)?.typeId, tsp?.sideStream),
+      },
     };
   }), [s.edges, s.nodes, cat, stepById]);
 
@@ -316,10 +330,6 @@ export function Actions() {
   const update = useStore((x) => x.update);
   const notify = useStore((x) => x.notify);
   const switchTemplate = useStore((x) => x.switchTemplate);
-  const undo = useStore((x) => x.undo);
-  const redo = useStore((x) => x.redo);
-  const canUndo = useStore((x) => x.past.length > 0);
-  const canRedo = useStore((x) => x.future.length > 0);
   const addStation = () => {
     const rel = relieveBottleneck(effective(s, cat), cat);
     if (!rel) return notify('Add some equipment first.');
@@ -335,8 +345,6 @@ export function Actions() {
       <Btn kind="primary" onClick={addStation}>Add a station to the slowest step</Btn>
       <Btn onClick={rightSizeAll}>Right-size everything</Btn>
       {s.templateId !== 'automated' && <Btn onClick={() => switchTemplate('automated')}>Try the automated line</Btn>}
-      <Btn kind="ghost" onClick={undo} disabled={!canUndo} title="Undo (Ctrl+Z)">↶ Undo</Btn>
-      <Btn kind="ghost" onClick={redo} disabled={!canRedo} title="Redo (Ctrl+Y)">↷ Redo</Btn>
     </div>
   );
 }
@@ -373,6 +381,7 @@ export function FlowsheetScreen() {
               )}
             </div>
           )}
+          <Legend />
           <div className="flex flex-col items-start gap-1">
             <Hint id="drag">Drag equipment in from the list{' '}<span className="md:hidden">(tap “Add equipment”)</span></Hint>
             <Hint id="tap">Tap a step to edit it. Tap an arrow to insert equipment, or drag its end to rewire</Hint>
@@ -391,6 +400,29 @@ export function FlowsheetScreen() {
         )}
       </div>
       <NodeEditor />
+    </div>
+  );
+}
+
+function Legend() {
+  const [open, setOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
+  const line = (colour: string, dashed?: boolean) => (
+    <svg width="26" height="8"><line x1="2" y1="4" x2="24" y2="4" stroke={colour} strokeWidth={dashed ? 2.5 : 3.5} strokeLinecap="round" strokeDasharray={dashed ? '2 6' : undefined} /></svg>
+  );
+  return (
+    <div className="pointer-events-auto absolute right-0 top-0 rounded-lg bg-white/95 p-2 text-[11px] shadow dark:bg-slate-900/95">
+      <button className="font-semibold" onClick={() => setOpen(!open)}>Key {open ? '▾' : '▸'}</button>
+      {open && (
+        <div className="mt-1 space-y-0.5">
+          {(['batch', 'dosing', 'modify', 'storage', 'inspect', 'pack'] as Role[]).map((r) => (
+            <div key={r} className="flex items-center gap-1.5"><span className="h-3 w-1.5 rounded" style={{ background: ROLES[r].colour }} />{ROLES[r].label}</div>
+          ))}
+          <div className="mt-1 border-t border-slate-200 pt-1 dark:border-slate-700" />
+          <div className="flex items-center gap-1">{line(ROLES.dosing.colour)}{line(ROLES.modify.colour)} Cup line (colour of next step)</div>
+          <div className="flex items-center gap-1">{line(ROLES.storage.colour)} Cup line, frozen</div>
+          <div className="flex items-center gap-1">{line(ROLES.batch.colour, true)} Batch feed (e.g. mixer to filler)</div>
+        </div>
+      )}
     </div>
   );
 }

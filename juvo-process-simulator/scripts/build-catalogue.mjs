@@ -97,6 +97,7 @@ type('Powder dosing', 'auger-filler', 'Auger filler', [
   ['inline2', 'Auger filler inline dual head', amb({ rate: { typ: 5400 }, loss: 0.006, dwellMin: 1, cost: { typ: 55000 }, kW: { typ: 4 }, L: 2.5, W: 1.2 })],
   ['rotary', 'Auger filler rotary', amb({ rate: { typ: 4800 }, loss: 0.006, dwellMin: 1, cost: { typ: 90000 }, kW: { typ: 5 }, L: 2.5, W: 2 })],
 ]);
+type('Powder dosing', 'powder-manual', 'Manual powder fill station', [['std', 'Manual powder fill station', amb({ rate: { min: 120, typ: 150, max: 180 }, loss: 0.01, dwellMin: 3, operators: 1, cost: { typ: 1500 }, kW: { typ: 0.1 }, L: 1.2, W: 0.7 })]]);
 type('Powder dosing', 'vol-filler', 'Vibratory / volumetric cup filler', [['std', 'Volumetric cup filler', amb({ rate: { typ: 1800 }, loss: 0.01, dwellMin: 1, operators: 0.5, cost: { typ: 20000 }, kW: { typ: 1.5 }, L: 1.5, W: 1 })]]);
 type('Powder dosing', 'powder-hopper', 'Powder hopper with level control', [['std', 'Powder hopper with level control', amb({ rate: { typ: 6000 }, dwellMin: 0.5, cost: { typ: 6000 }, kW: { typ: 0.4 }, L: 1, W: 1 })]]);
 

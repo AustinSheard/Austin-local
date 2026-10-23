@@ -22,6 +22,20 @@ const MORE: { id: Exclude<MorePage, null>; label: string }[] = [
   { id: 'settings', label: 'Settings' },
 ];
 
+function UndoRedo() {
+  const undo = useStore((s) => s.undo);
+  const redo = useStore((s) => s.redo);
+  const canUndo = useStore((s) => s.past.length > 0);
+  const canRedo = useStore((s) => s.future.length > 0);
+  const cls = 'flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 text-sm disabled:opacity-35 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800';
+  return (
+    <div className="flex gap-1">
+      <button className={cls} onClick={undo} disabled={!canUndo} title="Undo (Ctrl+Z)" aria-label="Undo">↶<span className="hidden sm:inline">Undo</span></button>
+      <button className={cls} onClick={redo} disabled={!canRedo} title="Redo (Ctrl+Y or Ctrl+Shift+Z)" aria-label="Redo">↷<span className="hidden sm:inline">Redo</span></button>
+    </div>
+  );
+}
+
 function useTheme() {
   const theme = useStore((s) => s.settings.theme);
   useEffect(() => {
@@ -86,6 +100,7 @@ export default function App() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-1">
+          <UndoRedo />
           <div role="group" aria-label="Mode" className="flex rounded-md border border-slate-300 text-xs dark:border-slate-600">
             {(['simple', 'advanced'] as const).map((m) => (
               <button key={m} onClick={() => set({ mode: m })}

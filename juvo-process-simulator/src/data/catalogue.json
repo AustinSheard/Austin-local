@@ -105,6 +105,12 @@
    "defaultVariantId": "auger-filler.desktop"
   },
   {
+   "id": "powder-manual",
+   "name": "Manual powder fill station",
+   "category": "Powder dosing",
+   "defaultVariantId": "powder-manual.std"
+  },
+  {
    "id": "vol-filler",
    "name": "Vibratory / volumetric cup filler",
    "category": "Powder dosing",
@@ -5348,6 +5354,216 @@
     "materials": [],
     "L": 0.8,
     "W": 0.6,
+    "H": 1,
+    "clearance": 0.5,
+    "notes": "",
+    "customFields": [],
+    "sources": {
+     "kind": {
+      "kind": "placeholder"
+     },
+     "state": {
+      "kind": "placeholder"
+     },
+     "sideStream": {
+      "kind": "placeholder"
+     },
+     "rate": {
+      "kind": "placeholder"
+     },
+     "cupsHeld": {
+      "kind": "placeholder"
+     },
+     "oee": {
+      "kind": "placeholder"
+     },
+     "usableFill": {
+      "kind": "placeholder"
+     },
+     "loss": {
+      "kind": "placeholder"
+     },
+     "dwellMin": {
+      "kind": "placeholder"
+     },
+     "kW": {
+      "kind": "placeholder"
+     },
+     "duty": {
+      "kind": "placeholder"
+     },
+     "alwaysOn": {
+      "kind": "placeholder"
+     },
+     "operators": {
+      "kind": "placeholder"
+     },
+     "cost": {
+      "kind": "placeholder"
+     },
+     "currency": {
+      "kind": "placeholder"
+     },
+     "life": {
+      "kind": "placeholder"
+     },
+     "maintPct": {
+      "kind": "placeholder"
+     },
+     "L": {
+      "kind": "placeholder"
+     },
+     "W": {
+      "kind": "placeholder"
+     },
+     "H": {
+      "kind": "placeholder"
+     },
+     "clearance": {
+      "kind": "placeholder"
+     }
+    }
+   }
+  },
+  {
+   "id": "powder-manual.std",
+   "typeId": "powder-manual",
+   "name": "Manual powder fill station",
+   "spec": {
+    "kind": "rate",
+    "state": "ambient",
+    "sideStream": false,
+    "rate": {
+     "min": 120,
+     "typ": 150,
+     "max": 180
+    },
+    "cupsHeld": 0,
+    "oee": 0.85,
+    "usableFill": 0.8,
+    "loss": 0.01,
+    "dwellMin": 3,
+    "dwellUnit": "min",
+    "kW": {
+     "typ": 0.1
+    },
+    "duty": 0.6,
+    "alwaysOn": false,
+    "operators": 1,
+    "cost": {
+     "typ": 1500
+    },
+    "currency": "AUD",
+    "life": 10,
+    "maintPct": 0.03,
+    "materials": [],
+    "L": 1.2,
+    "W": 0.7,
+    "H": 1,
+    "clearance": 0.5,
+    "notes": "",
+    "customFields": [],
+    "sources": {
+     "kind": {
+      "kind": "placeholder"
+     },
+     "state": {
+      "kind": "placeholder"
+     },
+     "sideStream": {
+      "kind": "placeholder"
+     },
+     "rate": {
+      "kind": "placeholder"
+     },
+     "cupsHeld": {
+      "kind": "placeholder"
+     },
+     "oee": {
+      "kind": "placeholder"
+     },
+     "usableFill": {
+      "kind": "placeholder"
+     },
+     "loss": {
+      "kind": "placeholder"
+     },
+     "dwellMin": {
+      "kind": "placeholder"
+     },
+     "kW": {
+      "kind": "placeholder"
+     },
+     "duty": {
+      "kind": "placeholder"
+     },
+     "alwaysOn": {
+      "kind": "placeholder"
+     },
+     "operators": {
+      "kind": "placeholder"
+     },
+     "cost": {
+      "kind": "placeholder"
+     },
+     "currency": {
+      "kind": "placeholder"
+     },
+     "life": {
+      "kind": "placeholder"
+     },
+     "maintPct": {
+      "kind": "placeholder"
+     },
+     "L": {
+      "kind": "placeholder"
+     },
+     "W": {
+      "kind": "placeholder"
+     },
+     "H": {
+      "kind": "placeholder"
+     },
+     "clearance": {
+      "kind": "placeholder"
+     }
+    }
+   }
+  },
+  {
+   "id": "powder-manual.custom",
+   "typeId": "powder-manual",
+   "name": "Manual powder fill station (custom)",
+   "spec": {
+    "kind": "rate",
+    "state": "ambient",
+    "sideStream": false,
+    "rate": {
+     "min": 120,
+     "typ": 150,
+     "max": 180
+    },
+    "cupsHeld": 0,
+    "oee": 0.85,
+    "usableFill": 0.8,
+    "loss": 0.01,
+    "dwellMin": 3,
+    "dwellUnit": "min",
+    "kW": {
+     "typ": 0.1
+    },
+    "duty": 0.6,
+    "alwaysOn": false,
+    "operators": 1,
+    "cost": {
+     "typ": 1500
+    },
+    "currency": "AUD",
+    "life": 10,
+    "maintPct": 0.03,
+    "materials": [],
+    "L": 1.2,
+    "W": 0.7,
     "H": 1,
     "clearance": 0.5,
     "notes": "",
