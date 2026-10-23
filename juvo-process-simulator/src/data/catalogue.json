@@ -2208,13 +2208,6 @@
       "unit": "g",
       "price": 6,
       "source": "placeholder"
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3,
-      "source": "placeholder"
      }
     ],
     "L": 1.8,
@@ -2328,13 +2321,6 @@
       "unit": "g",
       "price": 6,
       "source": "placeholder"
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3,
-      "source": "placeholder"
      }
     ],
     "L": 1.8,
@@ -2445,12 +2431,6 @@
       "qty": 120,
       "unit": "g",
       "price": 6
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3
      }
     ],
     "L": 1.5,
@@ -2561,12 +2541,6 @@
       "qty": 120,
       "unit": "g",
       "price": 6
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3
      }
     ],
     "L": 1.5,
@@ -2679,12 +2653,6 @@
       "qty": 120,
       "unit": "g",
       "price": 6
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3
      }
     ],
     "L": 3,
@@ -2795,12 +2763,6 @@
       "qty": 120,
       "unit": "g",
       "price": 6
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3
      }
     ],
     "L": 2,
@@ -2913,12 +2875,6 @@
       "qty": 120,
       "unit": "g",
       "price": 6
-     },
-     {
-      "name": "Aluminium cup",
-      "qty": 1,
-      "unit": "each",
-      "price": 0.3
      }
     ],
     "L": 3,
@@ -3023,7 +2979,15 @@
     "currency": "AUD",
     "life": 10,
     "maintPct": 0.03,
-    "materials": [],
+    "materials": [
+     {
+      "name": "Aluminium cup",
+      "qty": 1,
+      "unit": "each",
+      "price": 0.3,
+      "source": "placeholder"
+     }
+    ],
     "L": 0.8,
     "W": 0.6,
     "H": 1,
@@ -3119,19 +3083,27 @@
     },
     "duty": 0.6,
     "alwaysOn": false,
-    "operators": 0.5,
+    "operators": 0,
     "cost": {
      "typ": 400
     },
     "currency": "AUD",
     "life": 10,
     "maintPct": 0.03,
-    "materials": [],
+    "materials": [
+     {
+      "name": "Aluminium cup",
+      "qty": 1,
+      "unit": "each",
+      "price": 0.3,
+      "source": "placeholder"
+     }
+    ],
     "L": 0.5,
     "W": 0.5,
     "H": 1,
     "clearance": 0.5,
-    "notes": "",
+    "notes": "Gravity cup rack, loaded by the portioning operator.",
     "customFields": [],
     "sources": {
      "kind": {
@@ -3229,7 +3201,15 @@
     "currency": "AUD",
     "life": 10,
     "maintPct": 0.03,
-    "materials": [],
+    "materials": [
+     {
+      "name": "Aluminium cup",
+      "qty": 1,
+      "unit": "each",
+      "price": 0.3,
+      "source": "placeholder"
+     }
+    ],
     "L": 1,
     "W": 0.8,
     "H": 1,
@@ -3332,7 +3312,15 @@
     "currency": "AUD",
     "life": 10,
     "maintPct": 0.03,
-    "materials": [],
+    "materials": [
+     {
+      "name": "Aluminium cup",
+      "qty": 1,
+      "unit": "each",
+      "price": 0.3,
+      "source": "placeholder"
+     }
+    ],
     "L": 0.8,
     "W": 0.6,
     "H": 1,

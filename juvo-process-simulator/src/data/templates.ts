@@ -69,7 +69,8 @@ export const templates: Record<string, { name: string; build: () => Scenario }> 
   midland: {
     name: 'Midland semi-auto',
     build: () => line('midland', 'Midland semi-auto (now to Mar-27)', [
-      ['chest-freezer.500', 3, false, { label: 'Fruit chest freezers', overrides: { cupsHeld: 2000, notes: 'Bulk IQF fruit, held as cup-equivalents.' } }],
+      ['denester.manual', 1, false, { label: 'Cup de-nesting (cups in)' }],
+      ['chest-freezer.500', 3, true, { label: 'Fruit chest freezers', overrides: { cupsHeld: 2000, sideStream: true, notes: 'Bulk IQF fruit, held as cup-equivalents.' } }],
       ['fruit-portioning.manual', 2],
       ['ribbon-mixer.50', 1, true],
       ['auger-filler.desktop', 1],
@@ -83,7 +84,8 @@ export const templates: Record<string, { name: string; build: () => Scenario }> 
     name: 'Automated line',
     build: () => {
       const s = line('automated', 'Automated line (200+ machines)', [
-        ['cool-room.20', 1, false, { label: 'Fruit cool room', overrides: { cupsHeld: 40000, notes: 'Bulk IQF fruit, held as cup-equivalents.' } }],
+        ['denester.inline', 1, false, { label: 'Cup de-nesting (cups in)' }],
+        ['cool-room.20', 1, true, { label: 'Fruit cool room', overrides: { cupsHeld: 40000, sideStream: true, notes: 'Bulk IQF fruit, held as cup-equivalents.' } }],
         ['comb-weigher.24head', 1],
         ['ribbon-mixer.200', 1, true],
         ['auger-filler.inline1', 1],
@@ -102,7 +104,8 @@ export const templates: Record<string, { name: string; build: () => Scenario }> 
   hybrid: {
     name: 'Hybrid',
     build: () => line('hybrid', 'Hybrid with automatic labelling', [
-      ['chest-freezer.bank4', 1, false, { label: 'Fruit freezers', overrides: { cupsHeld: 8000 } }],
+      ['denester.semi', 1, false, { label: 'Cup de-nesting (cups in)' }],
+      ['chest-freezer.bank4', 1, true, { label: 'Fruit freezers', overrides: { cupsHeld: 8000, sideStream: true } }],
       ['fruit-depositor.std', 1],
       ['ribbon-mixer.100', 1, true],
       ['auger-filler.semi', 1],

@@ -9,6 +9,7 @@ import { Btn, Card, NumInput, Select, Table, TextInput } from '../common';
 import { MaterialsEditor } from '../EquipmentFields';
 import { aud, download, fleet, mins, num, pickFile } from '../format';
 import { effective } from '../useResults';
+import { templates } from '../../data/templates';
 
 export function ScenariosPage() {
   const scenarios = useStore((s) => s.scenarios);
@@ -47,6 +48,15 @@ export function ScenariosPage() {
             <span className="text-xs text-slate-500">{s.nodes.length} steps · {s.globals.fleet} machines</span>
             {s.id !== activeId && <Btn onClick={() => { setActive(s.id); set({ more: null, screen: 'flowsheet' }); }}>Open</Btn>}
             <Btn onClick={() => addScenario({ ...JSON.parse(JSON.stringify(s)), id: uid('sc'), name: `${s.name} (copy)`, templateId: undefined })}>Duplicate</Btn>
+            {s.templateId && templates[s.templateId] && (
+              <Btn title="Replace this flowsheet with the latest template. Your fleet size is kept." onClick={() => {
+                if (!confirm(`Reset “${s.name}” to the latest ${templates[s.templateId!].name} template? Changes to its steps will be lost.`)) return;
+                const fresh = { ...templates[s.templateId!].build(), id: s.id };
+                fresh.globals = { ...fresh.globals, fleet: s.globals.fleet };
+                set({ scenarios: scenarios.map((x) => (x.id === s.id ? fresh : x)), past: [], future: [] });
+                notify(`Reset to the latest ${templates[s.templateId!].name} template.`);
+              }}>Reset to template</Btn>
+            )}
             <Btn kind="danger" disabled={scenarios.length < 2} onClick={() => {
               if (!confirm(`Delete “${s.name}”?`)) return;
               const rest = scenarios.filter((x) => x.id !== s.id);

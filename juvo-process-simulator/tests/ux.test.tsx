@@ -7,7 +7,7 @@ describe('first load', () => {
     render(<App />);
     const strip = screen.getByTestId('result-strip');
     expect(within(strip).getByText('1,050')).toBeTruthy();
-    expect(within(strip).getByText('Cup chest freezers')).toBeTruthy();
+    expect(within(strip).getByText('Can seamer semi-auto desktop')).toBeTruthy();
     expect(within(strip).getByText('A$3.21')).toBeTruthy();
     expect(within(strip).getByText('20 min of 30')).toBeTruthy();
     expect(screen.getByLabelText('Fleet size')).toBeTruthy();
@@ -18,7 +18,7 @@ describe('first load', () => {
 
   it('Simple mode shows exactly 6 fields per equipment', async () => {
     render(<App />);
-    for (const id of ['n2', 'n8']) {
+    for (const id of ['n3', 'n9']) {
       act(() => useStore.setState({ selectedNodeId: id, editorOpen: true, mode: 'simple' }));
       const dialog = await screen.findByRole('dialog');
       expect(within(dialog).getAllByTestId('field')).toHaveLength(6);

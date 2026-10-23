@@ -36,9 +36,11 @@ All of the maths is in `src/engine`, which has no UI imports. It's a steady-stat
 | Survival `S_i` | product of (1 − loss) from step *i* to the end of the main path. A side stream uses the next main step's S × its own (1 − loss) |
 | Rate step capacity/day | units × rate (cups/h) × OEE × shift hours |
 | Storage step capacity/day | units × cups held × usable fill / dwell days × 7 / production days (Little's law) |
-| Max good output | min over steps of capacity × S_i (the argmin is the **slowest step**) |
+| Max good output | min over rate steps of capacity × S_i (the argmin is the **slowest step**). Freezers and cool rooms hold stock and never limit the line |
 | Supported fleet | max good × production days / (7 × cups/machine/day) |
 | Output made Q | min(demand, max good). All costs use Q |
+| Cup balance | cups in at de-nesting = good cups out + rejects. Every step passes the cups it receives to the next one |
+| Line pacing | the line moves in sync at Q / shift hours. Each step runs at that rate (shown as “runs X of Y cups/h”), and steps faster than the slowest one are marked “paced” |
 | Utilisation | (demand / S_i) / capacity |
 | Power | connected = units × kW; average = connected × duty. Always-on steps run 24 h, others run shift × utilisation |
 | Labour | operators × units × paid hours (shift × utilisation when flex labour is on). FTE = hours / shift |
@@ -47,7 +49,7 @@ All of the maths is in `src/engine`, which has no UI imports. It's a steady-stat
 | Depreciation | straight line over item life, including installation and contingency. Fit-out uses its own life |
 | Maintenance | % of equipment cost per year |
 | Cost per cup | (materials + labour + power + maintenance + depreciation + overheads) / cups per month. Cash OPEX leaves out depreciation |
-| Out-of-freezer window | longest run of consecutive ambient main-path steps (side streams don't count) |
+| Out-of-freezer window | longest run of consecutive ambient main-path steps once there is product in the cup (empty cups from de-nesting and side streams don't count) |
 | Right-size | units = ceil(required entering cups / (per-unit capacity × target utilisation)), minimum 1 |
 
 Monthly figures use 365/12 calendar days and production days × 52/12 production days.
@@ -58,7 +60,8 @@ Monthly figures use 365/12 calendar days and production days × 52/12 production
 
 ### Seed checks (from `tests/engine.test.ts`)
 
-- Midland semi-auto at 25 machines: 1,050 good cups/day, about A$3.21/cup, 95.9% yield, 20 min out of the freezer. The slowest step is the cup chest freezers.
+- Midland semi-auto at 25 machines: 1,050 good cups/day, about A$3.21/cup, 95.9% yield, 20 min out of the freezer. The slowest step is the semi-auto seamer; freezers never pace the line.
+- Each template starts with a cup de-nesting step (cups in, where the aluminium cup cost is charged). Fruit stores feed the dosing step from the side.
 - Midland at 100 machines as built is short of demand. Right-sized, it costs about A$2.89/cup.
 - Automated line at 25 machines: the slowest step is the YM515 labeller, and the line supports about 193 machines.
 - An empty flowsheet returns output = demand, with no NaN.

@@ -63,6 +63,15 @@ export interface StepResult {
   refrigeration: boolean;
   /** Good-path cups leaving the step per production hour. */
   cupsOutPerHour: number;
+  /** Cups entering and leaving per production day (cup line only). */
+  cupsInPerDay: number;
+  cupsOutPerDay: number;
+  /** False for storage, which never limits the line. */
+  limitsLine: boolean;
+  /** Cups/h each unit actually runs at when the line moves in sync (mass balance). */
+  runRatePerUnit: number;
+  /** Cups/h each unit could run at (rate × OEE). */
+  maxRatePerUnit: number;
   /** Running out-of-freezer time when a cup leaves this step (min). */
   oofClockMin: number;
 }
@@ -72,6 +81,10 @@ export interface Results {
   maxGood: number;
   output: number;
   shortfall: number;
+  /** Cups in = good cups out + rejects, per production day. */
+  balance: { cupsIn: number; cupsOut: number; rejected: number };
+  /** Good cups/h off the end of the line during the shift. Every step is paced to this. */
+  lineRatePerHour: number;
   supportedFleet: number;
   bottleneckId?: string;
   bottleneckName?: string;
@@ -220,6 +233,8 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
     const cap = stepCapacity(sp, n.units, g);
     caps.set(n.id, cap);
     const f = flow.get(n.id)!;
+    // Storage holds stock; it costs money, power and space but never paces the line.
+    if (sp.kind === 'storage') continue;
     const mg = f > 0 ? (cap * surv.get(n.id)!) / f : Infinity;
     if (mg < maxGood) { maxGood = mg; bottleneckId = n.id; }
   }
@@ -270,6 +285,10 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
       perUnitCapacity: n.units > 0 ? cap / n.units : stepCapacity(sp, 1, g),
       maxGood: f > 0 ? (cap * S) / f : Infinity, requiredEntering: reqDemand,
       utilDemand, utilActual: finiteUtil, isBottleneck: n.id === bottleneckId,
+      limitsLine: sp.kind !== 'storage',
+      cupsInPerDay: mainIds.has(n.id) ? reqActual : 0, cupsOutPerDay: mainIds.has(n.id) ? reqActual * (1 - sp.loss) : 0,
+      runRatePerUnit: n.units > 0 && g.shiftHours > 0 ? reqActual / n.units / g.shiftHours : 0,
+      maxRatePerUnit: sp.kind === 'rate' ? pickRange(sp.rate, g.pick.rate) * sp.oee : 0,
       dwellMin: sp.dwellMin, connectedKW, avgKW, kWhMonth, powerCostMonth: kWhMonth * g.kWhPrice,
       labourHoursMonth: labourHoursDay * pdm, labourCostMonth: labourHoursDay * pdm * g.wage,
       fte: g.shiftHours > 0 ? labourHoursDay / g.shiftHours : 0,
@@ -342,10 +361,21 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
   const frozenPrefix = new Map<string, number | null>();
   let oof = 0;
   let fruitAge = 0;
+  // The freezer clock only runs once there is product in the cup (empty cups from a denester don't count).
+  const hasProduct = new Map<string, boolean>();
+  const sidePreds = (id: string) => graph.preds.get(id)!.filter((p) => !mainIds.has(p));
   for (const n of graph.main) {
     const ps = mainPreds(n.id);
+    const product = specs.get(n.id)!.materials.some((m) => m.unit === 'g') || sidePreds(n.id).length > 0
+      || ps.some((p) => hasProduct.get(p));
+    hasProduct.set(n.id, product);
+    // Fruit held in a frozen store that feeds this step from the side.
+    for (const sp of sidePreds(n.id)) {
+      const ss = specs.get(sp)!;
+      if (ss.kind === 'storage' && ss.state === 'frozen') fruitAge = Math.max(fruitAge, ss.dwellMin);
+    }
     const prevRun = ps.length ? Math.max(...ps.map((p) => run.get(p) ?? 0)) : 0;
-    const r = ambient(n.id) ? prevRun + dwell(n.id) : 0;
+    const r = ambient(n.id) && product ? prevRun + dwell(n.id) : 0;
     run.set(n.id, r);
     oof = Math.max(oof, r);
     longest.set(n.id, dwell(n.id) + (ps.length ? Math.max(...ps.map((p) => longest.get(p) ?? 0)) : 0));
@@ -359,10 +389,17 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
     }
   }
   for (const st of steps) st.oofClockMin = run.get(st.id) ?? 0;
-  const startToFinish = graph.main.length ? Math.max(...graph.main.map((n) => longest.get(n.id)!)) : 0;
+  const sideFruit = graph.side.some((n) => specs.get(n.id)!.kind === 'storage' && specs.get(n.id)!.state === 'frozen');
+  const mainSpan = graph.main.length ? Math.max(...graph.main.map((n) => longest.get(n.id)!)) : 0;
+  const startToFinish = mainSpan + (sideFruit ? fruitAge : 0);
 
   return {
     demand, maxGood, output, shortfall: Math.max(0, demand - maxGood),
+    lineRatePerHour: g.shiftHours > 0 ? output / g.shiftHours : 0,
+    balance: (() => {
+      const cupsIn = roots.reduce((a, rt) => a + (steps.find((x) => x.id === rt.id)?.cupsInPerDay ?? 0), 0) || output;
+      return { cupsIn, cupsOut: output, rejected: cupsIn - output };
+    })(),
     supportedFleet: (maxGood * g.prodDays) / (7 * g.cupsPerMachine),
     bottleneckId, bottleneckName: bottleneckId ? steps.find((st) => st.id === bottleneckId)?.name : undefined,
     yield: overallYield, steps, cupsPerMonth, monthly, perCup,
@@ -375,7 +412,7 @@ export function simulate(s: Scenario, cat: Catalogue): Results {
     labour: { fte: sum('fte'), hoursMonth: sum('labourHoursMonth') },
     residence: {
       oofWindowMin: oof, oofLimitMin: g.oofLimitMin, oofOk: oof <= g.oofLimitMin,
-      fruitAgeMin: fruitAge, cupAgeMin: Math.max(0, startToFinish - fruitAge),
+      fruitAgeMin: fruitAge, cupAgeMin: sideFruit ? mainSpan : Math.max(0, mainSpan - fruitAge),
       startToFinishMin: startToFinish, frozenStock: EMPTY_SPEC_SAFE(sum('frozenStock')),
     },
   };

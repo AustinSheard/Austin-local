@@ -18,7 +18,23 @@ describe('Scenario A (Midland semi-auto)', () => {
   it('cost per cup within 2c of A$3.21', () => expect(Math.abs(r.perCup.total - 3.21)).toBeLessThan(0.02));
   it('yields about 95.9%', () => expect(r.yield * 100).toBeCloseTo(95.9, 1));
   it('has a 20 min out-of-freezer window', () => expect(r.residence.oofWindowMin).toBe(20));
-  it('slowest step is the cup freezer store', () => expect(r.bottleneckName).toBe('Cup chest freezers'));
+  it('slowest step is the seamer; freezers never pace the line', () => {
+    expect(r.bottleneckName).toBe('Can seamer semi-auto desktop');
+    for (const st of r.steps.filter((x) => x.kind === 'storage')) expect(st.limitsLine).toBe(false);
+  });
+  it('starts with cup de-nesting and balances cups in and out', () => {
+    expect(r.steps[0].name).toBe('Cup de-nesting (cups in)');
+    expect(r.balance.cupsOut).toBeCloseTo(1050, 6);
+    expect(r.balance.cupsIn).toBeCloseTo(1050 / r.yield, 6);
+    expect(r.balance.cupsIn).toBeCloseTo(r.balance.cupsOut + r.balance.rejected, 9);
+    const main = r.steps.filter((x) => !x.sideStream);
+    for (let i = 1; i < main.length; i++) expect(main[i].cupsInPerDay).toBeCloseTo(main[i - 1].cupsOutPerDay, 6);
+  });
+  it('every step is paced to the line rate', () => {
+    const portion = r.steps.find((x) => x.name === 'Manual portioning station')!;
+    expect(portion.runRatePerUnit).toBeLessThan(portion.maxRatePerUnit);
+    expect(r.lineRatePerHour).toBeCloseTo(1050 / 8, 6);
+  });
   it('cost breakdown adds up', () => {
     const p = r.perCup;
     expect(p.materials + p.labour + p.power + p.maintenance + p.depreciation + p.overheads).toBeCloseTo(p.total, 9);
@@ -44,7 +60,7 @@ describe('Scenario A (Midland semi-auto)', () => {
   it('relieving the bottleneck raises the supported fleet', () => {
     const rel = relieveBottleneck(a, cat)!;
     expect(rel.after).toBeGreaterThan(rel.before);
-    expect(insight(a, cat)).toMatch(/Adding one unit at Cup chest freezers/);
+    expect(insight(a, cat)).toMatch(/Adding one unit at Can seamer/);
   });
 });
 
@@ -66,7 +82,7 @@ describe('edge cases', () => {
   });
   it('side streams do not count in the out-of-freezer window', () => {
     const r = simulate(templates.midland.build(), cat);
-    const mixer = r.steps.find((s) => s.sideStream)!;
+    const mixer = r.steps.find((s) => s.sideStream && s.kind === 'rate')!;
     expect(mixer.dwellMin).toBe(30);
     expect(r.residence.oofWindowMin).toBe(20);
   });

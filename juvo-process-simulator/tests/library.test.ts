@@ -67,7 +67,7 @@ describe('library', () => {
   });
   it('override and reset leave the library untouched', () => {
     const s = templates.midland.build();
-    const n = s.nodes[1];
+    const n = s.nodes[2];
     const o = setOverride(n, 'oee', 0.5);
     expect(isOverridden(o, 'oee')).toBe(true);
     expect(cat.variants.find((v) => v.id === n.variantId)!.spec.oee).toBe(0.85);
@@ -75,16 +75,16 @@ describe('library', () => {
   });
   it('variant swap keeps connections and position', () => {
     const s = templates.midland.build();
-    const swapped = swapVariant(s, 'n6', 'labeller.ym515');
+    const swapped = swapVariant(s, 'n7', 'labeller.ym515');
     expect(swapped.edges).toEqual(s.edges);
-    const n = swapped.nodes.find((x) => x.id === 'n6')!;
+    const n = swapped.nodes.find((x) => x.id === 'n7')!;
     expect(n.variantId).toBe('labeller.ym515');
-    expect([n.x, n.y]).toEqual([s.nodes[5].x, s.nodes[5].y]);
-    expect(simulate(swapped, cat).steps.find((x) => x.id === 'n6')!.name).toMatch(/YM515/);
+    expect([n.x, n.y]).toEqual([s.nodes[6].x, s.nodes[6].y]);
+    expect(simulate(swapped, cat).steps.find((x) => x.id === 'n7')!.name).toMatch(/YM515/);
   });
   it('saves a customised node to the palette as a new variant', () => {
     const s = templates.midland.build();
-    const n = setOverride(s.nodes[1], 'rate', { typ: 200 });
+    const n = setOverride(s.nodes[2], 'rate', { typ: 200 });
     const { catalogue, variant } = saveNodeAsVariant(cat, n, 'Faster portioning');
     expect(catalogue.variants).toHaveLength(cat.variants.length + 1);
     expect(variant.spec.rate.typ).toBe(200);
@@ -98,14 +98,14 @@ describe('library', () => {
     const bad = {
       ...s,
       edges: [
-        { id: 'a', source: 'n2', target: 'n5' }, { id: 'b', source: 'n5', target: 'n4' }, { id: 'c', source: 'n4', target: 'n6' },
-        { id: 'd', source: 'n3', target: 'n4' },
+        { id: 'a', source: 'n3', target: 'n6' }, { id: 'b', source: 'n6', target: 'n5' }, { id: 'c', source: 'n5', target: 'n7' },
+        { id: 'd', source: 'n4', target: 'n5' },
       ],
     };
     expect(flowWarnings(bad, cat).some((w) => /before the filler/.test(w.message))).toBe(true);
-    const lonely = { ...s, nodes: [{ ...s.nodes[5], id: 'z' }], edges: [] };
+    const lonely = { ...s, nodes: [{ ...s.nodes[6], id: 'z' }], edges: [] };
     expect(flowWarnings(lonely, cat)[0].message).toMatch(/no cup step upstream/);
-    const noPack = { ...s, edges: s.edges.filter((e) => e.target !== 'n8' && e.source !== 'n7').concat({ id: 'q', source: 'n6', target: 'n8' }) };
+    const noPack = { ...s, edges: s.edges.filter((e) => e.target !== 'n9' && e.source !== 'n8').concat({ id: 'q', source: 'n7', target: 'n9' }) };
     expect(flowWarnings(noPack, cat).some((w) => /no packing/.test(w.message))).toBe(true);
   });
   it('library and quotes survive a JSON round trip', () => {
@@ -120,18 +120,18 @@ describe('rewiring', () => {
   const s = templates.midland.build();
   const path = (sc: typeof s) => simulate(sc, cat).steps.filter((x) => !x.sideStream).map((x) => x.id);
   it('inserts equipment on an arrow', () => {
-    const e = s.edges.find((x) => x.source === 'n2' && x.target === 'n4')!;
+    const e = s.edges.find((x) => x.source === 'n3' && x.target === 'n5')!;
     const out = insertOnEdge(s, e.id, { id: 'new', variantId: 'checkweigher.basic', units: 1, overrides: {}, x: 0, y: 0 });
-    expect(path(out)).toEqual(['n1', 'n2', 'new', 'n4', 'n5', 'n6', 'n7', 'n8']);
+    expect(path(out)).toEqual(['n1', 'n3', 'new', 'n5', 'n6', 'n7', 'n8', 'n9']);
   });
   it('swaps portioning and auger filler, keeping the mixer on the filler', () => {
-    const out = moveStep(s, cat, 'n4', 'earlier');
-    expect(path(out)).toEqual(['n1', 'n4', 'n2', 'n5', 'n6', 'n7', 'n8']);
-    expect(out.edges.some((e) => e.source === 'n3' && e.target === 'n4')).toBe(true);
-    expect(moveStep(out, cat, 'n4', 'later')).toMatchObject({ edges: expect.any(Array) });
-    expect(path(moveStep(out, cat, 'n4', 'later'))).toEqual(path(s));
+    const out = moveStep(s, cat, 'n5', 'earlier');
+    expect(path(out)).toEqual(['n1', 'n5', 'n3', 'n6', 'n7', 'n8', 'n9']);
+    expect(out.edges.some((e) => e.source === 'n4' && e.target === 'n5')).toBe(true);
+    expect(moveStep(out, cat, 'n5', 'later')).toMatchObject({ edges: expect.any(Array) });
+    expect(path(moveStep(out, cat, 'n5', 'later'))).toEqual(path(s));
   });
   it('removes a step and joins the line back up', () => {
-    expect(path(removeAndBridge(s, 'n5'))).toEqual(['n1', 'n2', 'n4', 'n6', 'n7', 'n8']);
+    expect(path(removeAndBridge(s, 'n6'))).toEqual(['n1', 'n3', 'n5', 'n7', 'n8', 'n9']);
   });
 });

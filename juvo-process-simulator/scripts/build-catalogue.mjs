@@ -58,19 +58,20 @@ type('Cold storage', 'pallet-freezer', 'Pallet freezer store', [
 // Fruit handling
 const amb = (o) => ({ state: 'ambient', ...o });
 type('Fruit handling', 'fruit-portioning', 'Manual fruit portioning and cup loading', [
-  ['manual', 'Manual portioning station', amb({ rate: { min: 120, typ: 150, max: 180 }, loss: 0.014, dwellMin: 5, operators: 1, cost: { typ: 2500 }, kW: { typ: 0.1 }, L: 1.8, W: 0.8, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6, source: 'placeholder' }, { name: 'Aluminium cup', qty: 1, unit: 'each', price: 0.3, source: 'placeholder' }] })],
+  ['manual', 'Manual portioning station', amb({ rate: { min: 120, typ: 150, max: 180 }, loss: 0.014, dwellMin: 5, operators: 1, cost: { typ: 2500 }, kW: { typ: 0.1 }, L: 1.8, W: 0.8, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6, source: 'placeholder' }] })],
 ]);
 type('Fruit handling', 'fruit-depositor', 'Semi-auto fruit depositor', [
-  ['std', 'Semi-auto fruit depositor', amb({ rate: { typ: 600 }, loss: 0.01, dwellMin: 3, operators: 1, cost: { typ: 25000 }, kW: { typ: 1.5 }, L: 1.5, W: 1, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6 }, { name: 'Aluminium cup', qty: 1, unit: 'each', price: 0.3 }] })],
+  ['std', 'Semi-auto fruit depositor', amb({ rate: { typ: 600 }, loss: 0.01, dwellMin: 3, operators: 1, cost: { typ: 25000 }, kW: { typ: 1.5 }, L: 1.5, W: 1, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6 }] })],
 ]);
 type('Fruit handling', 'comb-weigher', 'Combination weigher', [
-  ['24head', '24-head combination weigher with denester', amb({ rate: { min: 2100, typ: 2400, max: 2700 }, loss: 0.008, dwellMin: 2, operators: 1, cost: { typ: 120000 }, kW: { typ: 4 }, L: 3, W: 2.5, H: 3.5, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6 }, { name: 'Aluminium cup', qty: 1, unit: 'each', price: 0.3 }] })],
-  ['10head', '10-head combination weigher', amb({ rate: { typ: 1200 }, loss: 0.01, dwellMin: 2, operators: 1, cost: { typ: 45000 }, kW: { typ: 2 }, L: 2, W: 2, H: 3, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6 }, { name: 'Aluminium cup', qty: 1, unit: 'each', price: 0.3 }] })],
+  ['24head', '24-head combination weigher with denester', amb({ rate: { min: 2100, typ: 2400, max: 2700 }, loss: 0.008, dwellMin: 2, operators: 1, cost: { typ: 120000 }, kW: { typ: 4 }, L: 3, W: 2.5, H: 3.5, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6 }] })],
+  ['10head', '10-head combination weigher', amb({ rate: { typ: 1200 }, loss: 0.01, dwellMin: 2, operators: 1, cost: { typ: 45000 }, kW: { typ: 2 }, L: 2, W: 2, H: 3, materials: [{ name: 'Fruit (IQF)', qty: 120, unit: 'g', price: 6 }] })],
 ]);
+const cups = [{ name: 'Aluminium cup', qty: 1, unit: 'each', price: 0.3, source: 'placeholder' }];
 type('Fruit handling', 'denester', 'Cup denester / dispenser', [
-  ['semi', 'Cup denester semi-auto', amb({ rate: { typ: 1200 }, dwellMin: 0.5, cost: { typ: 8000 }, kW: { typ: 0.5 }, L: 0.8, W: 0.6 })],
-  ['manual', 'Cup dispenser manual', amb({ rate: { typ: 600 }, dwellMin: 0.5, operators: 0.5, cost: { typ: 400 }, L: 0.5, W: 0.5 })],
-  ['inline', 'Cup denester inline', amb({ rate: { typ: 3000 }, dwellMin: 0.5, cost: { typ: 18000 }, kW: { typ: 1 }, L: 1, W: 0.8 })],
+  ['semi', 'Cup denester semi-auto', amb({ rate: { typ: 1200 }, dwellMin: 0.5, cost: { typ: 8000 }, kW: { typ: 0.5 }, L: 0.8, W: 0.6, materials: cups })],
+  ['manual', 'Cup dispenser manual', amb({ rate: { typ: 600 }, dwellMin: 0.5, operators: 0, cost: { typ: 400 }, L: 0.5, W: 0.5, materials: cups, notes: 'Gravity cup rack, loaded by the portioning operator.' })],
+  ['inline', 'Cup denester inline', amb({ rate: { typ: 3000 }, dwellMin: 0.5, cost: { typ: 18000 }, kW: { typ: 1 }, L: 1, W: 0.8, materials: cups })],
 ]);
 type('Fruit handling', 'fruit-feed', 'Fruit conveyor / hopper feed', [
   ['std', 'Fruit incline conveyor and hopper', amb({ rate: { typ: 3000 }, dwellMin: 1, cost: { typ: 15000 }, kW: { typ: 0.75 }, L: 3, W: 0.8 })],

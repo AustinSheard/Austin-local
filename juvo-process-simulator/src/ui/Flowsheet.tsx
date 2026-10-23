@@ -78,8 +78,15 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
       <div className="mb-1 h-1.5 w-full rounded bg-slate-100 dark:bg-slate-800" title={`Utilisation ${pct(util)}`}>
         <div className={`h-1.5 rounded ${utilColour}`} style={{ width: `${Math.min(100, util * 100)}%` }} />
       </div>
+      {st && sp?.kind === 'rate' && !sp.sideStream && (
+        <div className="mb-0.5 text-slate-600 dark:text-slate-300" title="The cup line moves in sync, so this step runs at the line rate, below its maximum.">
+          Runs {num(st.runRatePerUnit)} of {num(st.maxRatePerUnit)} cups/h{n.units > 1 ? ' each' : ''}
+          {!st.isBottleneck && st.utilActual < 0.98 && <span className="ml-1 rounded bg-slate-100 px-1 text-[10px] dark:bg-slate-800">paced</span>}
+        </div>
+      )}
+      {sp?.kind === 'storage' && <div className="mb-0.5 text-slate-500">Storage · doesn’t limit the line</div>}
       <div className="grid grid-cols-2 gap-x-1 text-slate-600 dark:text-slate-300">
-        <span>Use {pct(util)}</span>
+        <span>{sp?.kind === 'storage' ? 'Full' : 'Use'} {pct(util)}</span>
         <span>{num(st?.capacityPerDay ?? 0)} cups/day</span>
         <span>{mins(sp?.dwellMin ?? 0)}</span>
         <span>{num(st?.connectedKW ?? 0, 1)} kW</span>

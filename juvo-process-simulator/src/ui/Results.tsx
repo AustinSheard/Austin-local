@@ -65,10 +65,21 @@ export function ResultsScreen() {
             <Stat label="Yield" value={pct(r.yield, 1)} />
           </div>
           {r.shortfall > 0 && <p className="mb-2 text-sm text-red-600">Short of demand by {num(r.shortfall)} cups/day. Slowest step: {r.bottleneckName}.</p>}
-          <Table head={['Step', 'Units', 'Capacity (cups/day)', 'Use']} rows={r.steps.map((st) => [
-            <span className={st.isBottleneck ? 'font-semibold text-red-600' : ''}>{st.name}{st.sideStream ? ' (side stream)' : ''}{st.isBottleneck ? ' · slowest' : ''}</span>,
-            st.units, num(st.capacityPerDay),
-            <span className={st.utilDemand > 1 ? 'text-red-600' : st.utilDemand > 0.85 ? 'text-amber-600' : ''}>{pct(st.utilDemand)}</span>,
+          <div className="mb-3 rounded bg-slate-50 p-2 text-sm dark:bg-slate-800">
+            <div className="font-medium">Cup balance (per production day)</div>
+            <div>{num(r.balance.cupsIn)} cups in = {num(r.balance.cupsOut)} good cups out + {num(r.balance.rejected)} rejected</div>
+            <div className="mt-1 text-xs text-slate-500">
+              Cups move along the line in sync at {num(r.lineRatePerHour)} good cups/h. Steps faster than the slowest step run below
+              their maximum to keep the balance; they are marked “paced”. Freezers and cool rooms hold stock and don’t limit the line.
+            </div>
+          </div>
+          <Table head={['Step', 'Units', 'Cups in/day', 'Cups out/day', 'Runs at (cups/h per unit)', 'Use']} rows={r.steps.map((st) => [
+            <span className={st.isBottleneck ? 'font-semibold text-red-600' : ''}>{st.name}{st.sideStream ? ' (feed)' : ''}{st.isBottleneck ? ' · slowest' : ''}</span>,
+            st.units,
+            st.sideStream ? '–' : num(st.cupsInPerDay),
+            st.sideStream ? '–' : num(st.cupsOutPerDay),
+            st.kind === 'storage' ? 'storage' : st.sideStream ? '–' : <span>{num(st.runRatePerUnit)} of {num(st.maxRatePerUnit)}{!st.isBottleneck && st.utilActual < 0.98 ? ' · paced' : ''}</span>,
+            <span className={st.limitsLine && st.utilDemand > 1 ? 'text-red-600' : st.limitsLine && st.utilDemand > 0.85 ? 'text-amber-600' : ''}>{pct(st.utilDemand)}{st.kind === 'storage' ? ' full' : ''}</span>,
           ])} />
         </Card>
         <Card title={`Cost per cup: ${aud(cost.total, 2)}`}>
