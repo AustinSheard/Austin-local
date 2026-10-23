@@ -48,7 +48,7 @@ function line(id: string, name: string, steps: Step[], extraEdges: [number, numb
   for (let i = 0; i < steps.length; i++) {
     const [variantId, units, side, extra] = steps[i];
     const nid = `n${i + 1}`;
-    nodes.push({ id: nid, variantId, units, overrides: extra?.overrides ?? {}, label: extra?.label, x: col * 260, y: side ? 230 : 40 });
+    nodes.push({ id: nid, variantId, units, overrides: extra?.overrides ?? {}, label: extra?.label, x: col * 320, y: side ? 230 : 40 });
     if (side) {
       // Side stream feeds the next main step.
       edges.push({ id: `e${i}s`, source: nid, target: `n${i + 2}` });

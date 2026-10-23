@@ -1,6 +1,6 @@
 import {
   Background, BaseEdge, Controls, EdgeLabelRenderer, Handle, MiniMap, Position, ReactFlow, ReactFlowProvider,
-  ConnectionMode, getBezierPath, reconnectEdge, useReactFlow, type Connection, type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
+  ConnectionMode, MarkerType, getBezierPath, reconnectEdge, useReactFlow, type Connection, type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
   applyNodeChanges,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -103,23 +103,23 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
 });
 
 type FEdge = Edge<{ step?: StepResult; frozen: boolean; batch: boolean; role: Role }>;
-function FlowEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, selected }: EdgeProps<FEdge>) {
+function FlowEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, selected, markerEnd }: EdgeProps<FEdge>) {
   const [path, lx, ly] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
   // Batch feeds are dotted; the cup line is solid, coloured by the step it feeds (blue while frozen).
   const colour = data?.batch ? ROLES.batch.colour : data?.frozen ? ROLES.storage.colour : ROLES[data?.role ?? 'other'].colour;
   const st = data?.step;
   return (
     <>
-      <BaseEdge id={id} path={path} style={{
+      <BaseEdge id={id} path={path} markerEnd={markerEnd} style={{
         stroke: colour, strokeWidth: selected ? 5 : data?.batch ? 2.5 : 3.5,
         strokeDasharray: data?.batch ? '2 6' : undefined, strokeLinecap: 'round',
       }} />
       {st && (
         <EdgeLabelRenderer>
-          <div style={{ transform: `translate(-50%,-50%) translate(${lx}px,${ly}px)` }}
-            className="pointer-events-none absolute rounded bg-white/90 px-1 text-[10px] leading-tight shadow-sm dark:bg-slate-900/90">
+          <div style={{ transform: `translate(-50%,-100%) translate(${lx}px,${ly - 6}px)` }}
+            className="pointer-events-none absolute whitespace-nowrap rounded bg-white/80 px-1 text-[9px] leading-tight text-slate-600 dark:bg-slate-900/80 dark:text-slate-300">
             {num(st.cupsOutPerHour)} cups/h
-            {!data?.frozen && <span className="text-amber-600"> · {mins(st.oofClockMin)}</span>}
+            {!data?.frozen && st.oofClockMin > 0 && <span className="text-amber-600"> · {mins(st.oofClockMin)}</span>}
           </div>
         </EdgeLabelRenderer>
       )}
@@ -225,9 +225,9 @@ function insertNodeOnEdge(s: Scenario, edgeId: string, variantId: string): { s: 
   const tgt = s.nodes.find((n) => n.id === e?.target);
   const src = s.nodes.find((n) => n.id === e?.source);
   const id = uid('n');
-  const x = tgt ? tgt.x : (src?.x ?? 0) + 260;
+  const x = tgt ? tgt.x : (src?.x ?? 0) + 320;
   const y = tgt && src ? Math.min(tgt.y, src.y) : tgt?.y ?? 40;
-  const shifted = { ...s, nodes: s.nodes.map((n) => (tgt && n.x >= tgt.x && n.id !== src?.id ? { ...n, x: n.x + 260 } : n)) };
+  const shifted = { ...s, nodes: s.nodes.map((n) => (tgt && n.x >= tgt.x && n.id !== src?.id ? { ...n, x: n.x + 320 } : n)) };
   const st = useStore.getState();
   st.touchRecent(variantId);
   // An arrow out of a side stream stays a side stream, so the new step does not start a second cup path.
@@ -269,16 +269,21 @@ function Canvas() {
     const sp = src ? resolveSpec(cat, src) : undefined;
     const tgt = s.nodes.find((n) => n.id === e.target);
     const tsp = tgt ? resolveSpec(cat, tgt) : undefined;
+    const batch = !!sp?.sideStream;
+    const frozen = sp?.state === 'frozen' && tsp?.state === 'frozen';
+    const role = roleOf(tgt && cat.variants.find((v) => v.id === tgt.variantId)?.typeId, tsp?.sideStream);
+    const color = batch ? ROLES.batch.colour : frozen ? ROLES.storage.colour : ROLES[role].colour;
     return {
       id: e.id, source: e.source, target: e.target, type: 'flow',
+      markerEnd: { type: MarkerType.ArrowClosed, color, width: 14, height: 14 },
       // Lines leave and enter by the sides that face each other, so they can run in any direction.
       sourceHandle: src && tgt ? `s-${sideToward(src, tgt)}` : undefined,
       targetHandle: src && tgt ? `t-${sideToward(tgt, src)}` : undefined,
       data: {
         step: sp?.sideStream ? undefined : stepById.get(e.source),
-        frozen: sp?.state === 'frozen' && tsp?.state === 'frozen',
-        batch: !!sp?.sideStream,
-        role: roleOf(tgt && cat.variants.find((v) => v.id === tgt.variantId)?.typeId, tsp?.sideStream),
+        frozen,
+        batch,
+        role,
       },
     };
   }), [s.edges, s.nodes, cat, stepById]);
@@ -328,7 +333,7 @@ function Canvas() {
       const st = useStore.getState();
       const sc = st.scenarios.find((x) => x.id === st.activeId)!;
       const sel = sc.nodes.find((n) => n.id === st.selectedNodeId);
-      const maxX = sc.nodes.length ? Math.max(...sc.nodes.map((n) => n.x)) : -260;
+      const maxX = sc.nodes.length ? Math.max(...sc.nodes.map((n) => n.x)) : -320;
       if (d.templateId) { update((x) => appendTemplate(x, d.templateId!, 0, (Math.max(0, ...sc.nodes.map((n) => n.y)) + 320))); return; }
       if (st.insertEdgeId && sc.edges.some((e) => e.id === st.insertEdgeId)) {
         let nid = '';
@@ -338,11 +343,11 @@ function Canvas() {
         return;
       }
       const v = st.catalogue.variants.find((m) => m.id === d.variantId);
-      const x = sel ? sel.x + (v?.spec.sideStream ? 0 : 260) : maxX + 260;
+      const x = sel ? sel.x + (v?.spec.sideStream ? 0 : 320) : maxX + 320;
       const y = sel ? sel.y + (v?.spec.sideStream ? 200 : 0) : 40;
       if (sel && !v?.spec.sideStream) {
         // Shift downstream nodes right to make room.
-        update((x0) => ({ ...x0, nodes: x0.nodes.map((n) => (n.y === sel.y && n.x > sel.x ? { ...n, x: n.x + 260 } : n)) }), false);
+        update((x0) => ({ ...x0, nodes: x0.nodes.map((n) => (n.y === sel.y && n.x > sel.x ? { ...n, x: n.x + 320 } : n)) }), false);
       }
       let newId = '';
       update((x0) => { const o = addNodeAt(x0, d.variantId!, x, y, sel?.id ?? (sc.nodes.length ? lastMain(x0) : undefined)); newId = o.id; return o.s; });
