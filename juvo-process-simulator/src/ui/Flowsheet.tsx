@@ -45,6 +45,22 @@ const ProcessNode = memo(function ProcessNode({ data, selected }: NodeProps<PNod
       ${sp?.sideStream ? 'border-dashed' : ''}`}>
       <Handle type="target" position={Position.Left} className="!h-3 !w-3" />
       <Handle type="source" position={Position.Right} className="!h-3 !w-3" />
+      {(() => {
+        const next = neighbourFor(s, n.id, !!sp?.sideStream);
+        if (!next) return null;
+        const name = next.label ?? cat.variants.find((x) => x.id === next.variantId)?.name ?? 'next step';
+        return (
+          <button aria-label={`Connect to ${name}`} title={`Connect to ${name}`}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              useStore.getState().update((sc) => ({ ...sc, edges: [...sc.edges, { id: uid('e'), source: n.id, target: next.id }] }));
+            }}
+            className="nodrag absolute -right-7 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-sky-600 text-[11px] font-bold text-white shadow hover:bg-sky-700">
+            →
+          </button>
+        );
+      })()}
       <Handle type="source" id="bottom" position={Position.Bottom} className="!h-2.5 !w-2.5" />
       <Handle type="target" id="top" position={Position.Top} className="!h-2.5 !w-2.5" />
       <div className="mb-1 flex items-start gap-1">
@@ -107,6 +123,26 @@ function FlowEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
       )}
     </>
   );
+}
+
+/**
+ * The nearest step to connect to: for the cup line, the closest step to the right;
+ * for a side stream, the closest cup-line step. Undefined when already connected.
+ */
+function neighbourFor(s: Scenario, id: string, side: boolean) {
+  const me = s.nodes.find((n) => n.id === id);
+  if (!me) return undefined;
+  const cat = useStore.getState().catalogue;
+  const linked = new Set(s.edges.filter((e) => e.source === id).map((e) => e.target));
+  const candidates = s.nodes.filter((n) => {
+    if (n.id === id) return false;
+    const sp = resolveSpec(cat, n);
+    if (!sp || sp.facilityOnly || sp.sideStream) return false;
+    return side || n.x > me.x + 20;
+  });
+  const dist = (n: { x: number; y: number }) => Math.hypot(n.x - me.x, (n.y - me.y) * 2);
+  const best = candidates.sort((a, b) => dist(a) - dist(b))[0];
+  return best && !linked.has(best.id) && !s.edges.some((e) => e.source === best.id && e.target === id) ? best : undefined;
 }
 
 const nodeTypes = { process: ProcessNode };
