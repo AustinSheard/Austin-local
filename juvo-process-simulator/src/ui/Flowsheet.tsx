@@ -481,7 +481,7 @@ export function FlowsheetScreen() {
         </button>
         {paletteOpen && (
           <div className="fixed inset-0 z-40 flex items-end bg-black/20 md:hidden" onClick={() => setPaletteOpen(false)}>
-            <div className="h-[70vh] w-full rounded-t-2xl bg-slate-50 dark:bg-slate-950" onClick={(e) => e.stopPropagation()}>
+            <div className="flex h-[85vh] w-full flex-col overflow-hidden rounded-t-2xl bg-slate-50 dark:bg-slate-950" onClick={(e) => e.stopPropagation()}>
               <PaletteSheet onClose={() => setPaletteOpen(false)} />
             </div>
           </div>
