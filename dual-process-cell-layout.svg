@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 820" font-family="Arial, Helvetica, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e79"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c55a11"/></marker>
+  </defs>
+  <rect width="1100" height="820" fill="#ffffff"/>
+  <text x="30" y="36" font-size="20" font-weight="bold" fill="#1f2a44">Dual-process cell — semi-auto auger filler + semi-auto desktop labeller (plan view)</text>
+  <text x="30" y="58" fill="#555">Machines at 90° in an L. Seated operator in the corner on a swivel chair; both machines foot-pedal triggered so both hands stay free.</text>
+
+  <!-- benches -->
+  <rect x="150" y="110" width="520" height="190" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="160" y="128" fill="#5a6b80">BENCH A (≈ 750 mm high, seated)</text>
+  <rect x="670" y="110" width="190" height="560" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="680" y="660" fill="#5a6b80">BENCH B</text>
+
+  <!-- empty containers infeed -->
+  <rect x="170" y="150" width="130" height="110" fill="#fff" stroke="#1f4e79" stroke-width="2" rx="6"/>
+  <text x="235" y="180" text-anchor="middle" font-weight="bold">① EMPTY</text>
+  <text x="235" y="198" text-anchor="middle">containers</text>
+  <text x="235" y="216" text-anchor="middle" fill="#555">+ lids/caps</text>
+  <text x="235" y="234" text-anchor="middle" fill="#555">(left hand)</text>
+
+  <!-- auger filler -->
+  <rect x="350" y="130" width="200" height="150" fill="#d9e7f5" stroke="#1f4e79" stroke-width="3" rx="6"/>
+  <circle cx="450" cy="175" r="34" fill="#fff" stroke="#1f4e79" stroke-width="2"/>
+  <text x="450" y="172" text-anchor="middle" font-size="11">hopper</text>
+  <text x="450" y="186" text-anchor="middle" font-size="11">+ auger</text>
+  <rect x="425" y="240" width="50" height="34" fill="#fff" stroke="#1f4e79" stroke-dasharray="4 3"/>
+  <text x="450" y="261" text-anchor="middle" font-size="11">nozzle</text>
+  <text x="450" y="148" text-anchor="middle" font-weight="bold" fill="#1f4e79">② AUGER FILLER</text>
+
+  <!-- capping / check zone -->
+  <rect x="570" y="210" width="85" height="75" fill="#fff" stroke="#c55a11" stroke-width="2" rx="6"/>
+  <text x="612" y="238" text-anchor="middle" font-weight="bold">③ CAP</text>
+  <text x="612" y="255" text-anchor="middle" font-size="11">+ checkweigh</text>
+  <text x="612" y="270" text-anchor="middle" font-size="11">(optional)</text>
+
+  <!-- labeller -->
+  <rect x="690" y="320" width="150" height="190" fill="#fbe5d6" stroke="#c55a11" stroke-width="3" rx="6"/>
+  <text x="765" y="345" text-anchor="middle" font-weight="bold" fill="#c55a11">④ LABELLER</text>
+  <rect x="705" y="365" width="120" height="44" fill="#fff" stroke="#c55a11"/>
+  <text x="765" y="391" text-anchor="middle" font-size="11">label reel / peel</text>
+  <rect x="705" y="420" width="120" height="70" fill="#fff" stroke="#c55a11" stroke-dasharray="4 3"/>
+  <text x="765" y="450" text-anchor="middle" font-size="11">roller cradle</text>
+  <text x="765" y="465" text-anchor="middle" font-size="11">(load facing operator)</text>
+
+  <!-- outfeed -->
+  <rect x="690" y="535" width="150" height="105" fill="#fff" stroke="#2e7d32" stroke-width="2" rx="6"/>
+  <text x="765" y="570" text-anchor="middle" font-weight="bold" fill="#2e7d32">⑤ FINISHED</text>
+  <text x="765" y="588" text-anchor="middle">outfeed tote / tray</text>
+  <text x="765" y="606" text-anchor="middle" fill="#555">(right hand)</text>
+
+  <!-- reach arcs -->
+  <circle cx="530" cy="430" r="190" fill="none" stroke="#7a9cc6" stroke-dasharray="6 5"/>
+  <circle cx="530" cy="430" r="290" fill="none" stroke="#b9c7d8" stroke-dasharray="2 6"/>
+  <text x="352" y="480" fill="#7a9cc6" font-size="11">primary reach ≈ 400 mm</text>
+  <text x="250" y="590" fill="#9aa9bb" font-size="11">max reach ≈ 600 mm</text>
+
+  <!-- operator -->
+  <circle cx="530" cy="430" r="46" fill="#f2f2f2" stroke="#333" stroke-width="2"/>
+  <circle cx="530" cy="430" r="17" fill="#555"/>
+  <text x="530" y="497" text-anchor="middle" font-weight="bold">OPERATOR</text>
+  <text x="530" y="513" text-anchor="middle" font-size="11">swivel chair, castors</text>
+  <text x="530" y="527" text-anchor="middle" font-size="11">faces 45° into the corner</text>
+  <path d="M480,375 A75,75 0 0 1 585,375" fill="none" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+  <text x="530" y="355" text-anchor="middle" font-size="11">≈ 45° swivel each way</text>
+
+  <!-- pedals -->
+  <rect x="470" y="545" width="40" height="22" fill="#1f4e79"/>
+  <text x="490" y="582" text-anchor="middle" font-size="11">filler pedal</text>
+  <rect x="555" y="545" width="40" height="22" fill="#c55a11"/>
+  <text x="575" y="582" text-anchor="middle" font-size="11">labeller pedal</text>
+
+  <!-- flow arrows -->
+  <path d="M300,205 L345,205" stroke="#1f4e79" stroke-width="3" fill="none" marker-end="url(#a)"/>
+  <path d="M550,250 L566,250" stroke="#1f4e79" stroke-width="3" fill="none" marker-end="url(#a)"/>
+  <path d="M640,288 Q690,300 712,316" stroke="#c55a11" stroke-width="3" fill="none" marker-end="url(#b)"/>
+  <path d="M765,512 L765,531" stroke="#2e7d32" stroke-width="3" fill="none" marker-end="url(#a)"/>
+
+  <!-- dims -->
+  <text x="870" y="320" font-size="11" fill="#555" transform="rotate(90 870 320)">labeller ⟂ filler (90°)</text>
+
+  <!-- cycle -->
+  <rect x="30" y="610" width="620" height="190" fill="#f7f9fc" stroke="#ccd5e0" rx="8"/>
+  <text x="45" y="635" font-weight="bold" font-size="15" fill="#1f2a44">Overlapped cycle (one operator, two machines running at once)</text>
+  <text x="45" y="660">1. Left hand: empty container from ① under nozzle → tap <tspan fill="#1f4e79" font-weight="bold">filler pedal</tspan>; auger doses (dwell time).</text>
+  <text x="45" y="682">2. During dose: right hand lifts finished unit off labeller → ⑤ tote.</text>
+  <text x="45" y="704">3. Take previous filled unit from ③, cap it, swivel right, load cradle → <tspan fill="#c55a11" font-weight="bold">labeller pedal</tspan>.</text>
+  <text x="45" y="726">4. While label applies: swivel back, remove just-filled unit from nozzle → ③.</text>
+  <text x="45" y="748">5. Repeat. Each machine's run time hides inside the other's handling time.</text>
+  <text x="45" y="776" fill="#555" font-size="12">Key rules: everything within the 400 mm arc, no standing, buffer of 1 unit at ③ decouples the two machines,</text>
+  <text x="45" y="792" fill="#555" font-size="12">flow left→right so hands never cross; dust extraction at filler away from labeller reel.</text>
+</svg>
