@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 860" font-family="Arial, Helvetica, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e79"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c55a11"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+  </defs>
+  <rect width="1100" height="860" fill="#ffffff"/>
+  <text x="30" y="36" font-size="20" font-weight="bold" fill="#1f2a44">Dual-process cell v2: de-nest → label → auger fill → split to two fruit-filling lines (plan view)</text>
+  <text x="30" y="58" fill="#555">Machines at 90° in an L. Seated operator in the corner on a swivel chair. Both machines are foot-pedal triggered, so both hands stay free.</text>
+
+  <!-- benches -->
+  <rect x="150" y="110" width="190" height="560" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="160" y="660" fill="#5a6b80">BENCH B (side)</text>
+  <rect x="340" y="110" width="560" height="190" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="790" y="128" fill="#5a6b80">BENCH A (front)</text>
+
+  <!-- de-nest -->
+  <rect x="170" y="535" width="150" height="105" fill="#fff" stroke="#555" stroke-width="2" rx="6"/>
+  <circle cx="215" cy="590" r="24" fill="#f2f2f2" stroke="#555"/><circle cx="215" cy="590" r="16" fill="none" stroke="#555"/><circle cx="215" cy="590" r="8" fill="none" stroke="#555"/>
+  <text x="285" y="570" text-anchor="middle" font-weight="bold">① DE-NEST</text>
+  <text x="285" y="588" text-anchor="middle" font-size="11">nested stack,</text>
+  <text x="285" y="602" text-anchor="middle" font-size="11">pull top pot</text>
+  <text x="285" y="616" text-anchor="middle" font-size="11">(left hand)</text>
+
+  <!-- labeller -->
+  <rect x="170" y="320" width="150" height="190" fill="#fbe5d6" stroke="#c55a11" stroke-width="3" rx="6"/>
+  <text x="245" y="345" text-anchor="middle" font-weight="bold" fill="#c55a11">② LABELLER</text>
+  <rect x="185" y="365" width="120" height="44" fill="#fff" stroke="#c55a11"/>
+  <text x="245" y="391" text-anchor="middle" font-size="11">label reel / peel</text>
+  <rect x="185" y="420" width="120" height="70" fill="#fff" stroke="#c55a11" stroke-dasharray="4 3"/>
+  <text x="245" y="450" text-anchor="middle" font-size="11">roller cradle</text>
+  <text x="245" y="465" text-anchor="middle" font-size="11">(load facing operator)</text>
+
+  <!-- buffer -->
+  <rect x="190" y="140" width="130" height="80" fill="#fff" stroke="#c55a11" stroke-width="2" rx="6"/>
+  <text x="255" y="170" text-anchor="middle" font-weight="bold">③ BUFFER</text>
+  <text x="255" y="188" text-anchor="middle" font-size="11">1–2 labelled pots</text>
+  <text x="255" y="203" text-anchor="middle" font-size="11">+ label check</text>
+
+  <!-- collection A -->
+  <rect x="360" y="140" width="150" height="140" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="6"/>
+  <text x="435" y="170" text-anchor="middle" font-weight="bold" fill="#2e7d32">⑤A COLLECTION</text>
+  <text x="435" y="188" text-anchor="middle">→ LINE 1</text>
+  <text x="435" y="208" text-anchor="middle" font-size="11">fruit-filling line 1</text>
+  <text x="435" y="223" text-anchor="middle" font-size="11">(left hand)</text>
+
+  <!-- auger -->
+  <rect x="540" y="130" width="180" height="150" fill="#d9e7f5" stroke="#1f4e79" stroke-width="3" rx="6"/>
+  <text x="630" y="148" text-anchor="middle" font-weight="bold" fill="#1f4e79">④ AUGER FILLER</text>
+  <circle cx="630" cy="190" r="32" fill="#fff" stroke="#1f4e79" stroke-width="2"/>
+  <text x="630" y="187" text-anchor="middle" font-size="11">hopper</text>
+  <text x="630" y="201" text-anchor="middle" font-size="11">+ auger</text>
+  <rect x="605" y="240" width="50" height="34" fill="#fff" stroke="#1f4e79" stroke-dasharray="4 3"/>
+  <text x="630" y="261" text-anchor="middle" font-size="11">nozzle</text>
+
+  <!-- collection B -->
+  <rect x="750" y="140" width="140" height="140" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="6"/>
+  <text x="820" y="170" text-anchor="middle" font-weight="bold" fill="#2e7d32">⑤B COLLECTION</text>
+  <text x="820" y="188" text-anchor="middle">→ LINE 2</text>
+  <text x="820" y="208" text-anchor="middle" font-size="11">fruit-filling line 2</text>
+  <text x="820" y="223" text-anchor="middle" font-size="11">(right hand)</text>
+
+  <!-- line take-offs -->
+  <rect x="395" y="72" width="80" height="34" fill="#2e7d32"/><text x="435" y="94" text-anchor="middle" fill="#fff" font-weight="bold">LINE 1 ↑</text>
+  <rect x="925" y="190" width="110" height="40" fill="#2e7d32"/><text x="980" y="215" text-anchor="middle" fill="#fff" font-weight="bold">LINE 2 →</text>
+  <path d="M435,138 L435,110" stroke="#2e7d32" stroke-width="3" marker-end="url(#g)"/>
+  <path d="M892,210 L921,210" stroke="#2e7d32" stroke-width="3" marker-end="url(#g)"/>
+
+  <!-- reach arcs -->
+  <circle cx="520" cy="440" r="210" fill="none" stroke="#7a9cc6" stroke-dasharray="6 5"/>
+  <circle cx="520" cy="440" r="390" fill="none" stroke="#b9c7d8" stroke-dasharray="2 6"/>
+  <text x="560" y="672" fill="#7a9cc6" font-size="11">primary reach ≈ 400 mm</text>
+  <text x="840" y="560" fill="#9aa9bb" font-size="11">max reach ≈ 600 mm</text>
+
+  <!-- operator -->
+  <circle cx="520" cy="440" r="46" fill="#f2f2f2" stroke="#333" stroke-width="2"/>
+  <circle cx="520" cy="440" r="17" fill="#555"/>
+  <text x="520" y="507" text-anchor="middle" font-weight="bold">OPERATOR</text>
+  <text x="520" y="523" text-anchor="middle" font-size="11">swivel chair, faces 45°</text>
+  <text x="520" y="537" text-anchor="middle" font-size="11">into the corner</text>
+  <path d="M465,390 A75,75 0 0 1 575,390" fill="none" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- pedals -->
+  <rect x="455" y="560" width="40" height="22" fill="#c55a11"/>
+  <text x="475" y="597" text-anchor="middle" font-size="11">labeller pedal</text>
+  <rect x="545" y="560" width="40" height="22" fill="#1f4e79"/>
+  <text x="565" y="597" text-anchor="middle" font-size="11">filler pedal</text>
+
+  <!-- flow arrows -->
+  <path d="M245,532 L245,514" stroke="#c55a11" stroke-width="3" marker-end="url(#b)"/>
+  <path d="M245,318 L245,224" stroke="#c55a11" stroke-width="3" marker-end="url(#b)"/>
+  <path d="M322,200 Q470,330 600,282" stroke="#1f4e79" stroke-width="3" fill="none" marker-end="url(#a)"/>
+  <path d="M600,262 L514,240" stroke="#2e7d32" stroke-width="3" marker-end="url(#g)"/>
+  <path d="M660,262 L746,240" stroke="#2e7d32" stroke-width="3" marker-end="url(#g)"/>
+  <text x="560" y="232" font-size="10" fill="#2e7d32">alt.</text>
+  <text x="680" y="232" font-size="10" fill="#2e7d32">alt.</text>
+
+  <!-- cycle -->
+  <rect x="30" y="690" width="1040" height="160" fill="#f7f9fc" stroke="#ccd5e0" rx="8"/>
+  <text x="45" y="715" font-weight="bold" font-size="15" fill="#1f2a44">Overlapped cycle</text>
+  <text x="45" y="740">1. Left hand de-nests a pot from ①, loads labeller cradle ②, taps <tspan fill="#c55a11" font-weight="bold">labeller pedal</tspan>.</text>
+  <text x="45" y="762">2. While labelling: swivel right, remove the filled pot from nozzle ④ and place on ⑤A or ⑤B (alternate, or ratio to each line's demand).</text>
+  <text x="45" y="784">3. Take a labelled pot from buffer ③, place under nozzle, tap <tspan fill="#1f4e79" font-weight="bold">filler pedal</tspan>.</text>
+  <text x="45" y="806">4. While dosing: swivel left, lift labelled pot from ② into buffer ③. Repeat. Each machine's run time hides inside the other's handling.</text>
+  <text x="45" y="834" fill="#555" font-size="12">Notes: de-nest stack at the far end keeps the longest reach to the lightest, least-frequent move. Collection tables sit either side of the nozzle so a single short slide sends to either line. Keep the auger dust away from the label reel.</text>
+</svg>
