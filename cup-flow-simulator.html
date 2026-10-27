@@ -52,6 +52,12 @@ canvas{width:100%;height:240px;display:block}
 .stats{display:grid;gap:8px;align-content:start}
 .st{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px}
 .st b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.opsplit{display:grid;gap:6px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.opsplit .bar{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--line)}
+.opsplit .bar i{display:block;height:100%}
+.opsplit .keys{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted)}
+.opsplit .keys span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px;background:var(--c)}
+.opsplit .keys b{font-family:var(--mono);color:var(--fg)}
 .note{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
 .verdict{font-weight:600;color:var(--fg)}
 </style>
@@ -427,13 +433,13 @@ function draw(){
     <div class="st"><span>Cups finished</span><b>${done}</b></div>
     <div class="st"><span>Rate so far</span><b>${h>0.01?Math.round(done/h):'–'} cups/h</b></div>
     <div class="st"><span>Line 1 / Line 2 waiting for cups</span><b>${pct(S.starve.A)} / ${pct(S.starve.B)}</b></div>
-    <div class="st"><span>Cell operator: auger / label / de-nest</span><b>${pct(S.opT.aug)} / ${pct(S.opT.lab)} / ${pct(S.opT.den)}</b></div>
-    <div class="st"><span>Cell operator refilling: hopper / de-nest</span><b>${pct(S.opT.rfA)} / ${pct(S.opT.rfD)}</b></div>
+    <div class="opsplit"><span>Cell operator time</span>
+      <div class="bar">${opSplit().map(p=>`<i style="width:${p.v}%;background:var(${p.c})" title="${p.n} ${p.v}%"></i>`).join('')}</div>
+      <div class="keys">${opSplit().map(p=>`<span style="--c:var(${p.c})">${p.n} <b>${p.v}%</b></span>`).join('')}</div>
+    </div>
     <div class="st"><span>Refills done: hopper / de-nest</span><b>${S.refills.A} / ${S.refills.D}</b></div>
     <div class="st"><span>Line 1 / Line 2 waiting for fruit</span><b>${pct(S.fblock.A)} / ${pct(S.fblock.B)}</b></div>
     <div class="st"><span>Fruit refills by cell op / F1 / F2</span><b>${S.frRef.OP} / ${S.frRef.A} / ${S.frRef.B}</b></div>
-    <div class="st"><span>Cell operator refilling fruit</span><b>${pct(S.opT.rfF)}</b></div>
-    <div class="st"><span>Cell operator idle</span><b>${pct(S.opT.idle)}</b></div>
     <div class="st"><span>Moves between P1 and P2</span><b>${S.moves} (${h>0.01?Math.round(S.moves/h):'–'}/h)</b></div>
     <p class="note verdict">${v}</p>
     <p class="note">${$('rule').value==='batch'?'Batch rule: the cell operator de-nests and labels at P1 until buffer ③ is full, then steps to P2 and fills until buffer ③ is empty. If both collection tables are full, they wait at P2.':'One-at-a-time rule: the cell operator always does the auger first, then the labeller, then de-nesting.'} Buffers start empty, so the first half hour shows the cell filling up.</p>`;
@@ -448,6 +454,14 @@ function chart(){
   for(let t=0;t<=tmax;t+=st){g.fillText(t>=3600?(t/3600).toFixed(t%3600?1:0)+'h':Math.round(t/60)+'m',pl+w*t/tmax-8,H-5)}
   for(const [k,c] of [['den','--denest'],['lab','--label'],['A','--collect'],['B','--fruit']]){g.strokeStyle=css(c);g.lineWidth=2;g.beginPath();
     S.hist.forEach((p,i)=>{const x=pl+w*p.t/tmax,y=pt+h-h*p[k]/cap;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
+}
+// cell operator time split, rounded so the parts always add to 100%
+function opSplit(){
+  const o=S.opT,parts=[['De-nest',o.den,'--denest'],['Labeller',o.lab,'--label'],['Auger',o.aug,'--auger'],['Refills',o.rfA+o.rfD+o.rfF,'--bad'],['Idle',o.idle,'--line']];
+  const tot=parts.reduce((a,p)=>a+p[1],0)||1,raw=parts.map(p=>100*p[1]/tot),fl=raw.map(Math.floor);
+  let left=100-fl.reduce((a,b)=>a+b,0);
+  raw.map((r,i)=>[r-fl[i],i]).sort((a,b)=>b[0]-a[0]).slice(0,left).forEach(([,i])=>fl[i]++);
+  return parts.map((p,i)=>({n:p[0],v:fl[i],c:p[2]}));
 }
 function chart2(){
   const cv=$('chart2'),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
