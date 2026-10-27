@@ -71,6 +71,9 @@ canvas{width:100%;height:240px;display:block}
     <label for="tLab">Labeller s/cup<input type="number" id="tLab" value="5" min="0.5" step="0.5"></label>
     <label for="tAug">Auger s/cup<input type="number" id="tAug" value="5" min="0.5" step="0.5"></label>
     <label for="tFru">Fruit + seam s/cup<input type="number" id="tFru" value="30" min="1" step="1"></label>
+    <label for="rule">Operator rule
+      <select id="rule"><option value="batch" selected>Batch: fill buffer ③, then empty it at the auger</option><option value="prio">One cup at a time, auger first</option></select>
+    </label>
     <label for="cap">Buffer size<input type="number" id="cap" value="10" min="1" max="20" step="1"></label>
     <div class="clock" id="clock">00:00:00</div>
   </section>
@@ -295,7 +298,7 @@ const POS={P1:[340,680],P2:[510,665]};
 
 function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,cap:Math.max(1,Math.min(20,+$('cap').value||10))}}
 function init(){
-  S={c:cfg(),t:0,buf:{den:0,lab:0,A:0,B:0},op:null,rem:0,
+  S={c:cfg(),t:0,buf:{den:0,lab:0,A:0,B:0},op:null,rem:0,at:'P1',moves:0,
      L:{A:{busy:false,rem:0},B:{busy:false,rem:0}},opT:{den:0,lab:0,aug:0,idle:0},starve:{A:0,B:0},done:{A:0,B:0},hist:[],alt:'A'};
   for(const k in AREA){const g=$('g-'+k);g.innerHTML='';for(let i=0;i<S.c.cap;i++){const a=AREA[k],c=document.createElementNS(NS,'circle');
     c.setAttribute('cx',a.x+(i%a.cols)*a.w);c.setAttribute('cy',a.y+Math.floor(i/a.cols)*(k==='den'?12:a.w));c.setAttribute('r',k==='den'||k==='lab'?4.5:7);g.appendChild(c)}}
@@ -311,10 +314,20 @@ function step(dt){
       if(S.op==='aug'){let t=S.buf.A<S.buf.B?'A':S.buf.B<S.buf.A?'B':S.alt;if(S.buf[t]>=c.cap)t=t==='A'?'B':'A';S.buf[t]++;S.alt=t==='A'?'B':'A'}
       S.op=null}}
   else S.opT.idle+=dt;
-  if(!S.op){ // keep the fruit lines fed first
-    if(canAug()){S.op='aug';S.buf.lab--;S.rem=c.tAug}
-    else if(canLab()){S.op='lab';S.buf.den--;S.rem=c.tLab}
-    else if(canDen()){S.op='den';S.rem=c.tDen}
+  if(!S.op){
+    const go=p=>{if(S.at!==p){S.at=p;S.moves++}};
+    if($('rule').value==='batch'){ // stay at P1 until buffer ③ is full, then stay at P2 until it is empty
+      if(S.at==='P1'&&S.buf.lab>=c.cap)go('P2');
+      else if(S.at==='P2'&&S.buf.lab===0)go('P1');
+      if(S.at==='P2'){if(canAug()){S.op='aug';S.buf.lab--;S.rem=c.tAug}}
+      else if(canLab()){S.op='lab';S.buf.den--;S.rem=c.tLab}
+      else if(canDen()){S.op='den';S.rem=c.tDen}
+    }else{ // keep the fruit lines fed first
+      if(canAug()){S.op='aug';S.buf.lab--;S.rem=c.tAug}
+      else if(canLab()){S.op='lab';S.buf.den--;S.rem=c.tLab}
+      else if(canDen()){S.op='den';S.rem=c.tDen}
+      if(S.op)go(S.op==='aug'?'P2':'P1');
+    }
   }
   for(const k of ['A','B']){const l=S.L[k];
     if(l.busy){l.rem-=dt;if(l.rem<=0){l.busy=false;S.done[k]++}}
@@ -331,11 +344,11 @@ function draw(){
   $('t-lab').textContent=`${S.buf.lab}/${c.cap}`;
   $('t-A').textContent=`${S.buf.A}/${c.cap}`;$('t-B').textContent=`${S.buf.B}/${c.cap}`;
   // operator
-  const at=S.op==='aug'?'P2':'P1';const [x,y]=POS[at];$('op').style.transform=`translate(${x}px,${y}px)`;
+  const at=S.at;const [x,y]=POS[at];$('op').style.transform=`translate(${x}px,${y}px)`;
   ring('ring-lab',S.op==='lab'?1-S.rem/c.tLab:0,css('--label'));
   ring('ring-aug',S.op==='aug'?1-S.rem/c.tAug:0,css('--auger'));
   $('cup-lab').style.opacity=S.op==='lab'?1:0;$('cup-aug').style.opacity=S.op==='aug'?1:0;
-  const sop=$('s-op');sop.textContent=S.op?{den:'OP: de-nesting',lab:'OP: labelling',aug:'OP: filling'}[S.op]:'OP: idle, buffers full';sop.setAttribute('fill',S.op?css('--ok'):css('--warn'));
+  const sop=$('s-op');sop.textContent=S.op?{den:'OP: de-nesting',lab:'OP: labelling',aug:'OP: filling'}[S.op]:(S.at==='P2'?'OP: waiting at auger, collection full':'OP: idle, buffers full');sop.setAttribute('fill',S.op?css('--ok'):css('--warn'));
   // fruit fillers walk the cup along the table
   [['A','f1',360,255,'s-f1'],['B','f2',660,765,'s-f2']].forEach(([k,id,tx,fx,sid])=>{
     const l=S.L[k],p=l.busy?1-l.rem/c.tFru:0,yy=450-p*300;
@@ -353,8 +366,9 @@ function draw(){
     <div class="st"><span>Line 1 / Line 2 waiting for cups</span><b>${pct(S.starve.A)} / ${pct(S.starve.B)}</b></div>
     <div class="st"><span>Cell operator: auger / label / de-nest</span><b>${pct(S.opT.aug)} / ${pct(S.opT.lab)} / ${pct(S.opT.den)}</b></div>
     <div class="st"><span>Cell operator idle</span><b>${pct(S.opT.idle)}</b></div>
+    <div class="st"><span>Moves between P1 and P2</span><b>${S.moves} (${h>0.01?Math.round(S.moves/h):'–'}/h)</b></div>
     <p class="note verdict">${v}</p>
-    <p class="note">The cell operator does one task at a time: auger first, then labeller, then de-nesting. Buffers start empty, so the first half hour shows the cell filling up.</p>`;
+    <p class="note">${$('rule').value==='batch'?'Batch rule: the cell operator de-nests and labels at P1 until buffer ③ is full, then steps to P2 and fills until buffer ③ is empty. If both collection tables are full, they wait at P2.':'One-at-a-time rule: the cell operator always does the auger first, then the labeller, then de-nesting.'} Buffers start empty, so the first half hour shows the cell filling up.</p>`;
 }
 function chart(){
   const cv=$('chart'),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
@@ -371,7 +385,7 @@ function loop(ts){if(!running)return;const real=Math.min(.1,(ts-last)/1000);last
   while(sim>0){const d=Math.min(.05,sim);step(d);sim-=d}draw();chart();requestAnimationFrame(loop)}
 $('play').onclick=()=>{running=!running;$('play').textContent=running?'Pause':'Play';if(running){last=performance.now();requestAnimationFrame(loop)}};
 $('reset').onclick=init;
-['tDen','tLab','tAug','tFru','cap'].forEach(id=>$(id).addEventListener('change',init));
+['tDen','tLab','tAug','tFru','cap','rule'].forEach(id=>$(id).addEventListener('change',init));
 addEventListener('resize',chart);
 init();
 // open in a working state: 15 simulated minutes in
