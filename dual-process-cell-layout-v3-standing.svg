@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 900" font-family="Arial, Helvetica, sans-serif" font-size="13">
+  <!-- Scale: 0.3 px = 1 mm (1 m = 300 px). All machine/bench sizes and reach arcs to this scale. -->
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e79"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c55a11"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+    <marker id="k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+  </defs>
+  <rect width="1100" height="900" fill="#fff"/>
+  <text x="30" y="36" font-size="20" font-weight="bold" fill="#1f2a44">Dual-process cell v3: STANDING operator (plan view, to scale)</text>
+  <text x="30" y="58" fill="#555">De-nest → label → buffer → auger fill → split to Line 1 / Line 2. Operator stands on an anti-fatigue mat and uses a perch stool at home position.</text>
+
+  <!-- benches: side 1400 x 600 mm, front 2000 x 600 mm, both ~900 mm high (standing) -->
+  <rect x="100" y="120" width="180" height="420" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <rect x="280" y="120" width="600" height="180" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="110" y="532" fill="#5a6b80" font-size="11">SIDE BENCH 1400×600</text>
+  <text x="770" y="292" fill="#5a6b80" font-size="11">FRONT BENCH 2000×600</text>
+
+  <!-- side bench items -->
+  <rect x="160" y="135" width="110" height="80" fill="#fff" stroke="#c55a11" stroke-width="2" rx="5"/>
+  <text x="215" y="168" text-anchor="middle" font-weight="bold">③ BUFFER</text>
+  <text x="215" y="185" text-anchor="middle" font-size="11">2–3 labelled pots</text>
+  <rect x="120" y="235" width="150" height="150" fill="#fbe5d6" stroke="#c55a11" stroke-width="3" rx="5"/>
+  <text x="195" y="262" text-anchor="middle" font-weight="bold" fill="#c55a11">② LABELLER</text>
+  <rect x="135" y="280" width="120" height="35" fill="#fff" stroke="#c55a11"/><text x="195" y="302" text-anchor="middle" font-size="11">label reel</text>
+  <rect x="190" y="325" width="70" height="50" fill="#fff" stroke="#c55a11" stroke-dasharray="4 3"/><text x="225" y="354" text-anchor="middle" font-size="10">cradle</text>
+  <rect x="160" y="405" width="110" height="105" fill="#fff" stroke="#555" stroke-width="2" rx="5"/>
+  <circle cx="195" cy="457" r="22" fill="#f2f2f2" stroke="#555"/><circle cx="195" cy="457" r="13" fill="none" stroke="#555"/>
+  <text x="245" y="440" text-anchor="middle" font-weight="bold" font-size="12">① DE-</text>
+  <text x="245" y="455" text-anchor="middle" font-weight="bold" font-size="12">NEST</text>
+  <text x="245" y="472" text-anchor="middle" font-size="10">stack at</text>
+  <text x="245" y="485" text-anchor="middle" font-size="10">front edge</text>
+
+  <!-- front bench items -->
+  <rect x="295" y="160" width="125" height="130" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="5"/>
+  <text x="357" y="195" text-anchor="middle" font-weight="bold" fill="#2e7d32">⑤A</text>
+  <text x="357" y="213" text-anchor="middle" font-size="11">COLLECT</text>
+  <text x="357" y="229" text-anchor="middle" font-size="11">→ LINE 1</text>
+  <rect x="440" y="130" width="180" height="160" fill="#d9e7f5" stroke="#1f4e79" stroke-width="3" rx="5"/>
+  <text x="530" y="150" text-anchor="middle" font-weight="bold" fill="#1f4e79">④ AUGER FILLER</text>
+  <circle cx="530" cy="195" r="30" fill="#fff" stroke="#1f4e79" stroke-width="2"/><text x="530" y="199" text-anchor="middle" font-size="11">hopper</text>
+  <rect x="507" y="250" width="46" height="34" fill="#fff" stroke="#1f4e79" stroke-dasharray="4 3"/><text x="530" y="271" text-anchor="middle" font-size="11">nozzle</text>
+  <rect x="640" y="160" width="125" height="130" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="5"/>
+  <text x="702" y="195" text-anchor="middle" font-weight="bold" fill="#2e7d32">⑤B</text>
+  <text x="702" y="213" text-anchor="middle" font-size="11">COLLECT</text>
+  <text x="702" y="229" text-anchor="middle" font-size="11">→ LINE 2</text>
+
+  <!-- line take-offs -->
+  <rect x="317" y="76" width="80" height="32" fill="#2e7d32"/><text x="357" y="97" text-anchor="middle" fill="#fff" font-weight="bold">LINE 1 ↑</text>
+  <path d="M357,158 L357,112" stroke="#2e7d32" stroke-width="3" marker-end="url(#g)"/>
+  <rect x="910" y="200" width="110" height="40" fill="#2e7d32"/><text x="965" y="225" text-anchor="middle" fill="#fff" font-weight="bold">LINE 2 →</text>
+  <path d="M767,220 L906,220" stroke="#2e7d32" stroke-width="3" marker-end="url(#g)"/>
+
+  <!-- anti-fatigue mat -->
+  <path d="M285,305 L860,305 L860,470 L470,470 L470,560 L285,560 Z" fill="#f4f1e8" stroke="#b5a77a" stroke-dasharray="5 4"/>
+  <text x="760" y="460" fill="#8a7d52" font-size="11">anti-fatigue mat</text>
+
+  <!-- reach arcs: 600 mm comfortable standing reach = 180 px, from each position -->
+  <circle cx="410" cy="410" r="180" fill="#1f4e79" fill-opacity="0.05" stroke="#1f4e79" stroke-dasharray="6 5"/>
+  <circle cx="330" cy="460" r="180" fill="none" stroke="#c55a11" stroke-dasharray="3 5"/>
+  <circle cx="610" cy="400" r="180" fill="none" stroke="#2e7d32" stroke-dasharray="3 5"/>
+
+  <!-- positions -->
+  <g>
+    <circle cx="410" cy="410" r="32" fill="#e6e6e6" stroke="#333" stroke-width="2"/><circle cx="410" cy="410" r="12" fill="#444"/>
+    <text x="410" y="460" text-anchor="middle" font-weight="bold">H = HOME</text>
+    <text x="410" y="475" text-anchor="middle" font-size="11">perch stool here</text>
+  </g>
+  <g>
+    <circle cx="330" cy="460" r="22" fill="#fff" stroke="#c55a11" stroke-width="2"/><text x="330" y="465" text-anchor="middle" font-weight="bold" fill="#c55a11">L</text>
+  </g>
+  <g>
+    <circle cx="610" cy="400" r="22" fill="#fff" stroke="#2e7d32" stroke-width="2"/><text x="610" y="405" text-anchor="middle" font-weight="bold" fill="#2e7d32">R</text>
+  </g>
+  <path d="M385,428 L352,447" stroke="#333" stroke-width="1.5" marker-end="url(#k)"/>
+  <path d="M442,408 L586,401" stroke="#333" stroke-width="1.5" marker-end="url(#k)"/>
+  <text x="510" y="395" text-anchor="middle" font-size="10">≈1 step (600 mm)</text>
+
+  <!-- pedals (one each, at home position) -->
+  <rect x="380" y="505" width="26" height="18" fill="#c55a11"/><rect x="414" y="505" width="26" height="18" fill="#1f4e79"/>
+  <text x="410" y="540" text-anchor="middle" font-size="10">pedals: label | fill</text>
+
+  <!-- flow -->
+  <path d="M155,457 L120,457 L120,388" stroke="#c55a11" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+  <path d="M110,232 L110,190 L156,190" stroke="#c55a11" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+  <path d="M272,175 Q400,320 505,285" stroke="#1f4e79" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M505,270 L424,250" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#g)"/>
+  <path d="M555,270 L636,250" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#g)"/>
+
+  <!-- scale bar -->
+  <g transform="translate(880,560)">
+    <rect x="0" y="0" width="150" height="8" fill="#333"/><rect x="0" y="0" width="75" height="8" fill="#fff" stroke="#333"/>
+    <text x="0" y="24" font-size="11">0</text><text x="68" y="24" font-size="11">250</text><text x="132" y="24" font-size="11">500 mm</text>
+  </g>
+
+  <!-- legend / reach table -->
+  <rect x="880" y="300" width="190" height="230" fill="#f7f9fc" stroke="#ccd5e0" rx="6"/>
+  <text x="892" y="322" font-weight="bold">Reach check (≤600 mm)</text>
+  <text x="892" y="345" font-size="11" fill="#c55a11" font-weight="bold">From L:</text>
+  <text x="892" y="361" font-size="11">① de-nest ✔  ② labeller ✔</text>
+  <text x="892" y="384" font-size="11" fill="#1f4e79" font-weight="bold">From H (home):</text>
+  <text x="892" y="400" font-size="11">② cradle ✔  ③ buffer ✔</text>
+  <text x="892" y="416" font-size="11">④ nozzle ✔  ⑤A ✔  pedals ✔</text>
+  <text x="892" y="439" font-size="11" fill="#2e7d32" font-weight="bold">From R:</text>
+  <text x="892" y="455" font-size="11">④ nozzle ✔  ⑤B ✔</text>
+  <text x="892" y="455" font-size="11"></text>
+  <text x="892" y="480" font-size="11" fill="#555">Benches ~900 mm high</text>
+  <text x="892" y="496" font-size="11" fill="#555">(elbow height standing)</text>
+  <text x="892" y="512" font-size="11" fill="#555">Hopper refill from R.</text>
+
+  <!-- cycle -->
+  <rect x="30" y="600" width="1040" height="285" fill="#f7f9fc" stroke="#ccd5e0" rx="8"/>
+  <text x="45" y="626" font-weight="bold" font-size="15" fill="#1f2a44">Overlapped cycle (standing)</text>
+  <text x="45" y="652">1. <tspan font-weight="bold" fill="#c55a11">Step L</tspan>: de-nest pot ① → labeller cradle ②. Step back to <tspan font-weight="bold">H</tspan>, tap <tspan fill="#c55a11" font-weight="bold">label pedal</tspan>.</text>
+  <text x="45" y="676">2. While labelling (at H): lift filled pot off nozzle ④ → ⑤A (Line 1), or <tspan font-weight="bold" fill="#2e7d32">step R</tspan> → ⑤B (Line 2). Alternate, or split by line demand.</text>
+  <text x="45" y="700">3. At H: labelled pot from buffer ③ → under nozzle, tap <tspan fill="#1f4e79" font-weight="bold">fill pedal</tspan>.</text>
+  <text x="45" y="724">4. While dosing: move finished label from cradle ② → buffer ③. Repeat.</text>
+  <text x="45" y="756" font-weight="bold" fill="#1f2a44">Why standing beats seated here</text>
+  <text x="45" y="778" font-size="12">• Cell spans ~2.0 m × 1.4 m: seated reach (400–600 mm) can't cover ① or ⑤B without lean-and-twist while holding a pot.</text>
+  <text x="45" y="798" font-size="12">• A half-step pivot replaces trunk twisting at the 90° corner; hopper refills, reel changes and jam clearing need standing anyway.</text>
+  <text x="45" y="818" font-size="12">• Perch stool at H lets the operator rest during long auger dwell times without losing reach to the nozzle, buffer or pedals.</text>
+  <text x="45" y="838" font-size="12">• Most moves happen at H; L and R are one step each and only once per cycle, so walking is minimal.</text>
+  <text x="45" y="866" fill="#555" font-size="11">Scale 1 m = 300 px. Reach circles = 600 mm comfortable standing reach. Check exact machine footprints against the chosen models before you build.</text>
+</svg>
