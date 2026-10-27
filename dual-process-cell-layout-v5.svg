@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1110" font-family="Arial, Helvetica, sans-serif" font-size="13">
+  <!-- Scale: 0.3 px = 1 mm (1 m = 300 px) -->
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e79"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c55a11"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+    <marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6a3d9a"/></marker>
+    <marker id="k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c62828"/></marker>
+  </defs>
+  <rect width="1100" height="1110" fill="#fff"/>
+  <text x="30" y="34" font-size="20" font-weight="bold" fill="#1f2a44">Dual-process cell v5: fruit lines fed from collection, scooping from shared freezer (plan view, to scale)</text>
+  <text x="30" y="55" fill="#555">P1 at the labeller and P2 at the auger, one step apart. Each fruit filler slides cups along a table beside the freezer and scoops fruit from tubs inside it.</text>
+
+  <g transform="translate(0,30)">
+  <!-- ===== FRUIT FILLING ZONE (far side) ===== -->
+  <!-- chest freezer ~1050 x 570 mm, long axis away from bench, in line with auger -->
+  <rect x="425" y="85" width="170" height="320" fill="#e3f2fd" stroke="#0d47a1" stroke-width="3" rx="4"/>
+  <text x="510" y="105" text-anchor="middle" font-weight="bold" fill="#0d47a1" font-size="12">CHEST FREEZER</text>
+  <text x="510" y="120" text-anchor="middle" font-size="10" fill="#0d47a1">(lid open)</text>
+  <g fill="#fff" stroke="#c62828" stroke-width="1.5">
+    <rect x="440" y="135" width="62" height="55" rx="4"/><rect x="518" y="135" width="62" height="55" rx="4"/>
+    <rect x="440" y="205" width="62" height="55" rx="4"/><rect x="518" y="205" width="62" height="55" rx="4"/>
+    <rect x="440" y="275" width="62" height="55" rx="4"/><rect x="518" y="275" width="62" height="55" rx="4"/>
+  </g>
+  <g font-size="9" text-anchor="middle" fill="#c62828">
+    <text x="471" y="166">fruit</text><text x="549" y="166">fruit</text>
+    <text x="471" y="236">fruit</text><text x="549" y="236">fruit</text>
+    <text x="471" y="306">fruit</text><text x="549" y="306">fruit</text>
+  </g>
+  <text x="510" y="355" text-anchor="middle" font-size="10">Line 1 scoops</text>
+  <text x="510" y="368" text-anchor="middle" font-size="10">from left half,</text>
+  <text x="510" y="381" text-anchor="middle" font-size="10">Line 2 from right</text>
+  <line x1="510" y1="335" x2="510" y2="342" stroke="#0d47a1"/>
+
+  <!-- Line 1 table (400 mm wide), parallel to freezer, continuous with collection A -->
+  <rect x="300" y="85" width="120" height="335" fill="#f3e9f7" stroke="#6a3d9a" stroke-width="2"/>
+  <text x="360" y="102" text-anchor="middle" font-weight="bold" fill="#6a3d9a" font-size="11">LINE 1 TABLE</text>
+  <g fill="#fff" stroke="#6a3d9a" stroke-width="1.5">
+    <circle cx="360" cy="390" r="12"/><circle cx="360" cy="320" r="12"/><circle cx="360" cy="250" r="12" fill="#f8bbd0"/><circle cx="360" cy="180" r="12" fill="#f8bbd0"/>
+  </g>
+  <path d="M385,405 L385,125" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+  <text x="395" y="300" font-size="9" fill="#6a3d9a" transform="rotate(-90 395 300)">cups slide along</text>
+  <rect x="300" y="40" width="120" height="34" fill="#6a3d9a"/><text x="360" y="62" text-anchor="middle" fill="#fff" font-weight="bold" font-size="11">→ LID / PACK</text>
+  <path d="M330,96 L330,78" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+
+  <!-- Line 2 table -->
+  <rect x="600" y="85" width="120" height="335" fill="#f3e9f7" stroke="#6a3d9a" stroke-width="2"/>
+  <text x="660" y="102" text-anchor="middle" font-weight="bold" fill="#6a3d9a" font-size="11">LINE 2 TABLE</text>
+  <g fill="#fff" stroke="#6a3d9a" stroke-width="1.5">
+    <circle cx="660" cy="390" r="12"/><circle cx="660" cy="320" r="12"/><circle cx="660" cy="250" r="12" fill="#f8bbd0"/><circle cx="660" cy="180" r="12" fill="#f8bbd0"/>
+  </g>
+  <path d="M635,405 L635,125" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+  <rect x="600" y="40" width="120" height="34" fill="#6a3d9a"/><text x="660" y="62" text-anchor="middle" fill="#fff" font-weight="bold" font-size="11">→ LID / PACK</text>
+  <path d="M690,96 L690,78" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+
+  <!-- fruit fillers: stand on outside of their table, walk along it, scoop across into freezer -->
+  <circle cx="255" cy="250" r="22" fill="#fff" stroke="#6a3d9a" stroke-width="2.5"/><text x="255" y="255" text-anchor="middle" font-weight="bold" fill="#6a3d9a">F1</text>
+  <path d="M255,222 L255,140" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M255,278 L255,370" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M278,245 Q380,215 452,230" stroke="#c62828" stroke-width="2" fill="none" stroke-dasharray="5 3" marker-end="url(#r)"/>
+  <text x="200" y="395" font-size="10" fill="#6a3d9a">walks with cups</text>
+  <circle cx="765" cy="250" r="22" fill="#fff" stroke="#6a3d9a" stroke-width="2.5"/><text x="765" y="255" text-anchor="middle" font-weight="bold" fill="#6a3d9a">F2</text>
+  <path d="M765,222 L765,140" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M765,278 L765,370" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M742,245 Q640,215 568,230" stroke="#c62828" stroke-width="2" fill="none" stroke-dasharray="5 3" marker-end="url(#r)"/>
+  <text x="745" y="395" font-size="10" fill="#6a3d9a">walks with cups</text>
+  <text x="140" y="180" font-size="10" fill="#c62828">scoop reach</text>
+  <text x="140" y="193" font-size="10" fill="#c62828">across table</text>
+  <text x="140" y="206" font-size="10" fill="#c62828">≈ 550 mm</text>
+
+  </g>
+  <g transform="translate(0,150)">
+  <!-- ===== BENCHES ===== -->
+  <!-- front bench 1700 x 500 mm; side bench 1400 x 500 mm -->
+  <rect x="280" y="300" width="510" height="150" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <rect x="130" y="300" width="150" height="420" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="138" y="712" fill="#5a6b80" font-size="10">SIDE BENCH 1400×500</text>
+  <text x="700" y="444" fill="#5a6b80" font-size="10">FRONT 1700×500</text>
+
+  <!-- side bench: labeller + de-nest -->
+  <rect x="145" y="470" width="130" height="125" fill="#fbe5d6" stroke="#c55a11" stroke-width="3" rx="5"/>
+  <text x="210" y="494" text-anchor="middle" font-weight="bold" fill="#c55a11">② LABELLER</text>
+  <rect x="158" y="505" width="104" height="30" fill="#fff" stroke="#c55a11"/><text x="210" y="525" text-anchor="middle" font-size="10">label reel</text>
+  <rect x="205" y="545" width="62" height="42" fill="#fff" stroke="#c55a11" stroke-dasharray="4 3"/><text x="236" y="570" text-anchor="middle" font-size="10">cradle</text>
+  <rect x="175" y="610" width="100" height="90" fill="#fff" stroke="#555" stroke-width="2" rx="5"/>
+  <circle cx="205" cy="655" r="20" fill="#f2f2f2" stroke="#555"/><circle cx="205" cy="655" r="11" fill="none" stroke="#555"/>
+  <text x="248" y="645" text-anchor="middle" font-weight="bold" font-size="11">① DE-</text>
+  <text x="248" y="660" text-anchor="middle" font-weight="bold" font-size="11">NEST</text>
+  <text x="248" y="676" text-anchor="middle" font-size="10">stack</text>
+
+  <!-- front bench: buffer (front-left), collection A (back-left), auger, collection B -->
+  <rect x="285" y="378" width="110" height="68" fill="#fff" stroke="#c55a11" stroke-width="2" rx="4"/>
+  <text x="340" y="405" text-anchor="middle" font-weight="bold" font-size="12">③ BUFFER</text>
+  <text x="340" y="421" text-anchor="middle" font-size="10">labelled, empty</text>
+  <rect x="285" y="304" width="140" height="68" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="4"/>
+  <text x="355" y="330" text-anchor="middle" font-weight="bold" fill="#2e7d32" font-size="12">⑤A COLLECT</text>
+  <text x="355" y="346" text-anchor="middle" font-size="10">→ Line 1 table</text>
+  <rect x="430" y="305" width="160" height="140" fill="#d9e7f5" stroke="#1f4e79" stroke-width="3" rx="5"/>
+  <text x="510" y="324" text-anchor="middle" font-weight="bold" fill="#1f4e79" font-size="12">④ AUGER</text>
+  <circle cx="510" cy="360" r="26" fill="#fff" stroke="#1f4e79" stroke-width="2"/><text x="510" y="364" text-anchor="middle" font-size="10">hopper</text>
+  <rect x="488" y="405" width="44" height="34" fill="#fff" stroke="#1f4e79" stroke-dasharray="4 3"/><text x="510" y="426" text-anchor="middle" font-size="10">nozzle</text>
+  <rect x="595" y="304" width="140" height="142" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="4"/>
+  <text x="665" y="345" text-anchor="middle" font-weight="bold" fill="#2e7d32" font-size="12">⑤B COLLECT</text>
+  <text x="665" y="361" text-anchor="middle" font-size="10">→ Line 2 table</text>
+  <text x="665" y="377" text-anchor="middle" font-size="10">(pass-through)</text>
+
+  <!-- ===== OPERATOR ===== -->
+  <rect x="285" y="460" width="320" height="150" fill="#f4f1e8" stroke="#b5a77a" stroke-dasharray="5 4"/>
+  <text x="540" y="602" fill="#8a7d52" font-size="10">anti-fatigue mat</text>
+  <circle cx="340" cy="530" r="180" fill="#c55a11" fill-opacity="0.04" stroke="#c55a11" stroke-dasharray="6 5"/>
+  <circle cx="510" cy="515" r="180" fill="#1f4e79" fill-opacity="0.04" stroke="#1f4e79" stroke-dasharray="6 5"/>
+  <circle cx="340" cy="530" r="28" fill="#fff" stroke="#c55a11" stroke-width="3"/><text x="340" y="535" text-anchor="middle" font-weight="bold" fill="#c55a11">P1</text>
+  <circle cx="510" cy="515" r="28" fill="#fff" stroke="#1f4e79" stroke-width="3"/><text x="510" y="520" text-anchor="middle" font-weight="bold" fill="#1f4e79">P2</text>
+  <path d="M370,527 L478,517" stroke="#333" stroke-width="1.5" marker-end="url(#k)"/>
+  <path d="M478,522 L372,532" stroke="#333" stroke-width="1.5" marker-end="url(#k)"/>
+  <text x="425" y="510" text-anchor="middle" font-size="10">1 step ≈ 550 mm</text>
+  <text x="340" y="574" text-anchor="middle" font-size="10">at labeller, faces 45° left</text>
+  <text x="510" y="559" text-anchor="middle" font-size="10">at auger, faces bench</text>
+  <rect x="318" y="582" width="26" height="16" fill="#c55a11"/><text x="331" y="618" text-anchor="middle" font-size="9">label pedal</text>
+  <rect x="497" y="567" width="26" height="16" fill="#1f4e79"/><text x="510" y="597" text-anchor="middle" font-size="9">fill pedal</text>
+  <rect x="560" y="490" width="26" height="26" rx="13" fill="#ddd" stroke="#555"/><text x="590" y="482" font-size="9">perch stool</text>
+
+  <!-- material flow -->
+  <path d="M175,640 L150,640 L150,598" stroke="#c55a11" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+  <path d="M270,545 Q300,470 305,450" stroke="#c55a11" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+  <path d="M397,425 L484,425" stroke="#1f4e79" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M488,410 Q440,385 428,360" stroke="#2e7d32" stroke-width="2.5" fill="none" marker-end="url(#g)"/>
+  <path d="M532,415 L592,400" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#g)"/>
+
+  <!-- scale bar -->
+  <g transform="translate(880,700)">
+    <rect x="0" y="0" width="150" height="8" fill="#333"/><rect x="0" y="0" width="75" height="8" fill="#fff" stroke="#333"/>
+    <text x="0" y="24" font-size="11">0</text><text x="68" y="24" font-size="11">250</text><text x="132" y="24" font-size="11">500 mm</text>
+  </g>
+
+  <!-- reach panel -->
+  <rect x="820" y="300" width="250" height="370" fill="#f7f9fc" stroke="#ccd5e0" rx="6"/>
+  <text x="834" y="324" font-weight="bold">Reach check (≤ 600 mm)</text>
+  <text x="834" y="350" font-size="12" fill="#c55a11" font-weight="bold">P1 (at labeller):</text>
+  <text x="834" y="368" font-size="11">① de-nest ✔</text>
+  <text x="834" y="384" font-size="11">② labeller cradle ✔</text>
+  <text x="834" y="400" font-size="11">③ buffer ✔ (drop-off)</text>
+  <text x="834" y="428" font-size="12" fill="#1f4e79" font-weight="bold">P2 (at auger):</text>
+  <text x="834" y="446" font-size="11">③ buffer ✔ (pick-up)</text>
+  <text x="834" y="462" font-size="11">④ nozzle ✔</text>
+  <text x="834" y="478" font-size="11">⑤A ✔   ⑤B ✔</text>
+  <text x="834" y="506" font-size="12" fill="#6a3d9a" font-weight="bold">Fruit lines (far side):</text>
+  <text x="834" y="524" font-size="11">Cups slide off ⑤A / ⑤B onto</text>
+  <text x="834" y="540" font-size="11">their line table, then F1/F2</text>
+  <text x="834" y="556" font-size="11">scoop across into the freezer</text>
+  <text x="834" y="584" font-size="11" fill="#555">Collection tables sit at the</text>
+  <text x="834" y="600" font-size="11" fill="#555">back edge of the bench, so</text>
+  <text x="834" y="616" font-size="11" fill="#555">they're reachable from both</text>
+  <text x="834" y="632" font-size="11" fill="#555">sides. Benches ≈ 900 mm high.</text>
+  <text x="834" y="652" font-size="11" fill="#555">Hopper refill from P2.</text>
+
+  <!-- cycle -->
+  <rect x="30" y="740" width="1040" height="205" fill="#f7f9fc" stroke="#ccd5e0" rx="8"/>
+  <text x="45" y="766" font-weight="bold" font-size="15" fill="#1f2a44">Overlapped cycle</text>
+  <text x="45" y="792"><tspan font-weight="bold" fill="#c55a11">At P1:</tspan> de-nest pot ① → cradle ② → tap <tspan fill="#c55a11" font-weight="bold">label pedal</tspan>. While it labels, move the previous labelled pot from ② to buffer ③.</text>
+  <text x="45" y="816"><tspan font-weight="bold">Step right.</tspan></text>
+  <text x="45" y="840"><tspan font-weight="bold" fill="#1f4e79">At P2:</tspan> lift filled pot off nozzle ④ → ⑤A or ⑤B (alternate, or split by line demand). Pot from buffer ③ → under nozzle → tap <tspan fill="#1f4e79" font-weight="bold">fill pedal</tspan>.</text>
+  <text x="45" y="864"><tspan font-weight="bold">Step left, repeat.</tspan> Auger dose time covers the labeller handling, and labeller run time covers the auger handling.</text>
+  <text x="45" y="892" font-weight="bold" fill="#6a3d9a">Fruit lines: cups slide off ⑤A / ⑤B onto the line tables. F1/F2 walk them along, scoop fruit from tubs in the freezer, then send them to lid/pack.</text>
+  <text x="45" y="920" fill="#555" font-size="11">Scale 1 m = 300 px. Circles show 600 mm comfortable standing reach. Machine footprints are typical sizes, so check them against the chosen models before you build the cell.</text>
+
+  </g>
+</svg>
