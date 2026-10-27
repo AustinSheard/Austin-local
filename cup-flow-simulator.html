@@ -1,0 +1,244 @@
+<title>Cup Flow Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: control strip, then the cell drawn as a left-to-right flow of stations and buffers, then the buffer-level chart and stats */
+:root{
+  --bg:#f5f7f9; --panel:#ffffff; --fg:#17212b; --muted:#5d6b78; --line:#d5dde5;
+  --label:#c55a11; --auger:#1f4e79; --fruit:#6a3d9a; --collect:#2e7d32; --denest:#5d6b78;
+  --warn:#b26a00; --bad:#b3261e; --ok:#2e7d32;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161b; --panel:#1a2128; --fg:#e6ecf1; --muted:#93a1ae; --line:#2c3640;
+  --label:#f08a4b; --auger:#6aa6dc; --fruit:#b48ae0; --collect:#6cc070; --denest:#a3b0bc;
+  --warn:#e0a040; --bad:#ef6b62; --ok:#6cc070; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161b; --panel:#1a2128; --fg:#e6ecf1; --muted:#93a1ae; --line:#2c3640;
+  --label:#f08a4b; --auger:#6aa6dc; --fruit:#b48ae0; --collect:#6cc070; --denest:#a3b0bc;
+  --warn:#e0a040; --bad:#ef6b62; --ok:#6cc070; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px}
+.wrap{max-width:1100px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+h1{font-size:22px;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;max-width:70ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end}
+.controls label{display:grid;gap:4px;font-size:12px;color:var(--muted);letter-spacing:.02em}
+input[type=number],select{font:inherit;font-family:var(--mono);width:84px;padding:5px 6px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--fg)}
+select{width:auto}
+button{font:inherit;font-weight:600;padding:7px 14px;border-radius:5px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+button.primary{background:var(--auger);border-color:var(--auger);color:var(--panel)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--auger);outline-offset:2px}
+.clock{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;margin-left:auto}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.st{border:1px solid var(--line);border-radius:6px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
+.st h3{margin:0;font-size:13px;display:flex;justify-content:space-between;gap:6px}
+.st .rate{font-family:var(--mono);font-weight:400;color:var(--muted);font-size:11px}
+.state{font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;justify-self:start;border:1px solid currentColor}
+.slots{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
+.slot{aspect-ratio:1;border-radius:50%;border:1px solid var(--line);max-width:100%}
+.count{font-family:var(--mono);font-size:20px;font-variant-numeric:tabular-nums}
+.prog{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;width:0}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+canvas{width:100%;height:260px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:12px;height:3px;margin-right:5px;vertical-align:middle;background:var(--c)}
+.stats{display:grid;gap:8px}
+.stat{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.stat b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.verdict{font-weight:600}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Cup flow simulator: dual-process cell</h1>
+    <p class="sub">De-nest, label, auger fill, then two fruit filling and seaming lines. Each buffer holds 10 cups. Press Play and set the speed to watch it as a timelapse.</p>
+  </header>
+
+  <section class="panel controls" aria-label="Controls">
+    <button class="primary" id="play">Play</button>
+    <button id="reset">Reset</button>
+    <label for="speed">Speed
+      <select id="speed"><option value="1">1×</option><option value="10">10×</option><option value="30" selected>30×</option><option value="60">60×</option><option value="120">120×</option><option value="300">300×</option></select>
+    </label>
+    <label for="mode">Staffing
+      <select id="mode"><option value="shared" selected>1 operator runs de-nest, labeller and auger</option><option value="indep">Each station staffed separately</option></select>
+    </label>
+    <label for="tDen">De-nest s/cup<input type="number" id="tDen" value="3" min="0.5" step="0.5"></label>
+    <label for="tLab">Labeller s/cup<input type="number" id="tLab" value="5" min="0.5" step="0.5"></label>
+    <label for="tAug">Auger s/cup<input type="number" id="tAug" value="5" min="0.5" step="0.5"></label>
+    <label for="tFru">Fruit + seam s/cup<input type="number" id="tFru" value="30" min="1" step="1"></label>
+    <label for="cap">Buffer size<input type="number" id="cap" value="10" min="1" max="30" step="1"></label>
+    <div class="clock" id="clock" aria-live="off">00:00:00</div>
+  </section>
+
+  <section class="panel flow" id="flow" aria-label="Cell"></section>
+
+  <section class="grid2">
+    <div class="panel">
+      <strong>Buffer levels over time</strong>
+      <canvas id="chart" width="720" height="260" aria-label="Buffer levels chart"></canvas>
+      <div class="legend">
+        <span style="--c:var(--denest)">De-nested</span>
+        <span style="--c:var(--label)">Labelled buffer ③</span>
+        <span style="--c:var(--collect)">Collection A</span>
+        <span style="--c:var(--fruit)">Collection B</span>
+      </div>
+    </div>
+    <div class="panel stats" id="stats"></div>
+  </section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let S, running=false, last=0;
+
+function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,cap:Math.max(1,Math.min(30,+$('cap').value||10)),mode:$('mode').value}}
+
+function init(){
+  const c=cfg();
+  S={c,t:0,
+    buf:{den:0,lab:0,A:0,B:0},
+    st:{den:{rem:0,busy:false},lab:{rem:0,busy:false},aug:{rem:0,busy:false},LA:{rem:0,busy:false},LB:{rem:0,busy:false}},
+    op:null, opBusy:{den:0,lab:0,aug:0}, opIdle:0,
+    starve:{LA:0,LB:0}, done:{LA:0,LB:0}, hist:[], nextAlt:'A'};
+  build(); draw(); chart();
+}
+
+function canDen(){return S.buf.den<S.c.cap}
+function canLab(){return S.buf.den>0&&S.buf.lab<S.c.cap}
+function canAug(){return S.buf.lab>0&&(S.buf.A<S.c.cap||S.buf.B<S.c.cap)}
+
+// A task takes its input cup at the start and only places the output when it finishes.
+function start(k){
+  const s=S.st[k]; s.busy=true;
+  if(k==='den'){s.rem=S.c.tDen}
+  if(k==='lab'){S.buf.den--;s.rem=S.c.tLab}
+  if(k==='aug'){S.buf.lab--;s.rem=S.c.tAug}
+}
+function finish(k){
+  const s=S.st[k]; s.busy=false;
+  if(k==='den')S.buf.den++;
+  if(k==='lab')S.buf.lab++;
+  if(k==='aug'){ // send to the emptier collection table, alternating when level
+    let tgt=S.buf.A<S.buf.B?'A':S.buf.B<S.buf.A?'B':S.nextAlt;
+    if(S.buf[tgt]>=S.c.cap)tgt=tgt==='A'?'B':'A';
+    S.buf[tgt]++; S.nextAlt=tgt==='A'?'B':'A';
+  }
+}
+function step(dt){
+  const c=S.c; S.t+=dt;
+  // stations
+  for(const k of ['den','lab','aug']){const s=S.st[k]; if(s.busy){s.rem-=dt; if(s.rem<=0){finish(k); if(c.mode==='shared')S.op=null;}}}
+  if(c.mode==='shared'){
+    if(!S.op){ // priority: keep the fruit lines fed first
+      if(canAug())S.op='aug'; else if(canLab())S.op='lab'; else if(canDen())S.op='den';
+      if(S.op)start(S.op);
+    }
+    if(S.op)S.opBusy[S.op]+=dt; else S.opIdle+=dt;
+  }else{
+    if(!S.st.aug.busy&&canAug())start('aug');
+    if(!S.st.lab.busy&&canLab())start('lab');
+    if(!S.st.den.busy&&canDen())start('den');
+  }
+  // fruit lines
+  for(const [L,b] of [['LA','A'],['LB','B']]){
+    const s=S.st[L];
+    if(s.busy){s.rem-=dt; if(s.rem<=0){s.busy=false;S.done[L]++;}}
+    if(!s.busy){ if(S.buf[b]>0){S.buf[b]--;s.busy=true;s.rem=c.tFru;} else S.starve[L]+=dt; }
+  }
+  if(!S.hist.length||S.t-S.hist[S.hist.length-1].t>=2){S.hist.push({t:S.t,...S.buf}); if(S.hist.length>4000)S.hist=S.hist.filter((_,i)=>i%2===0);}
+}
+
+const ST=[
+  {k:'den',name:'① De-nest',col:'--denest',buf:'den',bufName:'De-nested cups'},
+  {k:'lab',name:'② Labeller',col:'--label',buf:'lab',bufName:'Labelled buffer ③'},
+  {k:'aug',name:'④ Auger filler',col:'--auger',buf:null},
+  {k:'LA',name:'Fruit line 1',col:'--collect',buf:'A',bufName:'Collection A',inbuf:true},
+  {k:'LB',name:'Fruit line 2',col:'--fruit',buf:'B',bufName:'Collection B',inbuf:true},
+];
+function build(){
+  $('flow').innerHTML=ST.map(s=>`<div class="st" style="--c:var(${s.col})">
+    <h3><span style="color:var(${s.col})">${s.name}</span><span class="rate" id="r-${s.k}"></span></h3>
+    <span class="state" id="s-${s.k}">Idle</span>
+    <div class="prog"><i id="p-${s.k}" style="background:var(${s.col})"></i></div>
+    ${s.buf?`<div class="note">${s.inbuf?'Feeds from ':'Outputs to '}${s.bufName}</div>
+      <div class="count" id="c-${s.k}">0</div>
+      <div class="slots" id="b-${s.k}">${Array.from({length:S.c.cap},()=>'<i class="slot"></i>').join('')}</div>`:'<div class="note">Sends each cup to the emptier collection table</div>'}
+  </div>`).join('');
+}
+function fmt(t){t=Math.floor(t);return [t/3600|0,(t/60|0)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':')}
+function draw(){
+  const c=S.c;
+  $('clock').textContent=fmt(S.t);
+  const tot={den:c.tDen,lab:c.tLab,aug:c.tAug,LA:c.tFru,LB:c.tFru};
+  for(const s of ST){
+    const st=S.st[s.k], el=$('s-'+s.k);
+    $('r-'+s.k).textContent=tot[s.k]+'s';
+    $('p-'+s.k).style.width=st.busy?(100*(1-st.rem/tot[s.k]))+'%':'0';
+    let txt='Idle',col='--muted';
+    if(st.busy){txt='Running';col='--ok'}
+    else if(s.k==='LA'||s.k==='LB'){txt='Starved: no cups';col='--bad'}
+    else if(c.mode==='shared'&&S.op&&S.op!==s.k){txt='Operator at '+({den:'de-nest',lab:'labeller',aug:'auger'}[S.op]);col='--warn'}
+    else if(s.k==='den'&&!canDen()||s.k==='lab'&&S.buf.lab>=c.cap||s.k==='aug'&&S.buf.A>=c.cap&&S.buf.B>=c.cap){txt='Blocked: buffer full';col='--warn'}
+    else if(s.k!=='den'){txt='Waiting for cups';col='--muted'}
+    el.textContent=txt; el.style.color=`var(${col})`;
+    if(s.buf){
+      const n=S.buf[s.buf]; $('c-'+s.k).textContent=n+' / '+c.cap;
+      [...$('b-'+s.k).children].forEach((d,i)=>{d.style.background=i<n?`var(${s.col})`:'transparent'; d.style.borderColor=i<n?`var(${s.col})`:''});
+    }
+  }
+  // stats
+  const done=S.done.LA+S.done.LB, hrs=S.t/3600;
+  const pct=x=>S.t?Math.round(100*x/S.t)+'%':'–';
+  const opRows=c.mode==='shared'?`
+    <div class="stat"><span>Operator on auger</span><b>${pct(S.opBusy.aug)}</b></div>
+    <div class="stat"><span>Operator on labeller</span><b>${pct(S.opBusy.lab)}</b></div>
+    <div class="stat"><span>Operator de-nesting</span><b>${pct(S.opBusy.den)}</b></div>
+    <div class="stat"><span>Operator idle (cell blocked)</span><b>${pct(S.opIdle)}</b></div>`:'';
+  const cellRate=c.mode==='shared'?3600/(c.tDen+c.tLab+c.tAug):3600/Math.max(c.tDen,c.tLab,c.tAug);
+  const lineRate=2*3600/c.tFru;
+  const limit=cellRate<lineRate?`The front cell is the bottleneck (${Math.round(cellRate)} cups/h max vs ${Math.round(lineRate)} the fruit lines can take). Fruit lines will run short of cups.`:`The fruit lines are the bottleneck (${Math.round(lineRate)} cups/h max vs ${Math.round(cellRate)} the front cell can make). Buffers fill up and the front cell waits.`;
+  $('stats').innerHTML=`
+    <strong>Results</strong>
+    <div class="stat"><span>Cups finished (filled + seamed)</span><b>${done}</b></div>
+    <div class="stat"><span>Rate so far</span><b>${hrs>0.01?Math.round(done/hrs):'–'} cups/h</b></div>
+    <div class="stat"><span>Line 1 / Line 2 finished</span><b>${S.done.LA} / ${S.done.LB}</b></div>
+    <div class="stat"><span>Line 1 / Line 2 starved</span><b>${pct(S.starve.LA)} / ${pct(S.starve.LB)}</b></div>
+    ${opRows}
+    <p class="note verdict">${limit}</p>
+    <p class="note">The single operator always serves the auger first, then the labeller, then de-nesting. All buffers start empty. The page opens one hour into a run; press Reset to watch it fill from empty.</p>`;
+}
+function chart(){
+  const cv=$('chart'),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.scale(dpr,dpr);
+  const pl=34,pr=10,pt=10,pb=24,w=W-pl-pr,h=H-pt-pb,cap=S.c.cap;
+  const tmax=Math.max(300,S.t);
+  g.clearRect(0,0,W,H);g.font='11px '+css('--mono');g.fillStyle=css('--muted');g.strokeStyle=css('--line');g.lineWidth=1;
+  for(let v=0;v<=cap;v+=Math.max(1,Math.round(cap/5))){const y=pt+h-h*v/cap;g.beginPath();g.moveTo(pl,y);g.lineTo(pl+w,y);g.stroke();g.fillText(v,6,y+4)}
+  const step=[60,120,300,600,900,1800,3600,7200].find(s=>tmax/s<=6)||14400;
+  for(let t=0;t<=tmax;t+=step){const x=pl+w*t/tmax;g.fillText(t>=3600?(t/3600).toFixed(t%3600?1:0)+'h':Math.round(t/60)+'m',x-8,H-6)}
+  const ser=[['den','--denest'],['lab','--label'],['A','--collect'],['B','--fruit']];
+  for(const [k,col] of ser){g.strokeStyle=css(col);g.lineWidth=2;g.beginPath();
+    S.hist.forEach((p,i)=>{const x=pl+w*p.t/tmax,y=pt+h-h*p[k]/cap;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
+}
+function loop(ts){
+  if(!running)return;
+  const real=Math.min(0.1,(ts-last)/1000);last=ts;
+  let sim=real*(+$('speed').value);
+  while(sim>0){const d=Math.min(0.05,sim);step(d);sim-=d}
+  draw();chart();requestAnimationFrame(loop);
+}
+$('play').onclick=()=>{running=!running;$('play').textContent=running?'Pause':'Play';if(running){last=performance.now();requestAnimationFrame(loop)}};
+$('reset').onclick=()=>{init()};
+['tDen','tLab','tAug','tFru','cap','mode'].forEach(id=>$(id).addEventListener('change',()=>init()));
+window.addEventListener('resize',()=>chart());
+init();
+// Show a working state at rest: pre-run 60 simulated minutes
+for(let i=0;i<60*60*20;i++)step(0.05);draw();chart();
+</script>
