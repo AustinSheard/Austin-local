@@ -82,8 +82,12 @@ canvas{width:100%;height:240px;display:block}
     <label for="hopT">Hopper refill s<input type="number" id="hopT" value="30" min="0" step="5"></label>
     <label for="denN">De-nest refill every (cups)<input type="number" id="denN" value="500" min="1" step="10"></label>
     <label for="denT">De-nest refill s<input type="number" id="denT" value="30" min="0" step="5"></label>
-    <label for="frKg">Fruit container kg<input type="number" id="frKg" value="3" min="0.5" step="0.5"></label>
-    <label for="frG">Fruit g/cup (each of 3)<input type="number" id="frG" value="30" min="1" step="5"></label>
+    <label for="frKg1">Fruit 1 container kg<input type="number" id="frKg1" value="3" min="0.5" step="0.5"></label>
+    <label for="frG1">Fruit 1 g/cup<input type="number" id="frG1" value="30" min="0" step="5"></label>
+    <label for="frKg2">Fruit 2 container kg<input type="number" id="frKg2" value="3" min="0.5" step="0.5"></label>
+    <label for="frG2">Fruit 2 g/cup<input type="number" id="frG2" value="30" min="0" step="5"></label>
+    <label for="frKg3">Fruit 3 container kg<input type="number" id="frKg3" value="3" min="0.5" step="0.5"></label>
+    <label for="frG3">Fruit 3 g/cup<input type="number" id="frG3" value="30" min="0" step="5"></label>
     <label for="frT">Fruit refill s<input type="number" id="frT" value="30" min="0" step="5"></label>
     <label for="frRule">Who refills fruit
       <select id="frRule"><option value="pref" selected>Cell operator first, else an idle fruit filler</option><option value="cell">Cell operator only</option><option value="fill">Fruit fillers only</option></select>
@@ -327,18 +331,18 @@ let S,running=false,last=0;
 const AREA={den:{x:186,y:834,cols:5,w:18},lab:{x:294,y:588,cols:10,w:10},A:{x:298,y:490,cols:5,w:24},B:{x:610,y:530,cols:5,w:25}};
 const POS={P1:[340,680],P2:[510,665],FZ:[850,200]};
 
-function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,gpc:+$('gpc').value||50,hopKg:Math.max(0.1,+$('hopKg').value||7.5),hopT:Math.max(0,+$('hopT').value),denN:Math.max(1,+$('denN').value||500),denT:Math.max(0,+$('denT').value),cap:Math.max(1,Math.min(20,+$('cap').value||10)),frKg:Math.max(0.1,+$('frKg').value||3),frG:Math.max(1,+$('frG').value||30),frT:Math.max(0,+$('frT').value),frRule:$('frRule').value}}
+function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,gpc:+$('gpc').value||50,hopKg:Math.max(0.1,+$('hopKg').value||7.5),hopT:Math.max(0,+$('hopT').value),denN:Math.max(1,+$('denN').value||500),denT:Math.max(0,+$('denT').value),cap:Math.max(1,Math.min(20,+$('cap').value||10)),frKg:[1,2,3].map(i=>Math.max(0.1,+$('frKg'+i).value||3)),frG:[1,2,3].map(i=>Math.max(0,+$('frG'+i).value)),frT:Math.max(0,+$('frT').value),frRule:$('frRule').value}}
 function init(){
   S={c:cfg(),t:0,buf:{den:0,lab:0,A:0,B:0},op:null,rem:0,at:'P1',moves:0,
      L:{A:{busy:false,rem:0,rf:-1,rr:0},B:{busy:false,rem:0,rf:-1,rr:0}},opT:{den:0,lab:0,aug:0,rfA:0,rfD:0,rfF:0,idle:0},fr:[0,0,0],frBy:[null,null,null],rfIdx:-1,fblock:{A:0,B:0},frRef:{OP:0,A:0,B:0},nAug:0,nDen:0,refills:{A:0,D:0},starve:{A:0,B:0},done:{A:0,B:0},hist:[],alt:'A'};
   for(const k in AREA){const g=$('g-'+k);g.innerHTML='';for(let i=0;i<S.c.cap;i++){const a=AREA[k],c=document.createElementNS(NS,'circle');
     c.setAttribute('cx',a.x+(i%a.cols)*a.w);c.setAttribute('cy',a.y+Math.floor(i/a.cols)*(k==='den'?12:a.w));c.setAttribute('r',k==='den'||k==='lab'?4.5:7);g.appendChild(c)}}
-  S.fr=[0,1,2].map(()=>S.c.frKg*1000);
+  S.fr=[0,1,2].map(i=>S.c.frKg[i]*1000);
   $('frbars').innerHTML=[0,1,2].map(i=>`<text x="8" y="${36+i*22}" class="meter">Fruit ${i+1}</text><rect x="58" y="${27+i*22}" width="60" height="10" rx="2" fill="none" stroke="#c62828"/><rect id="frb${i}" x="58" y="${27+i*22}" width="60" height="10" rx="2" fill="#e57373"/><text id="frt${i}" x="124" y="${36+i*22}" class="meter"></text>`).join('');
   draw();chart();chart2();
 }
-const frNeed=()=>S.fr.findIndex((v,i)=>v<S.c.frG&&S.frBy[i]===null);
-const frOK=()=>S.fr.every(v=>v>=S.c.frG);
+const frNeed=()=>S.fr.findIndex((v,i)=>v<S.c.frG[i]&&S.frBy[i]===null);
+const frOK=()=>S.fr.every((v,i)=>v>=S.c.frG[i]);
 const canDen=()=>S.buf.den<S.c.cap, canLab=()=>S.buf.den>0&&S.buf.lab<S.c.cap, canAug=()=>S.buf.lab>0&&(S.buf.A<S.c.cap||S.buf.B<S.c.cap);
 function step(dt){
   const c=S.c;S.t+=dt;
@@ -347,7 +351,7 @@ function step(dt){
       if(S.op==='den'){S.buf.den++;S.nDen++}
       if(S.op==='rfA'){S.nAug=0;S.refills.A++}
       if(S.op==='rfD'){S.nDen=0;S.refills.D++}
-      if(S.op==='rfF'){S.fr[S.rfIdx]=c.frKg*1000;S.frBy[S.rfIdx]=null;S.frRef.OP++}
+      if(S.op==='rfF'){S.fr[S.rfIdx]=c.frKg[S.rfIdx]*1000;S.frBy[S.rfIdx]=null;S.frRef.OP++}
       if(S.op==='lab')S.buf.lab++;
       if(S.op==='aug'){let t=S.buf.A<S.buf.B?'A':S.buf.B<S.buf.A?'B':S.alt;if(S.buf[t]>=c.cap)t=t==='A'?'B':'A';S.buf[t]++;S.alt=t==='A'?'B':'A';S.nAug++}
       S.op=null}}
@@ -374,9 +378,9 @@ function step(dt){
   }
   for(const k of ['A','B']){const l=S.L[k];
     if(l.busy){l.rem-=dt;if(l.rem<=0){l.busy=false;S.done[k]++}}
-    if(l.rf>=0){l.rr-=dt;if(l.rr<=0){S.fr[l.rf]=c.frKg*1000;S.frBy[l.rf]=null;l.rf=-1;S.frRef[k]++}}
+    if(l.rf>=0){l.rr-=dt;if(l.rr<=0){S.fr[l.rf]=c.frKg[l.rf]*1000;S.frBy[l.rf]=null;l.rf=-1;S.frRef[k]++}}
     if(!l.busy&&l.rf<0){
-      if(S.buf[k]>0&&frOK()){S.buf[k]--;l.busy=true;l.rem=c.tFru;for(let i=0;i<3;i++)S.fr[i]-=c.frG}
+      if(S.buf[k]>0&&frOK()){S.buf[k]--;l.busy=true;l.rem=c.tFru;for(let i=0;i<3;i++)S.fr[i]-=c.frG[i]}
       else{
         const i=frNeed();
         if(i>=0&&(c.frRule==='fill'||(c.frRule==='pref'&&S.op))){l.rf=i;l.rr=c.frT;S.frBy[i]=k}
@@ -412,8 +416,8 @@ function draw(){
   const hf=$('hopfill');hf.setAttribute('y',485+50*(1-frac));hf.setAttribute('height',50*frac);
   $('m-den').textContent=`de-nested ${S.nDen} / ${c.denN}`;
   $('denbar').setAttribute('width',150*Math.min(1,S.nDen/c.denN));
-  for(let i=0;i<3;i++){const v=Math.max(0,S.fr[i]),fr=v/(c.frKg*1000);$('frb'+i).setAttribute('width',60*fr);$('frb'+i).setAttribute('fill',v<c.frG?'#b3261e':'#e57373');
-    $('frt'+i).textContent=S.frBy[i]?'refilling':`${(v/1000).toFixed(2)}/${c.frKg}kg`}
+  for(let i=0;i<3;i++){const v=Math.max(0,S.fr[i]),fr=v/(c.frKg[i]*1000);$('frb'+i).setAttribute('width',60*fr);$('frb'+i).setAttribute('fill',v<c.frG[i]?'#b3261e':'#e57373');
+    $('frt'+i).textContent=S.frBy[i]?'refilling':`${(v/1000).toFixed(2)}/${c.frKg[i]}kg`}
   $('t-L1').textContent=`done ${S.done.A}`;$('t-L2').textContent=`done ${S.done.B}`;
   // stats
   const done=S.done.A+S.done.B,h=S.t/3600,pct=x=>S.t?Math.round(100*x/S.t)+'%':'–';
@@ -466,7 +470,7 @@ function loop(ts){if(!running)return;const real=Math.min(.1,(ts-last)/1000);last
   while(sim>0){const d=Math.min(.05,sim);step(d);sim-=d}draw();chart();chart2();requestAnimationFrame(loop)}
 $('play').onclick=()=>{running=!running;$('play').textContent=running?'Pause':'Play';if(running){last=performance.now();requestAnimationFrame(loop)}};
 $('reset').onclick=init;
-['tDen','tLab','tAug','tFru','gpc','hopKg','hopT','denN','denT','cap','rule','frKg','frG','frT','frRule'].forEach(id=>$(id).addEventListener('change',init));
+['tDen','tLab','tAug','tFru','gpc','hopKg','hopT','denN','denT','cap','rule','frKg1','frG1','frKg2','frG2','frKg3','frG3','frT','frRule'].forEach(id=>$(id).addEventListener('change',init));
 addEventListener('resize',chart);
 init();
 // open in a working state: 15 simulated minutes in
