@@ -82,6 +82,12 @@ canvas{width:100%;height:240px;display:block}
     <label for="hopT">Hopper refill s<input type="number" id="hopT" value="30" min="0" step="5"></label>
     <label for="denN">De-nest refill every (cups)<input type="number" id="denN" value="500" min="1" step="10"></label>
     <label for="denT">De-nest refill s<input type="number" id="denT" value="30" min="0" step="5"></label>
+    <label for="frKg">Fruit container kg<input type="number" id="frKg" value="3" min="0.5" step="0.5"></label>
+    <label for="frG">Fruit g/cup (each of 3)<input type="number" id="frG" value="30" min="1" step="5"></label>
+    <label for="frT">Fruit refill s<input type="number" id="frT" value="30" min="0" step="5"></label>
+    <label for="frRule">Who refills fruit
+      <select id="frRule"><option value="pref" selected>Cell operator first, else an idle fruit filler</option><option value="cell">Cell operator only</option><option value="fill">Fruit fillers only</option></select>
+    </label>
     <label for="cap">Buffer size<input type="number" id="cap" value="10" min="1" max="20" step="1"></label>
     <div class="clock" id="clock">00:00:00</div>
   </section>
@@ -277,6 +283,11 @@ canvas{width:100%;height:240px;display:block}
     <text id="t-A" x="355" y="451" text-anchor="middle" class="badge"></text>
     <text id="t-B" x="665" y="451" text-anchor="middle" class="badge"></text>
     <text id="t-L1" x="360" y="152" text-anchor="middle" class="done"></text>
+    <g id="frm" transform="translate(108,78)">
+      <rect x="0" y="0" width="182" height="92" rx="5" fill="#fff" stroke="#c62828"/>
+      <text x="8" y="16" class="meter" fill="#c62828">Fruit containers (shared)</text>
+      <g id="frbars"></g>
+    </g>
     <text id="t-L2" x="660" y="152" text-anchor="middle" class="done"></text>
     <text id="s-op" x="425" y="740" text-anchor="middle" class="stat"></text>
     <text id="s-f1" x="255" y="322" text-anchor="middle" class="stat"></text>
@@ -314,16 +325,20 @@ const NS='http://www.w3.org/2000/svg';
 let S,running=false,last=0;
 // slot areas on the plan (plan coordinates)
 const AREA={den:{x:186,y:834,cols:5,w:18},lab:{x:294,y:588,cols:10,w:10},A:{x:298,y:490,cols:5,w:24},B:{x:610,y:530,cols:5,w:25}};
-const POS={P1:[340,680],P2:[510,665]};
+const POS={P1:[340,680],P2:[510,665],FZ:[850,200]};
 
-function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,gpc:+$('gpc').value||50,hopKg:Math.max(0.1,+$('hopKg').value||7.5),hopT:Math.max(0,+$('hopT').value),denN:Math.max(1,+$('denN').value||500),denT:Math.max(0,+$('denT').value),cap:Math.max(1,Math.min(20,+$('cap').value||10))}}
+function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,gpc:+$('gpc').value||50,hopKg:Math.max(0.1,+$('hopKg').value||7.5),hopT:Math.max(0,+$('hopT').value),denN:Math.max(1,+$('denN').value||500),denT:Math.max(0,+$('denT').value),cap:Math.max(1,Math.min(20,+$('cap').value||10)),frKg:Math.max(0.1,+$('frKg').value||3),frG:Math.max(1,+$('frG').value||30),frT:Math.max(0,+$('frT').value),frRule:$('frRule').value}}
 function init(){
   S={c:cfg(),t:0,buf:{den:0,lab:0,A:0,B:0},op:null,rem:0,at:'P1',moves:0,
-     L:{A:{busy:false,rem:0},B:{busy:false,rem:0}},opT:{den:0,lab:0,aug:0,rfA:0,rfD:0,idle:0},nAug:0,nDen:0,refills:{A:0,D:0},starve:{A:0,B:0},done:{A:0,B:0},hist:[],alt:'A'};
+     L:{A:{busy:false,rem:0,rf:-1,rr:0},B:{busy:false,rem:0,rf:-1,rr:0}},opT:{den:0,lab:0,aug:0,rfA:0,rfD:0,rfF:0,idle:0},fr:[0,0,0],frBy:[null,null,null],rfIdx:-1,fblock:{A:0,B:0},frRef:{OP:0,A:0,B:0},nAug:0,nDen:0,refills:{A:0,D:0},starve:{A:0,B:0},done:{A:0,B:0},hist:[],alt:'A'};
   for(const k in AREA){const g=$('g-'+k);g.innerHTML='';for(let i=0;i<S.c.cap;i++){const a=AREA[k],c=document.createElementNS(NS,'circle');
     c.setAttribute('cx',a.x+(i%a.cols)*a.w);c.setAttribute('cy',a.y+Math.floor(i/a.cols)*(k==='den'?12:a.w));c.setAttribute('r',k==='den'||k==='lab'?4.5:7);g.appendChild(c)}}
+  S.fr=[0,1,2].map(()=>S.c.frKg*1000);
+  $('frbars').innerHTML=[0,1,2].map(i=>`<text x="8" y="${36+i*22}" class="meter">Fruit ${i+1}</text><rect x="58" y="${27+i*22}" width="60" height="10" rx="2" fill="none" stroke="#c62828"/><rect id="frb${i}" x="58" y="${27+i*22}" width="60" height="10" rx="2" fill="#e57373"/><text id="frt${i}" x="124" y="${36+i*22}" class="meter"></text>`).join('');
   draw();chart();chart2();
 }
+const frNeed=()=>S.fr.findIndex((v,i)=>v<S.c.frG&&S.frBy[i]===null);
+const frOK=()=>S.fr.every(v=>v>=S.c.frG);
 const canDen=()=>S.buf.den<S.c.cap, canLab=()=>S.buf.den>0&&S.buf.lab<S.c.cap, canAug=()=>S.buf.lab>0&&(S.buf.A<S.c.cap||S.buf.B<S.c.cap);
 function step(dt){
   const c=S.c;S.t+=dt;
@@ -332,10 +347,13 @@ function step(dt){
       if(S.op==='den'){S.buf.den++;S.nDen++}
       if(S.op==='rfA'){S.nAug=0;S.refills.A++}
       if(S.op==='rfD'){S.nDen=0;S.refills.D++}
+      if(S.op==='rfF'){S.fr[S.rfIdx]=c.frKg*1000;S.frBy[S.rfIdx]=null;S.frRef.OP++}
       if(S.op==='lab')S.buf.lab++;
       if(S.op==='aug'){let t=S.buf.A<S.buf.B?'A':S.buf.B<S.buf.A?'B':S.alt;if(S.buf[t]>=c.cap)t=t==='A'?'B':'A';S.buf[t]++;S.alt=t==='A'?'B':'A';S.nAug++}
       S.op=null}}
   else S.opT.idle+=dt;
+  if(!S.op&&c.frRule!=='fill'&&frNeed()>=0){ // fruit refill takes priority for the cell operator
+    const i=frNeed();S.op='rfF';S.rfIdx=i;S.frBy[i]='OP';S.rem=c.frT}
   if(!S.op){
     const go=p=>{if(S.at!==p){S.at=p;S.moves++}};
     if($('rule').value==='batch'){ // stay at P1 until buffer ③ is full, then stay at P2 until it is empty
@@ -356,7 +374,15 @@ function step(dt){
   }
   for(const k of ['A','B']){const l=S.L[k];
     if(l.busy){l.rem-=dt;if(l.rem<=0){l.busy=false;S.done[k]++}}
-    if(!l.busy){if(S.buf[k]>0){S.buf[k]--;l.busy=true;l.rem=c.tFru}else S.starve[k]+=dt}}
+    if(l.rf>=0){l.rr-=dt;if(l.rr<=0){S.fr[l.rf]=c.frKg*1000;S.frBy[l.rf]=null;l.rf=-1;S.frRef[k]++}}
+    if(!l.busy&&l.rf<0){
+      if(S.buf[k]>0&&frOK()){S.buf[k]--;l.busy=true;l.rem=c.tFru;for(let i=0;i<3;i++)S.fr[i]-=c.frG}
+      else{
+        const i=frNeed();
+        if(i>=0&&(c.frRule==='fill'||(c.frRule==='pref'&&S.op))){l.rf=i;l.rr=c.frT;S.frBy[i]=k}
+        else if(S.buf[k]>0)S.fblock[k]+=dt; else S.starve[k]+=dt;
+      }
+    }}
   if(!S.hist.length||S.t-S.hist[S.hist.length-1].t>=2){S.hist.push({t:S.t,...S.buf,d:S.done.A+S.done.B});if(S.hist.length>4000)S.hist=S.hist.filter((_,i)=>i%2===0)}
 }
 const fmt=t=>{t=Math.floor(t);return[t/3600|0,(t/60|0)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':')};
@@ -369,22 +395,25 @@ function draw(){
   $('t-lab').textContent=`${S.buf.lab}/${c.cap}`;
   $('t-A').textContent=`${S.buf.A}/${c.cap}`;$('t-B').textContent=`${S.buf.B}/${c.cap}`;
   // operator
-  const at=S.at;const [x,y]=POS[at];$('op').style.transform=`translate(${x}px,${y}px)`;
+  const at=S.op==='rfF'?'FZ':S.at;const [x,y]=POS[at];$('op').style.transform=`translate(${x}px,${y}px)`;
   ring('ring-lab',S.op==='lab'?1-S.rem/c.tLab:0,css('--label'));
   ring('ring-aug',S.op==='aug'?1-S.rem/c.tAug:0,css('--auger'));
   $('cup-lab').style.opacity=S.op==='lab'?1:0;$('cup-aug').style.opacity=S.op==='aug'?1:0;
-  const sop=$('s-op');sop.textContent=S.op?{den:'OP: de-nesting',lab:'OP: labelling',aug:'OP: filling',rfA:'OP: refilling auger hopper',rfD:'OP: refilling de-nest stack'}[S.op]:(S.at==='P2'?'OP: waiting at auger, collection full':'OP: idle, buffers full');sop.setAttribute('fill',S.op?css('--ok'):css('--warn'));
+  const sop=$('s-op');sop.textContent=S.op?{den:'OP: de-nesting',lab:'OP: labelling',aug:'OP: filling',rfA:'OP: refilling auger hopper',rfD:'OP: refilling de-nest stack',rfF:`OP: refilling fruit ${S.rfIdx+1} (at freezer)`}[S.op]:(S.at==='P2'?'OP: waiting at auger, collection full':'OP: idle, buffers full');sop.setAttribute('fill',S.op?css('--ok'):css('--warn'));
   // fruit fillers walk the cup along the table
   [['A','f1',360,255,'s-f1'],['B','f2',660,765,'s-f2']].forEach(([k,id,tx,fx,sid])=>{
     const l=S.L[k],p=l.busy?1-l.rem/c.tFru:0,yy=450-p*300;
     $(id).setAttribute('transform',`translate(${tx},${yy})`);$(id).style.opacity=l.busy?1:0;
-    const s=$(sid);s.textContent=l.busy?'filling':'WAITING FOR CUPS';s.setAttribute('fill',l.busy?css('--ok'):css('--bad'));
+    const s=$(sid),[t,cl]=l.busy?['filling','--ok']:l.rf>=0?[`refilling fruit ${l.rf+1}`,'--warn']:S.buf[k]>0?['WAITING FOR FRUIT','--bad']:['WAITING FOR CUPS','--bad'];
+    s.textContent=t;s.setAttribute('fill',css(cl));
   });
   const used=S.nAug*c.gpc/1000,frac=Math.max(0,1-used/c.hopKg);
   $('m-hop').textContent=`${used.toFixed(2)} / ${c.hopKg} kg`;
   const hf=$('hopfill');hf.setAttribute('y',485+50*(1-frac));hf.setAttribute('height',50*frac);
   $('m-den').textContent=`de-nested ${S.nDen} / ${c.denN}`;
   $('denbar').setAttribute('width',150*Math.min(1,S.nDen/c.denN));
+  for(let i=0;i<3;i++){const v=Math.max(0,S.fr[i]),fr=v/(c.frKg*1000);$('frb'+i).setAttribute('width',60*fr);$('frb'+i).setAttribute('fill',v<c.frG?'#b3261e':'#e57373');
+    $('frt'+i).textContent=S.frBy[i]?'refilling':`${(v/1000).toFixed(2)}/${c.frKg}kg`}
   $('t-L1').textContent=`done ${S.done.A}`;$('t-L2').textContent=`done ${S.done.B}`;
   // stats
   const done=S.done.A+S.done.B,h=S.t/3600,pct=x=>S.t?Math.round(100*x/S.t)+'%':'–';
@@ -397,6 +426,9 @@ function draw(){
     <div class="st"><span>Cell operator: auger / label / de-nest</span><b>${pct(S.opT.aug)} / ${pct(S.opT.lab)} / ${pct(S.opT.den)}</b></div>
     <div class="st"><span>Cell operator refilling: hopper / de-nest</span><b>${pct(S.opT.rfA)} / ${pct(S.opT.rfD)}</b></div>
     <div class="st"><span>Refills done: hopper / de-nest</span><b>${S.refills.A} / ${S.refills.D}</b></div>
+    <div class="st"><span>Line 1 / Line 2 waiting for fruit</span><b>${pct(S.fblock.A)} / ${pct(S.fblock.B)}</b></div>
+    <div class="st"><span>Fruit refills by cell op / F1 / F2</span><b>${S.frRef.OP} / ${S.frRef.A} / ${S.frRef.B}</b></div>
+    <div class="st"><span>Cell operator refilling fruit</span><b>${pct(S.opT.rfF)}</b></div>
     <div class="st"><span>Cell operator idle</span><b>${pct(S.opT.idle)}</b></div>
     <div class="st"><span>Moves between P1 and P2</span><b>${S.moves} (${h>0.01?Math.round(S.moves/h):'–'}/h)</b></div>
     <p class="note verdict">${v}</p>
@@ -434,7 +466,7 @@ function loop(ts){if(!running)return;const real=Math.min(.1,(ts-last)/1000);last
   while(sim>0){const d=Math.min(.05,sim);step(d);sim-=d}draw();chart();chart2();requestAnimationFrame(loop)}
 $('play').onclick=()=>{running=!running;$('play').textContent=running?'Pause':'Play';if(running){last=performance.now();requestAnimationFrame(loop)}};
 $('reset').onclick=init;
-['tDen','tLab','tAug','tFru','gpc','hopKg','hopT','denN','denT','cap','rule'].forEach(id=>$(id).addEventListener('change',init));
+['tDen','tLab','tAug','tFru','gpc','hopKg','hopT','denN','denT','cap','rule','frKg','frG','frT','frRule'].forEach(id=>$(id).addEventListener('change',init));
 addEventListener('resize',chart);
 init();
 // open in a working state: 15 simulated minutes in
