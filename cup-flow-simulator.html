@@ -2,86 +2,277 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: control strip, then the cell drawn as a left-to-right flow of stations and buffers, then the buffer-level chart and stats */
+/* Layout: control strip, then the to-scale cell plan with the live simulation drawn on top, then buffer chart and results side by side */
 :root{
   --bg:#f5f7f9; --panel:#ffffff; --fg:#17212b; --muted:#5d6b78; --line:#d5dde5;
   --label:#c55a11; --auger:#1f4e79; --fruit:#6a3d9a; --collect:#2e7d32; --denest:#5d6b78;
-  --warn:#b26a00; --bad:#b3261e; --ok:#2e7d32;
+  --warn:#b26a00; --bad:#b3261e; --ok:#2e7d32; --cup:#f2c14e;
   --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#11161b; --panel:#1a2128; --fg:#e6ecf1; --muted:#93a1ae; --line:#2c3640;
   --label:#f08a4b; --auger:#6aa6dc; --fruit:#b48ae0; --collect:#6cc070; --denest:#a3b0bc;
-  --warn:#e0a040; --bad:#ef6b62; --ok:#6cc070; color-scheme:dark}}
+  --warn:#e0a040; --bad:#ef6b62; --ok:#6cc070; --cup:#f2c14e; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#11161b; --panel:#1a2128; --fg:#e6ecf1; --muted:#93a1ae; --line:#2c3640;
   --label:#f08a4b; --auger:#6aa6dc; --fruit:#b48ae0; --collect:#6cc070; --denest:#a3b0bc;
-  --warn:#e0a040; --bad:#ef6b62; --ok:#6cc070; color-scheme:dark}
+  --warn:#e0a040; --bad:#ef6b62; --ok:#6cc070; --cup:#f2c14e; color-scheme:dark}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px}
-.wrap{max-width:1100px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+.wrap{max-width:1200px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
 h1{font-size:22px;margin:0;text-wrap:balance}
-.sub{color:var(--muted);margin:4px 0 0;max-width:70ch}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+.sub{color:var(--muted);margin:4px 0 0;max-width:75ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;min-width:0}
 .controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end}
 .controls label{display:grid;gap:4px;font-size:12px;color:var(--muted);letter-spacing:.02em}
-input[type=number],select{font:inherit;font-family:var(--mono);width:84px;padding:5px 6px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--fg)}
+input[type=number],select{font:inherit;font-family:var(--mono);width:80px;padding:5px 6px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--fg)}
 select{width:auto}
 button{font:inherit;font-weight:600;padding:7px 14px;border-radius:5px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
 button.primary{background:var(--auger);border-color:var(--auger);color:var(--panel)}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--auger);outline-offset:2px}
 .clock{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;margin-left:auto}
-.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.st{border:1px solid var(--line);border-radius:6px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
-.st h3{margin:0;font-size:13px;display:flex;justify-content:space-between;gap:6px}
-.st .rate{font-family:var(--mono);font-weight:400;color:var(--muted);font-size:11px}
-.state{font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;justify-self:start;border:1px solid currentColor}
-.slots{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
-.slot{aspect-ratio:1;border-radius:50%;border:1px solid var(--line);max-width:100%}
-.count{font-family:var(--mono);font-size:20px;font-variant-numeric:tabular-nums}
-.prog{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
-.prog i{display:block;height:100%;width:0}
+.plan{overflow-x:auto;padding:6px}
+/* the drawing itself is a light paper plan in both themes */
+.plan svg{display:block;width:100%;min-width:640px;height:auto;background:#fff;border-radius:6px}
+.cupc{fill:var(--cup);stroke:#7a5a00;stroke-width:1.5}
+.cupf{fill:#e57373;stroke:#7a1f1f;stroke-width:1.5}
+.opdot{fill:#17212b;fill-opacity:.88;stroke:#f2c14e;stroke-width:3}
+.optext{fill:#fff;font-weight:600;font-size:13px}
+.opg{transition:transform .35s ease}
+.badge{font-size:12px;font-weight:600;fill:#17212b}
+.done{font-size:12px;font-weight:600;fill:#4a2470}
+.stat{font-size:11px;font-weight:600}
+@media (prefers-reduced-motion:reduce){.opg{transition:none}}
 .grid2{display:grid;grid-template-columns:2fr 1fr;gap:16px}
 @media (max-width:760px){.grid2{grid-template-columns:1fr}}
-canvas{width:100%;height:260px;display:block}
+canvas{width:100%;height:240px;display:block}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:6px}
 .legend span::before{content:"";display:inline-block;width:12px;height:3px;margin-right:5px;vertical-align:middle;background:var(--c)}
-.stats{display:grid;gap:8px}
-.stat{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px}
-.stat b{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.note{font-size:12px;color:var(--muted);line-height:1.5}
-.verdict{font-weight:600}
+.stats{display:grid;gap:8px;align-content:start}
+.st{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.st b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+.verdict{font-weight:600;color:var(--fg)}
 </style>
 
 <div class="wrap">
   <header>
     <h1>Cup flow simulator: dual-process cell</h1>
-    <p class="sub">De-nest, label, auger fill, then two fruit filling and seaming lines. Each buffer holds 10 cups. Press Play and set the speed to watch it as a timelapse.</p>
+    <p class="sub">One operator runs de-nesting, the labeller and the auger. One operator on each fruit fill and seam line. Each buffer holds 10 cups. Yellow dots are cups; the dark OP marker is the cell operator moving between P1 and P2.</p>
   </header>
 
   <section class="panel controls" aria-label="Controls">
     <button class="primary" id="play">Play</button>
     <button id="reset">Reset</button>
     <label for="speed">Speed
-      <select id="speed"><option value="1">1×</option><option value="10">10×</option><option value="30" selected>30×</option><option value="60">60×</option><option value="120">120×</option><option value="300">300×</option></select>
-    </label>
-    <label for="mode">Staffing
-      <select id="mode"><option value="shared" selected>1 operator runs de-nest, labeller and auger</option><option value="indep">Each station staffed separately</option></select>
+      <select id="speed"><option value="1">1×</option><option value="5">5×</option><option value="10" selected>10×</option><option value="30">30×</option><option value="60">60×</option><option value="120">120×</option></select>
     </label>
     <label for="tDen">De-nest s/cup<input type="number" id="tDen" value="3" min="0.5" step="0.5"></label>
     <label for="tLab">Labeller s/cup<input type="number" id="tLab" value="5" min="0.5" step="0.5"></label>
     <label for="tAug">Auger s/cup<input type="number" id="tAug" value="5" min="0.5" step="0.5"></label>
     <label for="tFru">Fruit + seam s/cup<input type="number" id="tFru" value="30" min="1" step="1"></label>
-    <label for="cap">Buffer size<input type="number" id="cap" value="10" min="1" max="30" step="1"></label>
-    <div class="clock" id="clock" aria-live="off">00:00:00</div>
+    <label for="cap">Buffer size<input type="number" id="cap" value="10" min="1" max="20" step="1"></label>
+    <div class="clock" id="clock">00:00:00</div>
   </section>
 
-  <section class="panel flow" id="flow" aria-label="Cell"></section>
+  <section class="panel plan" aria-label="Cell plan">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 66 990 820" id="cell" role="img" aria-label="Cell layout with live cup flow" font-family="Arial, Helvetica, sans-serif" font-size="13">
+  <!-- Scale: 0.3 px = 1 mm (1 m = 300 px) -->
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e79"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c55a11"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+    <marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6a3d9a"/></marker>
+    <marker id="k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c62828"/></marker>
+  </defs>
+  <rect width="1100" height="1110" fill="#fff"/>
+  <text x="30" y="34" font-size="20" font-weight="bold" fill="#1f2a44">Dual-process cell v5: fruit lines fed from collection, scooping from shared freezer (plan view, to scale)</text>
+  <text x="30" y="55" fill="#555">P1 at the labeller and P2 at the auger, one step apart. Each fruit filler slides cups along a table beside the freezer and scoops fruit from tubs inside it.</text>
+
+  <g transform="translate(0,30)">
+  <!-- ===== FRUIT FILLING ZONE (far side) ===== -->
+  <!-- chest freezer ~1050 x 570 mm, long axis away from bench, in line with auger -->
+  <rect x="425" y="85" width="170" height="320" fill="#e3f2fd" stroke="#0d47a1" stroke-width="3" rx="4"/>
+  <text x="510" y="105" text-anchor="middle" font-weight="bold" fill="#0d47a1" font-size="12">CHEST FREEZER</text>
+  <text x="510" y="120" text-anchor="middle" font-size="10" fill="#0d47a1">(lid open)</text>
+  <g fill="#fff" stroke="#c62828" stroke-width="1.5">
+    <rect x="440" y="135" width="62" height="55" rx="4"/><rect x="518" y="135" width="62" height="55" rx="4"/>
+    <rect x="440" y="205" width="62" height="55" rx="4"/><rect x="518" y="205" width="62" height="55" rx="4"/>
+    <rect x="440" y="275" width="62" height="55" rx="4"/><rect x="518" y="275" width="62" height="55" rx="4"/>
+  </g>
+  <g font-size="9" text-anchor="middle" fill="#c62828">
+    <text x="471" y="166">fruit</text><text x="549" y="166">fruit</text>
+    <text x="471" y="236">fruit</text><text x="549" y="236">fruit</text>
+    <text x="471" y="306">fruit</text><text x="549" y="306">fruit</text>
+  </g>
+  <text x="510" y="355" text-anchor="middle" font-size="10">Line 1 scoops</text>
+  <text x="510" y="368" text-anchor="middle" font-size="10">from left half,</text>
+  <text x="510" y="381" text-anchor="middle" font-size="10">Line 2 from right</text>
+  <line x1="510" y1="335" x2="510" y2="342" stroke="#0d47a1"/>
+
+  <!-- Line 1 table (400 mm wide), parallel to freezer, continuous with collection A -->
+  <rect x="300" y="85" width="120" height="335" fill="#f3e9f7" stroke="#6a3d9a" stroke-width="2"/>
+  <text x="360" y="102" text-anchor="middle" font-weight="bold" fill="#6a3d9a" font-size="11">LINE 1 TABLE</text>
+  <g fill="#fff" stroke="#6a3d9a" stroke-width="1.5">
+    <circle cx="360" cy="390" r="12"/><circle cx="360" cy="320" r="12"/><circle cx="360" cy="250" r="12" fill="#f8bbd0"/><circle cx="360" cy="180" r="12" fill="#f8bbd0"/>
+  </g>
+  <path d="M385,405 L385,125" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+  <text x="395" y="300" font-size="9" fill="#6a3d9a" transform="rotate(-90 395 300)">cups slide along</text>
+  <rect x="300" y="40" width="120" height="34" fill="#6a3d9a"/><text x="360" y="62" text-anchor="middle" fill="#fff" font-weight="bold" font-size="11">→ LID / PACK</text>
+  <path d="M330,96 L330,78" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+
+  <!-- Line 2 table -->
+  <rect x="600" y="85" width="120" height="335" fill="#f3e9f7" stroke="#6a3d9a" stroke-width="2"/>
+  <text x="660" y="102" text-anchor="middle" font-weight="bold" fill="#6a3d9a" font-size="11">LINE 2 TABLE</text>
+  <g fill="#fff" stroke="#6a3d9a" stroke-width="1.5">
+    <circle cx="660" cy="390" r="12"/><circle cx="660" cy="320" r="12"/><circle cx="660" cy="250" r="12" fill="#f8bbd0"/><circle cx="660" cy="180" r="12" fill="#f8bbd0"/>
+  </g>
+  <path d="M635,405 L635,125" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+  <rect x="600" y="40" width="120" height="34" fill="#6a3d9a"/><text x="660" y="62" text-anchor="middle" fill="#fff" font-weight="bold" font-size="11">→ LID / PACK</text>
+  <path d="M690,96 L690,78" stroke="#6a3d9a" stroke-width="2.5" marker-end="url(#p)"/>
+
+  <!-- fruit fillers: stand on outside of their table, walk along it, scoop across into freezer -->
+  <circle cx="255" cy="250" r="22" fill="#fff" stroke="#6a3d9a" stroke-width="2.5"/><text x="255" y="255" text-anchor="middle" font-weight="bold" fill="#6a3d9a">F1</text>
+  <path d="M255,222 L255,140" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M255,278 L255,370" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M278,245 Q380,215 452,230" stroke="#c62828" stroke-width="2" fill="none" stroke-dasharray="5 3" marker-end="url(#r)"/>
+  <text x="200" y="395" font-size="10" fill="#6a3d9a">walks with cups</text>
+  <circle cx="765" cy="250" r="22" fill="#fff" stroke="#6a3d9a" stroke-width="2.5"/><text x="765" y="255" text-anchor="middle" font-weight="bold" fill="#6a3d9a">F2</text>
+  <path d="M765,222 L765,140" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M765,278 L765,370" stroke="#6a3d9a" stroke-dasharray="4 3" marker-end="url(#p)"/>
+  <path d="M742,245 Q640,215 568,230" stroke="#c62828" stroke-width="2" fill="none" stroke-dasharray="5 3" marker-end="url(#r)"/>
+  <text x="745" y="395" font-size="10" fill="#6a3d9a">walks with cups</text>
+  <text x="140" y="180" font-size="10" fill="#c62828">scoop reach</text>
+  <text x="140" y="193" font-size="10" fill="#c62828">across table</text>
+  <text x="140" y="206" font-size="10" fill="#c62828">≈ 550 mm</text>
+
+  </g>
+  <g transform="translate(0,150)">
+  <!-- ===== BENCHES ===== -->
+  <!-- front bench 1700 x 500 mm; side bench 1400 x 500 mm -->
+  <rect x="280" y="300" width="510" height="150" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <rect x="130" y="300" width="150" height="420" fill="#eef2f7" stroke="#8a99ad" stroke-width="2"/>
+  <text x="138" y="712" fill="#5a6b80" font-size="10">SIDE BENCH 1400×500</text>
+  <text x="700" y="444" fill="#5a6b80" font-size="10">FRONT 1700×500</text>
+
+  <!-- side bench: labeller + de-nest -->
+  <rect x="145" y="470" width="130" height="125" fill="#fbe5d6" stroke="#c55a11" stroke-width="3" rx="5"/>
+  <text x="210" y="494" text-anchor="middle" font-weight="bold" fill="#c55a11">② LABELLER</text>
+  <rect x="158" y="505" width="104" height="30" fill="#fff" stroke="#c55a11"/><text x="210" y="525" text-anchor="middle" font-size="10">label reel</text>
+  <rect x="205" y="545" width="62" height="42" fill="#fff" stroke="#c55a11" stroke-dasharray="4 3"/><text x="236" y="570" text-anchor="middle" font-size="10">cradle</text>
+  <rect x="175" y="610" width="100" height="90" fill="#fff" stroke="#555" stroke-width="2" rx="5"/>
+  <circle cx="205" cy="655" r="20" fill="#f2f2f2" stroke="#555"/><circle cx="205" cy="655" r="11" fill="none" stroke="#555"/>
+  <text x="248" y="645" text-anchor="middle" font-weight="bold" font-size="11">① DE-</text>
+  <text x="248" y="660" text-anchor="middle" font-weight="bold" font-size="11">NEST</text>
+  <text x="248" y="676" text-anchor="middle" font-size="10">stack</text>
+
+  <!-- front bench: buffer (front-left), collection A (back-left), auger, collection B -->
+  <rect x="285" y="378" width="110" height="68" fill="#fff" stroke="#c55a11" stroke-width="2" rx="4"/>
+  <text x="340" y="405" text-anchor="middle" font-weight="bold" font-size="12">③ BUFFER</text>
+  <text x="340" y="421" text-anchor="middle" font-size="10">labelled, empty</text>
+  <rect x="285" y="304" width="140" height="68" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="4"/>
+  <text x="355" y="330" text-anchor="middle" font-weight="bold" fill="#2e7d32" font-size="12">⑤A COLLECT</text>
+  <text x="355" y="346" text-anchor="middle" font-size="10">→ Line 1 table</text>
+  <rect x="430" y="305" width="160" height="140" fill="#d9e7f5" stroke="#1f4e79" stroke-width="3" rx="5"/>
+  <text x="510" y="324" text-anchor="middle" font-weight="bold" fill="#1f4e79" font-size="12">④ AUGER</text>
+  <circle cx="510" cy="360" r="26" fill="#fff" stroke="#1f4e79" stroke-width="2"/><text x="510" y="364" text-anchor="middle" font-size="10">hopper</text>
+  <rect x="488" y="405" width="44" height="34" fill="#fff" stroke="#1f4e79" stroke-dasharray="4 3"/><text x="510" y="426" text-anchor="middle" font-size="10">nozzle</text>
+  <rect x="595" y="304" width="140" height="142" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" rx="4"/>
+  <text x="665" y="345" text-anchor="middle" font-weight="bold" fill="#2e7d32" font-size="12">⑤B COLLECT</text>
+  <text x="665" y="361" text-anchor="middle" font-size="10">→ Line 2 table</text>
+  <text x="665" y="377" text-anchor="middle" font-size="10">(pass-through)</text>
+
+  <!-- ===== OPERATOR ===== -->
+  <rect x="285" y="460" width="320" height="150" fill="#f4f1e8" stroke="#b5a77a" stroke-dasharray="5 4"/>
+  <text x="540" y="602" fill="#8a7d52" font-size="10">anti-fatigue mat</text>
+  <circle cx="340" cy="530" r="180" fill="#c55a11" fill-opacity="0.04" stroke="#c55a11" stroke-dasharray="6 5"/>
+  <circle cx="510" cy="515" r="180" fill="#1f4e79" fill-opacity="0.04" stroke="#1f4e79" stroke-dasharray="6 5"/>
+  <circle cx="340" cy="530" r="28" fill="#fff" stroke="#c55a11" stroke-width="3"/><text x="340" y="535" text-anchor="middle" font-weight="bold" fill="#c55a11">P1</text>
+  <circle cx="510" cy="515" r="28" fill="#fff" stroke="#1f4e79" stroke-width="3"/><text x="510" y="520" text-anchor="middle" font-weight="bold" fill="#1f4e79">P2</text>
+  <path d="M370,527 L478,517" stroke="#333" stroke-width="1.5" marker-end="url(#k)"/>
+  <path d="M478,522 L372,532" stroke="#333" stroke-width="1.5" marker-end="url(#k)"/>
+  <text x="425" y="510" text-anchor="middle" font-size="10">1 step ≈ 550 mm</text>
+  <text x="340" y="574" text-anchor="middle" font-size="10">at labeller, faces 45° left</text>
+  <text x="510" y="559" text-anchor="middle" font-size="10">at auger, faces bench</text>
+  <rect x="318" y="582" width="26" height="16" fill="#c55a11"/><text x="331" y="618" text-anchor="middle" font-size="9">label pedal</text>
+  <rect x="497" y="567" width="26" height="16" fill="#1f4e79"/><text x="510" y="597" text-anchor="middle" font-size="9">fill pedal</text>
+  <rect x="560" y="490" width="26" height="26" rx="13" fill="#ddd" stroke="#555"/><text x="590" y="482" font-size="9">perch stool</text>
+
+  <!-- material flow -->
+  <path d="M175,640 L150,640 L150,598" stroke="#c55a11" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+  <path d="M270,545 Q300,470 305,450" stroke="#c55a11" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+  <path d="M397,425 L484,425" stroke="#1f4e79" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M488,410 Q440,385 428,360" stroke="#2e7d32" stroke-width="2.5" fill="none" marker-end="url(#g)"/>
+  <path d="M532,415 L592,400" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#g)"/>
+
+  <!-- scale bar -->
+  <g transform="translate(880,700)">
+    <rect x="0" y="0" width="150" height="8" fill="#333"/><rect x="0" y="0" width="75" height="8" fill="#fff" stroke="#333"/>
+    <text x="0" y="24" font-size="11">0</text><text x="68" y="24" font-size="11">250</text><text x="132" y="24" font-size="11">500 mm</text>
+  </g>
+
+  <!-- reach panel -->
+  <rect x="820" y="300" width="250" height="370" fill="#f7f9fc" stroke="#ccd5e0" rx="6"/>
+  <text x="834" y="324" font-weight="bold">Reach check (≤ 600 mm)</text>
+  <text x="834" y="350" font-size="12" fill="#c55a11" font-weight="bold">P1 (at labeller):</text>
+  <text x="834" y="368" font-size="11">① de-nest ✔</text>
+  <text x="834" y="384" font-size="11">② labeller cradle ✔</text>
+  <text x="834" y="400" font-size="11">③ buffer ✔ (drop-off)</text>
+  <text x="834" y="428" font-size="12" fill="#1f4e79" font-weight="bold">P2 (at auger):</text>
+  <text x="834" y="446" font-size="11">③ buffer ✔ (pick-up)</text>
+  <text x="834" y="462" font-size="11">④ nozzle ✔</text>
+  <text x="834" y="478" font-size="11">⑤A ✔   ⑤B ✔</text>
+  <text x="834" y="506" font-size="12" fill="#6a3d9a" font-weight="bold">Fruit lines (far side):</text>
+  <text x="834" y="524" font-size="11">Cups slide off ⑤A / ⑤B onto</text>
+  <text x="834" y="540" font-size="11">their line table, then F1/F2</text>
+  <text x="834" y="556" font-size="11">scoop across into the freezer</text>
+  <text x="834" y="584" font-size="11" fill="#555">Collection tables sit at the</text>
+  <text x="834" y="600" font-size="11" fill="#555">back edge of the bench, so</text>
+  <text x="834" y="616" font-size="11" fill="#555">they're reachable from both</text>
+  <text x="834" y="632" font-size="11" fill="#555">sides. Benches ≈ 900 mm high.</text>
+  <text x="834" y="652" font-size="11" fill="#555">Hopper refill from P2.</text>
+
+  <!-- cycle -->
+  <rect x="30" y="740" width="1040" height="205" fill="#f7f9fc" stroke="#ccd5e0" rx="8"/>
+  <text x="45" y="766" font-weight="bold" font-size="15" fill="#1f2a44">Overlapped cycle</text>
+  <text x="45" y="792"><tspan font-weight="bold" fill="#c55a11">At P1:</tspan> de-nest pot ① → cradle ② → tap <tspan fill="#c55a11" font-weight="bold">label pedal</tspan>. While it labels, move the previous labelled pot from ② to buffer ③.</text>
+  <text x="45" y="816"><tspan font-weight="bold">Step right.</tspan></text>
+  <text x="45" y="840"><tspan font-weight="bold" fill="#1f4e79">At P2:</tspan> lift filled pot off nozzle ④ → ⑤A or ⑤B (alternate, or split by line demand). Pot from buffer ③ → under nozzle → tap <tspan fill="#1f4e79" font-weight="bold">fill pedal</tspan>.</text>
+  <text x="45" y="864"><tspan font-weight="bold">Step left, repeat.</tspan> Auger dose time covers the labeller handling, and labeller run time covers the auger handling.</text>
+  <text x="45" y="892" font-weight="bold" fill="#6a3d9a">Fruit lines: cups slide off ⑤A / ⑤B onto the line tables. F1/F2 walk them along, scoop fruit from tubs in the freezer, then send them to lid/pack.</text>
+  <text x="45" y="920" fill="#555" font-size="11">Scale 1 m = 300 px. Circles show 600 mm comfortable standing reach. Machine footprints are typical sizes, so check them against the chosen models before you build the cell.</text>
+
+  </g>
+
+  <!-- ===== LIVE OVERLAY ===== -->
+  <g id="ov" font-family="IBM Plex Mono, monospace">
+    <g id="g-den"></g><g id="g-lab"></g><g id="g-A"></g><g id="g-B"></g>
+    <circle id="ring-lab" cx="236" cy="716" r="24" fill="none" stroke-width="5"/>
+    <circle id="ring-aug" cx="510" cy="572" r="24" fill="none" stroke-width="5"/>
+    <g id="cup-lab"><circle cx="236" cy="716" r="9" class="cupc"/></g>
+    <g id="cup-aug"><circle cx="510" cy="572" r="9" class="cupc"/></g>
+    <g id="f1"><circle cx="0" cy="0" r="10" class="cupf"/></g>
+    <g id="f2"><circle cx="0" cy="0" r="10" class="cupf"/></g>
+    <g id="op" class="opg"><circle r="30" class="opdot"/><text y="5" text-anchor="middle" class="optext">OP</text></g>
+    <text id="t-den" x="225" y="866" text-anchor="middle" class="badge"></text>
+    <text id="t-lab" x="340" y="614" text-anchor="middle" class="badge"></text>
+    <text id="t-A" x="355" y="451" text-anchor="middle" class="badge"></text>
+    <text id="t-B" x="665" y="451" text-anchor="middle" class="badge"></text>
+    <text id="t-L1" x="360" y="152" text-anchor="middle" class="done"></text>
+    <text id="t-L2" x="660" y="152" text-anchor="middle" class="done"></text>
+    <text id="s-op" x="425" y="740" text-anchor="middle" class="stat"></text>
+    <text id="s-f1" x="255" y="322" text-anchor="middle" class="stat"></text>
+    <text id="s-f2" x="765" y="322" text-anchor="middle" class="stat"></text>
+  </g>
+</svg>
+
+  </section>
 
   <section class="grid2">
     <div class="panel">
       <strong>Buffer levels over time</strong>
-      <canvas id="chart" width="720" height="260" aria-label="Buffer levels chart"></canvas>
+      <canvas id="chart" aria-label="Buffer levels chart"></canvas>
       <div class="legend">
         <span style="--c:var(--denest)">De-nested</span>
         <span style="--c:var(--label)">Labelled buffer ③</span>
@@ -96,149 +287,93 @@ canvas{width:100%;height:260px;display:block}
 <script>
 const $=id=>document.getElementById(id);
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-let S, running=false, last=0;
+const NS='http://www.w3.org/2000/svg';
+let S,running=false,last=0;
+// slot areas on the plan (plan coordinates)
+const AREA={den:{x:186,y:834,cols:5,w:18},lab:{x:294,y:588,cols:10,w:10},A:{x:298,y:490,cols:5,w:24},B:{x:610,y:530,cols:5,w:25}};
+const POS={P1:[340,680],P2:[510,665]};
 
-function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,cap:Math.max(1,Math.min(30,+$('cap').value||10)),mode:$('mode').value}}
-
+function cfg(){return{tDen:+$('tDen').value||3,tLab:+$('tLab').value||5,tAug:+$('tAug').value||5,tFru:+$('tFru').value||30,cap:Math.max(1,Math.min(20,+$('cap').value||10))}}
 function init(){
-  const c=cfg();
-  S={c,t:0,
-    buf:{den:0,lab:0,A:0,B:0},
-    st:{den:{rem:0,busy:false},lab:{rem:0,busy:false},aug:{rem:0,busy:false},LA:{rem:0,busy:false},LB:{rem:0,busy:false}},
-    op:null, opBusy:{den:0,lab:0,aug:0}, opIdle:0,
-    starve:{LA:0,LB:0}, done:{LA:0,LB:0}, hist:[], nextAlt:'A'};
-  build(); draw(); chart();
+  S={c:cfg(),t:0,buf:{den:0,lab:0,A:0,B:0},op:null,rem:0,
+     L:{A:{busy:false,rem:0},B:{busy:false,rem:0}},opT:{den:0,lab:0,aug:0,idle:0},starve:{A:0,B:0},done:{A:0,B:0},hist:[],alt:'A'};
+  for(const k in AREA){const g=$('g-'+k);g.innerHTML='';for(let i=0;i<S.c.cap;i++){const a=AREA[k],c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',a.x+(i%a.cols)*a.w);c.setAttribute('cy',a.y+Math.floor(i/a.cols)*(k==='den'?12:a.w));c.setAttribute('r',k==='den'||k==='lab'?4.5:7);g.appendChild(c)}}
+  draw();chart();
 }
-
-function canDen(){return S.buf.den<S.c.cap}
-function canLab(){return S.buf.den>0&&S.buf.lab<S.c.cap}
-function canAug(){return S.buf.lab>0&&(S.buf.A<S.c.cap||S.buf.B<S.c.cap)}
-
-// A task takes its input cup at the start and only places the output when it finishes.
-function start(k){
-  const s=S.st[k]; s.busy=true;
-  if(k==='den'){s.rem=S.c.tDen}
-  if(k==='lab'){S.buf.den--;s.rem=S.c.tLab}
-  if(k==='aug'){S.buf.lab--;s.rem=S.c.tAug}
-}
-function finish(k){
-  const s=S.st[k]; s.busy=false;
-  if(k==='den')S.buf.den++;
-  if(k==='lab')S.buf.lab++;
-  if(k==='aug'){ // send to the emptier collection table, alternating when level
-    let tgt=S.buf.A<S.buf.B?'A':S.buf.B<S.buf.A?'B':S.nextAlt;
-    if(S.buf[tgt]>=S.c.cap)tgt=tgt==='A'?'B':'A';
-    S.buf[tgt]++; S.nextAlt=tgt==='A'?'B':'A';
-  }
-}
+const canDen=()=>S.buf.den<S.c.cap, canLab=()=>S.buf.den>0&&S.buf.lab<S.c.cap, canAug=()=>S.buf.lab>0&&(S.buf.A<S.c.cap||S.buf.B<S.c.cap);
 function step(dt){
-  const c=S.c; S.t+=dt;
-  // stations
-  for(const k of ['den','lab','aug']){const s=S.st[k]; if(s.busy){s.rem-=dt; if(s.rem<=0){finish(k); if(c.mode==='shared')S.op=null;}}}
-  if(c.mode==='shared'){
-    if(!S.op){ // priority: keep the fruit lines fed first
-      if(canAug())S.op='aug'; else if(canLab())S.op='lab'; else if(canDen())S.op='den';
-      if(S.op)start(S.op);
-    }
-    if(S.op)S.opBusy[S.op]+=dt; else S.opIdle+=dt;
-  }else{
-    if(!S.st.aug.busy&&canAug())start('aug');
-    if(!S.st.lab.busy&&canLab())start('lab');
-    if(!S.st.den.busy&&canDen())start('den');
+  const c=S.c;S.t+=dt;
+  if(S.op){S.rem-=dt;S.opT[S.op]+=dt;
+    if(S.rem<=0){
+      if(S.op==='den')S.buf.den++;
+      if(S.op==='lab')S.buf.lab++;
+      if(S.op==='aug'){let t=S.buf.A<S.buf.B?'A':S.buf.B<S.buf.A?'B':S.alt;if(S.buf[t]>=c.cap)t=t==='A'?'B':'A';S.buf[t]++;S.alt=t==='A'?'B':'A'}
+      S.op=null}}
+  else S.opT.idle+=dt;
+  if(!S.op){ // keep the fruit lines fed first
+    if(canAug()){S.op='aug';S.buf.lab--;S.rem=c.tAug}
+    else if(canLab()){S.op='lab';S.buf.den--;S.rem=c.tLab}
+    else if(canDen()){S.op='den';S.rem=c.tDen}
   }
-  // fruit lines
-  for(const [L,b] of [['LA','A'],['LB','B']]){
-    const s=S.st[L];
-    if(s.busy){s.rem-=dt; if(s.rem<=0){s.busy=false;S.done[L]++;}}
-    if(!s.busy){ if(S.buf[b]>0){S.buf[b]--;s.busy=true;s.rem=c.tFru;} else S.starve[L]+=dt; }
-  }
-  if(!S.hist.length||S.t-S.hist[S.hist.length-1].t>=2){S.hist.push({t:S.t,...S.buf}); if(S.hist.length>4000)S.hist=S.hist.filter((_,i)=>i%2===0);}
+  for(const k of ['A','B']){const l=S.L[k];
+    if(l.busy){l.rem-=dt;if(l.rem<=0){l.busy=false;S.done[k]++}}
+    if(!l.busy){if(S.buf[k]>0){S.buf[k]--;l.busy=true;l.rem=c.tFru}else S.starve[k]+=dt}}
+  if(!S.hist.length||S.t-S.hist[S.hist.length-1].t>=2){S.hist.push({t:S.t,...S.buf});if(S.hist.length>4000)S.hist=S.hist.filter((_,i)=>i%2===0)}
 }
-
-const ST=[
-  {k:'den',name:'① De-nest',col:'--denest',buf:'den',bufName:'De-nested cups'},
-  {k:'lab',name:'② Labeller',col:'--label',buf:'lab',bufName:'Labelled buffer ③'},
-  {k:'aug',name:'④ Auger filler',col:'--auger',buf:null},
-  {k:'LA',name:'Fruit line 1',col:'--collect',buf:'A',bufName:'Collection A',inbuf:true},
-  {k:'LB',name:'Fruit line 2',col:'--fruit',buf:'B',bufName:'Collection B',inbuf:true},
-];
-function build(){
-  $('flow').innerHTML=ST.map(s=>`<div class="st" style="--c:var(${s.col})">
-    <h3><span style="color:var(${s.col})">${s.name}</span><span class="rate" id="r-${s.k}"></span></h3>
-    <span class="state" id="s-${s.k}">Idle</span>
-    <div class="prog"><i id="p-${s.k}" style="background:var(${s.col})"></i></div>
-    ${s.buf?`<div class="note">${s.inbuf?'Feeds from ':'Outputs to '}${s.bufName}</div>
-      <div class="count" id="c-${s.k}">0</div>
-      <div class="slots" id="b-${s.k}">${Array.from({length:S.c.cap},()=>'<i class="slot"></i>').join('')}</div>`:'<div class="note">Sends each cup to the emptier collection table</div>'}
-  </div>`).join('');
-}
-function fmt(t){t=Math.floor(t);return [t/3600|0,(t/60|0)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':')}
+const fmt=t=>{t=Math.floor(t);return[t/3600|0,(t/60|0)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':')};
+function ring(id,frac,col){const r=$(id),C=2*Math.PI*24;r.style.stroke=col;r.setAttribute('stroke-dasharray',`${C*frac} ${C}`);r.setAttribute('transform',`rotate(-90 ${r.getAttribute('cx')} ${r.getAttribute('cy')})`);r.style.opacity=frac>0?1:0}
 function draw(){
-  const c=S.c;
-  $('clock').textContent=fmt(S.t);
-  const tot={den:c.tDen,lab:c.tLab,aug:c.tAug,LA:c.tFru,LB:c.tFru};
-  for(const s of ST){
-    const st=S.st[s.k], el=$('s-'+s.k);
-    $('r-'+s.k).textContent=tot[s.k]+'s';
-    $('p-'+s.k).style.width=st.busy?(100*(1-st.rem/tot[s.k]))+'%':'0';
-    let txt='Idle',col='--muted';
-    if(st.busy){txt='Running';col='--ok'}
-    else if(s.k==='LA'||s.k==='LB'){txt='Starved: no cups';col='--bad'}
-    else if(c.mode==='shared'&&S.op&&S.op!==s.k){txt='Operator at '+({den:'de-nest',lab:'labeller',aug:'auger'}[S.op]);col='--warn'}
-    else if(s.k==='den'&&!canDen()||s.k==='lab'&&S.buf.lab>=c.cap||s.k==='aug'&&S.buf.A>=c.cap&&S.buf.B>=c.cap){txt='Blocked: buffer full';col='--warn'}
-    else if(s.k!=='den'){txt='Waiting for cups';col='--muted'}
-    el.textContent=txt; el.style.color=`var(${col})`;
-    if(s.buf){
-      const n=S.buf[s.buf]; $('c-'+s.k).textContent=n+' / '+c.cap;
-      [...$('b-'+s.k).children].forEach((d,i)=>{d.style.background=i<n?`var(${s.col})`:'transparent'; d.style.borderColor=i<n?`var(${s.col})`:''});
-    }
-  }
+  const c=S.c;$('clock').textContent=fmt(S.t);
+  const col={den:css('--denest'),lab:css('--label'),A:css('--collect'),B:css('--fruit')};
+  for(const k in AREA){[...$('g-'+k).children].forEach((d,i)=>{const on=i<S.buf[k];d.setAttribute('fill',on?css('--cup'):'none');d.setAttribute('stroke',on?'#7a5a00':col[k]);d.setAttribute('stroke-width',on?1.2:1);d.setAttribute('stroke-opacity',on?1:.5)})}
+  $('t-den').textContent=`de-nested ${S.buf.den}/${c.cap}`;
+  $('t-lab').textContent=`${S.buf.lab}/${c.cap}`;
+  $('t-A').textContent=`${S.buf.A}/${c.cap}`;$('t-B').textContent=`${S.buf.B}/${c.cap}`;
+  // operator
+  const at=S.op==='aug'?'P2':'P1';const [x,y]=POS[at];$('op').style.transform=`translate(${x}px,${y}px)`;
+  ring('ring-lab',S.op==='lab'?1-S.rem/c.tLab:0,css('--label'));
+  ring('ring-aug',S.op==='aug'?1-S.rem/c.tAug:0,css('--auger'));
+  $('cup-lab').style.opacity=S.op==='lab'?1:0;$('cup-aug').style.opacity=S.op==='aug'?1:0;
+  const sop=$('s-op');sop.textContent=S.op?{den:'OP: de-nesting',lab:'OP: labelling',aug:'OP: filling'}[S.op]:'OP: idle, buffers full';sop.setAttribute('fill',S.op?css('--ok'):css('--warn'));
+  // fruit fillers walk the cup along the table
+  [['A','f1',360,255,'s-f1'],['B','f2',660,765,'s-f2']].forEach(([k,id,tx,fx,sid])=>{
+    const l=S.L[k],p=l.busy?1-l.rem/c.tFru:0,yy=450-p*300;
+    $(id).setAttribute('transform',`translate(${tx},${yy})`);$(id).style.opacity=l.busy?1:0;
+    const s=$(sid);s.textContent=l.busy?'filling':'WAITING FOR CUPS';s.setAttribute('fill',l.busy?css('--ok'):css('--bad'));
+  });
+  $('t-L1').textContent=`done ${S.done.A}`;$('t-L2').textContent=`done ${S.done.B}`;
   // stats
-  const done=S.done.LA+S.done.LB, hrs=S.t/3600;
-  const pct=x=>S.t?Math.round(100*x/S.t)+'%':'–';
-  const opRows=c.mode==='shared'?`
-    <div class="stat"><span>Operator on auger</span><b>${pct(S.opBusy.aug)}</b></div>
-    <div class="stat"><span>Operator on labeller</span><b>${pct(S.opBusy.lab)}</b></div>
-    <div class="stat"><span>Operator de-nesting</span><b>${pct(S.opBusy.den)}</b></div>
-    <div class="stat"><span>Operator idle (cell blocked)</span><b>${pct(S.opIdle)}</b></div>`:'';
-  const cellRate=c.mode==='shared'?3600/(c.tDen+c.tLab+c.tAug):3600/Math.max(c.tDen,c.tLab,c.tAug);
-  const lineRate=2*3600/c.tFru;
-  const limit=cellRate<lineRate?`The front cell is the bottleneck (${Math.round(cellRate)} cups/h max vs ${Math.round(lineRate)} the fruit lines can take). Fruit lines will run short of cups.`:`The fruit lines are the bottleneck (${Math.round(lineRate)} cups/h max vs ${Math.round(cellRate)} the front cell can make). Buffers fill up and the front cell waits.`;
-  $('stats').innerHTML=`
-    <strong>Results</strong>
-    <div class="stat"><span>Cups finished (filled + seamed)</span><b>${done}</b></div>
-    <div class="stat"><span>Rate so far</span><b>${hrs>0.01?Math.round(done/hrs):'–'} cups/h</b></div>
-    <div class="stat"><span>Line 1 / Line 2 finished</span><b>${S.done.LA} / ${S.done.LB}</b></div>
-    <div class="stat"><span>Line 1 / Line 2 starved</span><b>${pct(S.starve.LA)} / ${pct(S.starve.LB)}</b></div>
-    ${opRows}
-    <p class="note verdict">${limit}</p>
-    <p class="note">The single operator always serves the auger first, then the labeller, then de-nesting. All buffers start empty. The page opens one hour into a run; press Reset to watch it fill from empty.</p>`;
+  const done=S.done.A+S.done.B,h=S.t/3600,pct=x=>S.t?Math.round(100*x/S.t)+'%':'–';
+  const cell=3600/(c.tDen+c.tLab+c.tAug),lines=2*3600/c.tFru;
+  const v=cell<lines?`The cell operator is the bottleneck: ${Math.round(cell)} cups/h max against ${Math.round(lines)} cups/h the fruit lines can take. The fruit fillers will wait for cups.`:`The fruit lines are the bottleneck: ${Math.round(lines)} cups/h max against ${Math.round(cell)} cups/h the cell operator can make. Buffers fill and the cell operator gets spare time.`;
+  $('stats').innerHTML=`<strong>Results</strong>
+    <div class="st"><span>Cups finished</span><b>${done}</b></div>
+    <div class="st"><span>Rate so far</span><b>${h>0.01?Math.round(done/h):'–'} cups/h</b></div>
+    <div class="st"><span>Line 1 / Line 2 waiting for cups</span><b>${pct(S.starve.A)} / ${pct(S.starve.B)}</b></div>
+    <div class="st"><span>Cell operator: auger / label / de-nest</span><b>${pct(S.opT.aug)} / ${pct(S.opT.lab)} / ${pct(S.opT.den)}</b></div>
+    <div class="st"><span>Cell operator idle</span><b>${pct(S.opT.idle)}</b></div>
+    <p class="note verdict">${v}</p>
+    <p class="note">The cell operator does one task at a time: auger first, then labeller, then de-nesting. Buffers start empty, so the first half hour shows the cell filling up.</p>`;
 }
 function chart(){
   const cv=$('chart'),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
   cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.scale(dpr,dpr);
-  const pl=34,pr=10,pt=10,pb=24,w=W-pl-pr,h=H-pt-pb,cap=S.c.cap;
-  const tmax=Math.max(300,S.t);
-  g.clearRect(0,0,W,H);g.font='11px '+css('--mono');g.fillStyle=css('--muted');g.strokeStyle=css('--line');g.lineWidth=1;
+  const pl=30,pr=10,pt=10,pb=22,w=W-pl-pr,h=H-pt-pb,cap=S.c.cap,tmax=Math.max(300,S.t);
+  g.font='11px '+css('--mono');g.fillStyle=css('--muted');g.strokeStyle=css('--line');g.lineWidth=1;
   for(let v=0;v<=cap;v+=Math.max(1,Math.round(cap/5))){const y=pt+h-h*v/cap;g.beginPath();g.moveTo(pl,y);g.lineTo(pl+w,y);g.stroke();g.fillText(v,6,y+4)}
-  const step=[60,120,300,600,900,1800,3600,7200].find(s=>tmax/s<=6)||14400;
-  for(let t=0;t<=tmax;t+=step){const x=pl+w*t/tmax;g.fillText(t>=3600?(t/3600).toFixed(t%3600?1:0)+'h':Math.round(t/60)+'m',x-8,H-6)}
-  const ser=[['den','--denest'],['lab','--label'],['A','--collect'],['B','--fruit']];
-  for(const [k,col] of ser){g.strokeStyle=css(col);g.lineWidth=2;g.beginPath();
+  const st=[60,120,300,600,900,1800,3600,7200].find(s=>tmax/s<=6)||14400;
+  for(let t=0;t<=tmax;t+=st){g.fillText(t>=3600?(t/3600).toFixed(t%3600?1:0)+'h':Math.round(t/60)+'m',pl+w*t/tmax-8,H-5)}
+  for(const [k,c] of [['den','--denest'],['lab','--label'],['A','--collect'],['B','--fruit']]){g.strokeStyle=css(c);g.lineWidth=2;g.beginPath();
     S.hist.forEach((p,i)=>{const x=pl+w*p.t/tmax,y=pt+h-h*p[k]/cap;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
 }
-function loop(ts){
-  if(!running)return;
-  const real=Math.min(0.1,(ts-last)/1000);last=ts;
-  let sim=real*(+$('speed').value);
-  while(sim>0){const d=Math.min(0.05,sim);step(d);sim-=d}
-  draw();chart();requestAnimationFrame(loop);
-}
+function loop(ts){if(!running)return;const real=Math.min(.1,(ts-last)/1000);last=ts;let sim=real*+$('speed').value;
+  while(sim>0){const d=Math.min(.05,sim);step(d);sim-=d}draw();chart();requestAnimationFrame(loop)}
 $('play').onclick=()=>{running=!running;$('play').textContent=running?'Pause':'Play';if(running){last=performance.now();requestAnimationFrame(loop)}};
-$('reset').onclick=()=>{init()};
-['tDen','tLab','tAug','tFru','cap','mode'].forEach(id=>$(id).addEventListener('change',()=>init()));
-window.addEventListener('resize',()=>chart());
+$('reset').onclick=init;
+['tDen','tLab','tAug','tFru','cap'].forEach(id=>$(id).addEventListener('change',init));
+addEventListener('resize',chart);
 init();
-// Show a working state at rest: pre-run 60 simulated minutes
-for(let i=0;i<60*60*20;i++)step(0.05);draw();chart();
+// open in a working state: 15 simulated minutes in
+for(let i=0;i<15*60*20;i++)step(.05);draw();chart();
 </script>
