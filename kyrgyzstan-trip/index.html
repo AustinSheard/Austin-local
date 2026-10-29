@@ -45,7 +45,7 @@
 const COLORS = ['#e6194b','#3cb44b','#4363d8','#f58231','#911eb4','#42d4f4',
                 '#f032e6','#9a6324','#469990','#800000','#808000','#000075'];
 // Emoji per activity type
-const ICONS = { waterfall:'💧', hotsprings:'♨️', hike:'🥾', lake:'🏞️', cultural:'🏛️' };
+const ICONS = { waterfall:'💧', hotsprings:'♨️', hike:'🥾', lake:'🏞️', cultural:'🏛️', pass:'⛰️', ride:'🏍️' };
 
 const map = L.map('map');
 L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
@@ -96,7 +96,8 @@ fetch('data.json').then(r => r.json()).then(data => {
         html: ICONS[a.type] || '📍', iconSize: [26, 26],
         iconAnchor: [-10, 30], popupAnchor: [23, -30] }) })   // sit up-right of the spot so numbered pins stay visible
       .bindPopup(`<div class="popup"><b>${a.name}</b> (Day ${a.day})${img}
-        <p>${a.desc}</p><a href="${gmaps}" target="_blank">Open in Google Maps</a></div>`,
+        <p>${a.desc}</p><a href="${gmaps}" target="_blank">Open in Google Maps</a> ·
+        <a href="https://www.google.com/search?q=${encodeURIComponent(a.searchTerm)}" target="_blank">Google it</a></div>`,
         { maxWidth: 270 })
       .addTo(map);
   });
