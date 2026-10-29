@@ -3,24 +3,24 @@
  "days": [
   {
    "day": 1,
-   "title": "Bishkek → Kochkor via Boom Gorge",
-   "km": 210,
-   "distance": "~210 km (mostly paved)",
-   "activities": "Boom Gorge",
-   "night": "Camp near Kochkor",
-   "maxElev": 1850,
-   "route": [[42.8746,74.5698],[42.84,75.3],[42.72,75.75],[42.58,75.83],[42.4,75.85],[42.215,75.755]
+   "title": "Bishkek → Kyzyl Oi via Suusamyr valley",
+   "km": 200,
+   "distance": "~200 km (mostly paved)",
+   "activities": "Too-Ashuu Pass, Suusamyr valley, Kokomeren river gorge",
+   "night": "Camp by the Kokomeren river",
+   "maxElev": 3200,
+   "route": [[42.8746,74.5698],[42.81,73.85],[42.65,73.9],[42.33,73.8],[42.18,73.95],[42.08,74.05],[41.953,74.15]
    ]
   },
   {
    "day": 2,
-   "title": "Kochkor → Song Kul via Karakeche Pass",
-   "km": 110,
-   "distance": "~110 km (dirt)",
+   "title": "Kyzyl Oi → Song Kul via Karakeche Pass",
+   "km": 150,
+   "distance": "~150 km (dirt)",
    "activities": "Karakeche Pass, Song Kul lake (3,016 m)",
-   "night": "Camp on Song Kul shore",
+   "night": "Camp on the Song Kul shore",
    "maxElev": 3300,
-   "route": [[42.215,75.755],[42.1,75.4],[41.95,75.05],[41.9,75.0],[41.92,75.12]
+   "route": [[41.953,74.15],[41.82,74.4],[41.83,74.7],[41.88,74.92],[41.905,75.1]
    ]
   },
   {
@@ -29,20 +29,20 @@
    "km": 30,
    "distance": "~30 km",
    "activities": "Lakeshore riding, hike",
-   "night": "Camp on Song Kul shore",
+   "night": "Camp on the Song Kul shore",
    "maxElev": 3100,
-   "route": [[41.92,75.12],[41.88,75.25],[41.92,75.12]
+   "route": [[41.905,75.1],[41.88,75.25],[41.905,75.1]
    ]
   },
   {
    "day": 4,
-   "title": "Song Kul → Tash Rabat via Moldo-Ashuu & Naryn",
+   "title": "Song Kul → Tash Rabat via Moldo-Ashuu Pass",
    "km": 200,
    "distance": "~200 km (dirt + paved)",
    "activities": "Moldo-Ashuu Pass (3,346 m)",
    "night": "Camp at Tash Rabat",
    "maxElev": 3346,
-   "route": [[41.92,75.12],[41.78,75.3],[41.72,75.32],[41.55,75.65],[41.43,76.0],[41.2,75.8],[40.95,75.4],[40.823,75.288]
+   "route": [[41.905,75.1],[41.8,75.25],[41.72,75.32],[41.5,75.35],[41.3,75.55],[41.17,75.8],[40.98,75.55],[40.823,75.288]
    ]
   },
   {
@@ -58,13 +58,13 @@
   },
   {
    "day": 6,
-   "title": "Tash Rabat → Kochkor via Dolon Pass",
+   "title": "Tash Rabat → Kochkor via Naryn and Dolon Pass",
    "km": 210,
    "distance": "~210 km (mostly paved)",
    "activities": "Dolon Pass",
    "night": "Camp or guesthouse in Kochkor",
    "maxElev": 3030,
-   "route": [[40.823,75.288],[40.95,75.4],[41.2,75.8],[41.43,76.0],[41.81,75.73],[42.0,75.75],[42.215,75.755]
+   "route": [[40.823,75.288],[40.98,75.55],[41.17,75.8],[41.43,76.0],[41.81,75.73],[42.0,75.75],[42.215,75.755]
    ]
   },
   {
@@ -75,7 +75,7 @@
    "activities": "Skazka Canyon, lake swim",
    "night": "Beach camp at Kaji Sai",
    "maxElev": 1900,
-   "route": [[42.215,75.755],[42.3,76.1],[42.42,76.4],[42.2,76.8],[42.14,77.18],[42.157,77.36],[42.14,77.18]
+   "route": [[42.215,75.755],[42.3,75.95],[42.4,76.15],[42.38,76.45],[42.25,76.8],[42.12,76.99],[42.14,77.18]
    ]
   },
   {
@@ -86,7 +86,7 @@
    "activities": "Barskoon Waterfall, Jeti Oguz rocks",
    "night": "Camp in Jeti Oguz gorge",
    "maxElev": 2400,
-   "route": [[42.14,77.18],[42.15,77.6],[42.0,77.61],[42.15,77.6],[42.3,78.05],[42.34,78.23]
+   "route": [[42.14,77.18],[42.157,77.36],[42.15,77.6],[42.0,77.61],[42.15,77.6],[42.3,78.05],[42.34,78.23]
    ]
   },
   {
@@ -97,7 +97,7 @@
    "activities": "Ride/hike up the gorge, hot spring soak",
    "night": "Hut or camp at Altyn Arashan",
    "maxElev": 2600,
-   "route": [[42.34,78.23],[42.43,78.33],[42.45,78.55],[42.37,78.62]
+   "route": [[42.34,78.23],[42.43,78.33],[42.5,78.53],[42.45,78.58],[42.37,78.62]
    ]
   },
   {
@@ -108,18 +108,18 @@
    "activities": "Lakeside riding",
    "night": "Camp on the lake",
    "maxElev": 1700,
-   "route": [[42.37,78.62],[42.45,78.55],[42.49,78.39],[42.62,78.2],[42.68,77.9],[42.65,77.5],[42.65,77.08]
+   "route": [[42.37,78.62],[42.45,78.58],[42.5,78.53],[42.49,78.39],[42.73,78.37],[42.68,77.9],[42.65,77.5],[42.65,77.08]
    ]
   },
   {
    "day": 11,
-   "title": "Cholpon-Ata → Bishkek",
+   "title": "Cholpon-Ata → Bishkek via Boom Gorge",
    "km": 240,
    "distance": "~240 km (paved)",
-   "activities": "Ride out via Boom Gorge",
+   "activities": "Boom Gorge",
    "night": "Bishkek, fly out",
    "maxElev": 1800,
-   "route": [[42.65,77.08],[42.46,76.19],[42.58,75.83],[42.72,75.75],[42.84,75.3],[42.8746,74.5698]
+   "route": [[42.65,77.08],[42.55,76.6],[42.46,76.19],[42.5,75.95],[42.58,75.83],[42.72,75.75],[42.84,75.3],[42.8746,74.5698]
    ]
   }
  ],
@@ -127,7 +127,7 @@
   {
    "name": "Altyn Kol felt co-op",
    "type": "cultural",
-   "day": 1,
+   "day": 6,
    "lat": 42.214,
    "lng": 75.757,
    "desc": "Women's co-op making shyrdak felt carpets in Kochkor.",
@@ -171,16 +171,6 @@
    "lat": 40.78,
    "lng": 75.33,
    "desc": "Hike up the ridge for views over Chatyr Kul.",
-   "photo": "",
-   "credit": ""
-  },
-  {
-   "name": "Chatyr Kul",
-   "type": "lake",
-   "day": 5,
-   "lat": 40.62,
-   "lng": 75.5,
-   "desc": "High-altitude lake near the Chinese border (permit zone).",
    "photo": "",
    "credit": ""
   },

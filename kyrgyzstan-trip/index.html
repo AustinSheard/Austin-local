@@ -69,7 +69,7 @@ fetch('data.json').then(r => r.json()).then(data => {
 
   // Fill the day box from data.json, highlight that day's line, dim the rest, zoom to it
   let cur = 0;
-  function showDay(i) {
+  function showDay(i, zoom = true) {
     cur = i;
     const d = data.days[i];
     document.getElementById('bTitle').textContent = `Day ${d.day}: ${d.title}`;
@@ -80,7 +80,7 @@ fetch('data.json').then(r => r.json()).then(data => {
     document.getElementById('next').disabled = i === data.days.length - 1;
     lines.forEach((l, j) => l.setStyle(j === i ? { weight: 7, opacity: 1 } : { weight: 3, opacity: 0.25 }));
     // extra bottom padding so the route isn't hidden behind the box
-    map.fitBounds(lines[i].getBounds(), { paddingTopLeft: [30, 30], paddingBottomRight: [30, 190] });
+    if (zoom) map.fitBounds(lines[i].getBounds(), { paddingTopLeft: [30, 30], paddingBottomRight: [30, 190] });
     lines[i].bringToFront();   // after fitBounds, once the map has a view
   }
   document.getElementById('prev').onclick = () => showDay(cur - 1);
@@ -109,7 +109,9 @@ fetch('data.json').then(r => r.json()).then(data => {
   // start the map below the top bar (it wraps to 2 lines on phones)
   document.getElementById('map').style.top = document.getElementById('bar').offsetHeight + 'px';
   map.invalidateSize();
-  showDay(0);   // start on Day 1
+  // on load: fit the whole loop, and show Day 1 in the box without zooming in
+  map.fitBounds(L.featureGroup(lines).getBounds(), { paddingTopLeft: [20, 20], paddingBottomRight: [20, 170] });
+  showDay(0, false);
 });
 </script>
 </body>
