@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyrgyzstan Moto Trip</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+  #bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: #222; color: #fff;
+         padding: 8px 12px; font-size: 14px; display: flex; gap: 14px; flex-wrap: wrap; }
+  #bar b { font-size: 15px; margin-right: auto; }
+  #map { position: absolute; top: 36px; bottom: 0; left: 0; right: 0; }
+  .pin { background: #fff; border: 3px solid; border-radius: 50%; width: 22px; height: 22px;
+         line-height: 22px; text-align: center; font-weight: bold; font-size: 12px; }
+  .act { font-size: 20px; text-align: center; }
+  .popup img { width: 100%; max-width: 260px; display: block; }
+  .ph { background: #eee; color: #900; padding: 30px 8px; text-align: center; font-size: 12px; }
+  .credit { font-size: 10px; color: #666; }
+</style>
+</head>
+<body>
+<div id="bar"><b>Kyrgyzstan by Motorbike</b><span id="stats"></span></div>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// One colour per day (edit freely)
+const COLORS = ['#e6194b','#3cb44b','#4363d8','#f58231','#911eb4','#42d4f4',
+                '#f032e6','#9a6324','#469990','#800000','#808000','#000075'];
+// Emoji per activity type
+const ICONS = { waterfall:'💧', hotsprings:'♨️', hike:'🥾', lake:'🏞️', cultural:'🏛️' };
+
+const map = L.map('map');
+L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+  maxZoom: 17,
+  attribution: 'Map: © OpenStreetMap contributors, SRTM | Style: © OpenTopoMap (CC-BY-SA)'
+}).addTo(map);
+
+fetch('data.json').then(r => r.json()).then(data => {
+  const bounds = L.latLngBounds([]);
+
+  // Day routes + numbered overnight pins (pin sits at the last waypoint of each day)
+  data.days.forEach((d, i) => {
+    const color = COLORS[i % COLORS.length];
+    L.polyline(d.route, { color, weight: 4, opacity: 0.85 }).addTo(map);
+    d.route.forEach(p => bounds.extend(p));
+    const end = d.route[d.route.length - 1];
+    L.marker(end, { icon: L.divIcon({ className: '', html:
+        `<div class="pin" style="border-color:${color}">${d.day}</div>`, iconSize: [28, 28] }) })
+      .bindPopup(`<b>Day ${d.day}: ${d.title}</b><br>${d.km} km · ${d.terrain}<br>Sleep: ${d.sleep}`)
+      .addTo(map);
+  });
+
+  // Activity pins with photo, credit, description, Google Maps link
+  data.activities.forEach(a => {
+    const img = a.photo
+      ? `<img src="${a.photo}" alt="${a.name}"><div class="credit">Photo: ${a.credit}</div>`
+      : `<div class="ph">PHOTO PLACEHOLDER</div>`;
+    const gmaps = `https://www.google.com/maps?q=${a.lat},${a.lng}`;
+    L.marker([a.lat, a.lng], { icon: L.divIcon({ className: 'act',
+        html: ICONS[a.type] || '📍', iconSize: [26, 26] }) })
+      .bindPopup(`<div class="popup"><b>${a.name}</b> (Day ${a.day})${img}
+        <p>${a.desc}</p><a href="${gmaps}" target="_blank">Open in Google Maps</a></div>`,
+        { maxWidth: 270 })
+      .addTo(map);
+  });
+
+  // Top bar stats, computed from data.json
+  const km = data.days.reduce((s, d) => s + d.km, 0);
+  const high = Math.max(...data.days.map(d => d.maxElev));
+  document.getElementById('stats').textContent =
+    `${data.days.length} days · ${km.toLocaleString()} km · highest ${high.toLocaleString()} m`;
+  map.fitBounds(bounds, { padding: [20, 20] });
+});
+</script>
+</body>
+</html>
