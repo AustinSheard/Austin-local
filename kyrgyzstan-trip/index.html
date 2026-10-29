@@ -61,7 +61,7 @@ fetch('data.json').then(r => r.json()).then(data => {
     const line = L.polyline(d.route, { color, weight: 4, opacity: 0.85 }).addTo(map);
     const end = d.route[d.route.length - 1];
     L.marker(end, { icon: L.divIcon({ className: '', html:
-        `<div class="pin" style="border-color:${color}">${d.day}</div>`, iconSize: [28, 28] }) })
+        `<div class="pin" style="border-color:${color}">${d.day}</div>`, iconSize: [28, 28] }), zIndexOffset: 1000 })   // numbers always on top
       .on('click', () => showDay(i))   // tapping a pin opens that day's box
       .addTo(map);
     return line;
@@ -93,7 +93,8 @@ fetch('data.json').then(r => r.json()).then(data => {
       : `<div class="ph">PHOTO PLACEHOLDER</div>`;
     const gmaps = `https://www.google.com/maps?q=${a.lat},${a.lng}`;
     L.marker([a.lat, a.lng], { icon: L.divIcon({ className: 'act',
-        html: ICONS[a.type] || '📍', iconSize: [26, 26] }) })
+        html: ICONS[a.type] || '📍', iconSize: [26, 26],
+        iconAnchor: [-10, 30], popupAnchor: [23, -30] }) })   // sit up-right of the spot so numbered pins stay visible
       .bindPopup(`<div class="popup"><b>${a.name}</b> (Day ${a.day})${img}
         <p>${a.desc}</p><a href="${gmaps}" target="_blank">Open in Google Maps</a></div>`,
         { maxWidth: 270 })
