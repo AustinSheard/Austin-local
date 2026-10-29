@@ -17,11 +17,28 @@
   .popup img { width: 100%; max-width: 260px; display: block; }
   .ph { background: #eee; color: #900; padding: 30px 8px; text-align: center; font-size: 12px; }
   .credit { font-size: 10px; color: #666; }
+  /* Day box: bottom-centre on phones, bottom-left on desktop */
+  #box { position: fixed; z-index: 1000; bottom: 24px; left: 50%; transform: translateX(-50%);
+         width: calc(100% - 32px); max-width: 340px; box-sizing: border-box; background: #fff;
+         border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.3); padding: 8px 10px; font-size: 13px; }
+  #box h3 { margin: 0 0 4px; font-size: 15px; }
+  #box p { margin: 2px 0; padding-right: 0; }
+  #nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+  #nav button { width: 44px; height: 44px; font-size: 20px; border: 0; border-radius: 8px; background: #222; color: #fff; }
+  #nav button:disabled { opacity: .25; }
+  @media (min-width: 700px) { #box { left: 12px; transform: none; } }
 </style>
 </head>
 <body>
 <div id="bar"><b>Kyrgyzstan by Motorbike</b><span id="stats"></span></div>
 <div id="map"></div>
+<div id="box">
+  <h3 id="bTitle"></h3>
+  <p>🏍️ <span id="bDist"></span></p>
+  <p>⭐ <span id="bAct"></span></p>
+  <p>🌙 <span id="bNight"></span></p>
+  <div id="nav"><button id="prev" aria-label="Previous day">◀</button><button id="next" aria-label="Next day">▶</button></div>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // One colour per day (edit freely)
@@ -37,19 +54,37 @@ L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 fetch('data.json').then(r => r.json()).then(data => {
-  const bounds = L.latLngBounds([]);
 
   // Day routes + numbered overnight pins (pin sits at the last waypoint of each day)
-  data.days.forEach((d, i) => {
+  const lines = data.days.map((d, i) => {
     const color = COLORS[i % COLORS.length];
-    L.polyline(d.route, { color, weight: 4, opacity: 0.85 }).addTo(map);
-    d.route.forEach(p => bounds.extend(p));
+    const line = L.polyline(d.route, { color, weight: 4, opacity: 0.85 }).addTo(map);
     const end = d.route[d.route.length - 1];
     L.marker(end, { icon: L.divIcon({ className: '', html:
         `<div class="pin" style="border-color:${color}">${d.day}</div>`, iconSize: [28, 28] }) })
-      .bindPopup(`<b>Day ${d.day}: ${d.title}</b><br>${d.km} km · ${d.terrain}<br>Sleep: ${d.sleep}`)
+      .on('click', () => showDay(i))   // tapping a pin opens that day's box
       .addTo(map);
+    return line;
   });
+
+  // Fill the day box from data.json, highlight that day's line, dim the rest, zoom to it
+  let cur = 0;
+  function showDay(i) {
+    cur = i;
+    const d = data.days[i];
+    document.getElementById('bTitle').textContent = `Day ${d.day}: ${d.title}`;
+    document.getElementById('bDist').textContent = d.distance;
+    document.getElementById('bAct').textContent = d.activities;
+    document.getElementById('bNight').textContent = d.night;
+    document.getElementById('prev').disabled = i === 0;
+    document.getElementById('next').disabled = i === data.days.length - 1;
+    lines.forEach((l, j) => l.setStyle(j === i ? { weight: 7, opacity: 1 } : { weight: 3, opacity: 0.25 }));
+    // extra bottom padding so the route isn't hidden behind the box
+    map.fitBounds(lines[i].getBounds(), { paddingTopLeft: [30, 30], paddingBottomRight: [30, 190] });
+    lines[i].bringToFront();   // after fitBounds, once the map has a view
+  }
+  document.getElementById('prev').onclick = () => showDay(cur - 1);
+  document.getElementById('next').onclick = () => showDay(cur + 1);
 
   // Activity pins with photo, credit, description, Google Maps link
   data.activities.forEach(a => {
@@ -70,7 +105,10 @@ fetch('data.json').then(r => r.json()).then(data => {
   const high = Math.max(...data.days.map(d => d.maxElev));
   document.getElementById('stats').textContent =
     `${data.days.length} days · ${km.toLocaleString()} km · highest ${high.toLocaleString()} m`;
-  map.fitBounds(bounds, { padding: [20, 20] });
+  // start the map below the top bar (it wraps to 2 lines on phones)
+  document.getElementById('map').style.top = document.getElementById('bar').offsetHeight + 'px';
+  map.invalidateSize();
+  showDay(0);   // start on Day 1
 });
 </script>
 </body>
